@@ -13,7 +13,6 @@ function App() {
     <div className="App">
       <header className="App-header">
         <BrowserRouter>
-          <Navbar />
           <Switch>
             <Route path="/" component={Home} exact />
             <Route path="/Freelancia-Front-End" component={Home} exact />
