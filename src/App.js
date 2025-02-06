@@ -1,7 +1,8 @@
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
 import "./App.css";
-import Home from "./Pages/Home";
+// import Home from "./Pages/Home";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import RegisterForm from "./Pages/Register";
 
 function App() {
   return (
@@ -14,9 +15,10 @@ function App() {
       <header className="App-header">
         <BrowserRouter>
           <Switch>
-            <Route path="/" component={Home} exact />
-            <Route path="/Freelancia" component={Home} exact />
-            <Route path="*" component={Home} />
+            {/* <Route path="/" component={Home} exact /> */}
+            {/* <Route path="/Freelancia" component={Home} exact /> */}
+            <Route path="/" component={RegisterForm} />
+            {/* <Route path="*" component={Home} /> */}
           </Switch>
         </BrowserRouter>
       </header>
