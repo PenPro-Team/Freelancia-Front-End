@@ -5,14 +5,17 @@ function NavBar() {
   return (
     <>
       <Navbar bg="dark" data-bs-theme="dark">
-        <Container className='d-flex justify-content-end'>
-          <Navbar.Brand to="/"><span className='text-primary'>Free</span>Lanceia</Navbar.Brand>
+        <Container className='d-flex justify-content-between'>
+          <Navbar.Brand to="/"><span className='text-primary '>Free</span>Lanceia</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link to="/">Home</Nav.Link>
             <Nav.Link to="/">Features</Nav.Link>
+          </Nav>
+          <div className='text-light d-flex flex-row flex-wrap gap-2'>
             <Nav.Link to="/">Login</Nav.Link>
             <Nav.Link to="/">Regester</Nav.Link>
-          </Nav>
+          </div>
+
         </Container>
       </Navbar>
       <br />
