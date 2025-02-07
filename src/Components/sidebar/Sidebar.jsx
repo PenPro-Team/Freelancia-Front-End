@@ -7,6 +7,7 @@ import axios from "axios";
 import Rate_Stars from "../Rate_Stars";
 import { Image } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import persImg from "../../assets/hero-bg.jpg";
 
 export default function Sidebar() {
   const [data, setData] = useState([]);
@@ -53,7 +54,7 @@ export default function Sidebar() {
           <div className="d-flex row p-3 rounded-4 bg-primary-subtle mb-3 w-100  justify-content-start">
             <div className="d-flex align-items-center">
               <Image
-                src="https://www.upwork.com/profile-portraits/c1h_Fuv4ZIYmOf5A1oUEU5JcUr6pB1LzbnEdHvcWnBB5tGUIWZa4GJHpDTrc0CuzUZ"
+                src={persImg}
                 roundedCircle
                 alt="aa"
                 width={64}
