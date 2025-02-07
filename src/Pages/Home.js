@@ -9,8 +9,11 @@ import Btn from "../Components/Btn";
 import proImages from "../assets/hero-bg.jpg";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
+import { useSelector } from "react-redux";
 
 function Home() {
+  const user = useSelector((state) => state.auth.user);
+  console.log("Logged in User:", user);
   return (
     <Container>
       <Row>
@@ -42,7 +45,7 @@ function Home() {
           <img width={"350%"} src={proImage} />
         </Col>
       </Row>
-      <div class="row row-cols-1 row-cols-md-3 g-3 ms-1 mt-2">
+      <div className="row row-cols-1 row-cols-md-3 g-3 ms-1 mt-2">
         <Cards
           title={"WordPress Themes"}
           pragraph={"Email, newsletter and landing page."}

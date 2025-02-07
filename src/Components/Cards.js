@@ -7,7 +7,7 @@ const Cards = ({ title, pragraph }) => {
   // Destructure to easily use
 
   return (
-    <div class="col mt-5">
+    <div className="col mt-5">
       <div className="card-body">
         <div className="card" style={{ maxWidth: 20 + "rem" }}>
           <div className="card-body text-center">
