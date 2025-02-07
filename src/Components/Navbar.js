@@ -5,7 +5,10 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import personalImg from "../assets/hero-bg.jpg";
 import JobList from "../Pages/JobList";
+import { useDispatch } from "react-redux";
+import { logout } from "../Redux/Actions/authAction";
 function NavBar() {
+  const dispatch = useDispatch();
   const state = useSelector((state) => state.auth);
   const user = state ? state.user : null;
   const isAuth = state ? state.isAuthenticated : null;
@@ -13,14 +16,14 @@ function NavBar() {
   return (
     <Navbar bg="dark" data-bs-theme="dark">
       <Container className="d-flex justify-content-between">
-        <Navbar.Brand to="/">
+        <Navbar.Brand to="/Freelancia-Front-End/">
           <span className="text-primary">Free</span>Lanceia
         </Navbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link as={Link} to="/">
+          <Nav.Link as={Link} to="/Freelancia-Front-End/">
             Home
           </Nav.Link>
-          <Nav.Link as={Link} to="/Job_List">
+          <Nav.Link as={Link} to="/Freelancia-Front-End/Job_List">
             Projects
           </Nav.Link>
         </Nav>
@@ -36,13 +39,23 @@ function NavBar() {
             </div>
 
             <div className="fs-5">{user.firstName}</div>
+            <Nav.Link to="/">
+              <span
+                className="text-danger ms-2"
+                onClick={() => {
+                  dispatch(logout());
+                }}
+              >
+                Logout
+              </span>
+            </Nav.Link>
           </div>
         ) : (
           <div className="text-light d-flex flex-row flex-wrap gap-2">
-            <Nav.Link as={Link} to="/login">
+            <Nav.Link as={Link} to="/Freelancia-Front-End/login">
               Login
             </Nav.Link>
-            <Nav.Link as={Link} to="/register">
+            <Nav.Link as={Link} to="/Freelancia-Front-End/register">
               Register
             </Nav.Link>
           </div>

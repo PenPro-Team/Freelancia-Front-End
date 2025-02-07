@@ -34,7 +34,7 @@ export default function ProjectCard() {
       {data.length > 0 ? (
         data.map((project, index) => (
           <Link
-            to={`/job_details/${project.id}`}
+            to={`/Freelancia-Front-End/job_details/${project.id}`}
             key={index}
             className="text-decoration-none"
             style={{ height: "50px" }}
