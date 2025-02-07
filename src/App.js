@@ -2,6 +2,11 @@ import logo from "./logo.svg";
 import "./App.css";
 import Home from "./Pages/Home";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import LoginForm from "./Pages/login";
+import RegisterForm from "./Pages/Register";
+import NavBar from "./Components/Navbar";
+import Footer from "./Components/Footer";
+import Job_Details from "./Pages/Job_Details";
 
 function App() {
   return (
@@ -10,16 +15,38 @@ function App() {
     //     <Home></Home>
     //   </header>
     // </div>
-    <div className="App">
-      <header className="App-header">
-        <BrowserRouter>
-          <Switch>
-            <Route path="/" component={Home} exact />
-            <Route path="/Freelancia-Front-End" component={Home} exact />
-            <Route path="*" component={Home} />
-          </Switch>
-        </BrowserRouter>
-      </header>
+    <div className="">
+      <BrowserRouter>
+        <NavBar />
+        <Switch>
+          <Route path="/" component={Home} exact />
+          <Route path="/Freelancia-Front-End" component={Home} exact />
+          <Route
+            path="/Freelancia-Front-End/login"
+            component={LoginForm}
+            exact
+          />
+          <Route path="/login" component={LoginForm} exact />
+          <Route
+            path="/Freelancia-Front-End/register"
+            component={RegisterForm}
+            exact
+          />
+          <Route path="/register" component={RegisterForm} exact />
+          <Route
+            path="/job_details/:project_id"
+            component={Job_Details}
+            exact
+          />
+          <Route
+            path="/Freelancia-Front-End/job_details/:project_id"
+            component={Job_Details}
+            exact
+          />
+          <Route path="*" component={Home} />
+        </Switch>
+        <Footer />
+      </BrowserRouter>
     </div>
   );
 }
