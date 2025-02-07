@@ -25,7 +25,7 @@ function Job_Details() {
 
   return (
     <>
-      <div className="fs-1 fw-bold">{project.project_name}</div>
+      <div className="fs-1 fw-bold text-center m-3">{project.project_name}</div>
       <div>
         <div className="d-flex flex-row flex-wrap gap-3 justify-content-center m-2 mb-5">
           <div className="col-lg-8 col-md-7 col-sm-12 col-12">

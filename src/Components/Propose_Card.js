@@ -10,7 +10,7 @@ import Propose_Msg from "./Propose_Msg";
 
 function Propose_Card(props) {
   return (
-    <>
+    <div style={{ minHeight: "36vh" }}>
       <Accordion>
         <Accordion.Item eventKey="0">
           <AccordionHeader>Make a Proposal</AccordionHeader>
@@ -29,7 +29,7 @@ function Propose_Card(props) {
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
-    </>
+    </div>
   );
 }
 

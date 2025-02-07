@@ -7,14 +7,10 @@ import RegisterForm from "./Pages/Register";
 import NavBar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import Job_Details from "./Pages/Job_Details";
+import JobList from "./Pages/JobList";
 
 function App() {
   return (
-    // <div className="App">
-    //   <header className="App-header">
-    //     <Home></Home>
-    //   </header>
-    // </div>
     <div className="">
       <BrowserRouter>
         <NavBar />
@@ -34,6 +30,12 @@ function App() {
           />
           <Route path="/register" component={RegisterForm} exact />
           <Route
+            path="/Freelancia-Front-End/job_list"
+            component={JobList}
+            exact
+          />
+          <Route path="/job_list" component={JobList} exact />
+          <Route
             path="/job_details/:project_id"
             component={Job_Details}
             exact
@@ -43,6 +45,7 @@ function App() {
             component={Job_Details}
             exact
           />
+
           <Route path="*" component={Home} />
         </Switch>
         <Footer />
