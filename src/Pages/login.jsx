@@ -137,7 +137,8 @@ const LoginForm = () => {
                   </Form.Group>
 
                   <p className="mt-3">
-                    Don't have an account? <Link to="/register">Register</Link>
+                    Don't have an account?{" "}
+                    <Link to="/Freelancia-Front-End/register">Register</Link>
                   </p>
 
                   {isSpin ? (

@@ -9,8 +9,12 @@ import {
   Alert,
   Container,
   Card,
+  InputGroup,
+  EyeSlash,
+  Eye,
 } from "react-bootstrap";
 import InputField from "../Components/InputField";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const RegisterForm = () => {
   const history = useHistory();
@@ -20,6 +24,7 @@ const RegisterForm = () => {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
     birthdate: "",
     postalCode: "",
     address: "",
@@ -33,14 +38,85 @@ const RegisterForm = () => {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const handleChange = async (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-    setErrors({ ...errors, [name]: "" });
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const robustPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const userNameReg = /^[a-z0-9\._]{3,}$/;
 
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
     if (name === "username" || name === "email") {
       checkAvailability(name, value);
     }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let newValue = value;
+    if (name === "username") {
+      newValue = value.replace(/\s+/g, "").replace(/[^a-z0-9._]/gi, "");
+    }
+    setFormValues({ ...formValues, [name]: newValue });
+
+    let errorMessage = "";
+    console.log(e.target.name);
+    if (newValue.trim() === "") {
+      errorMessage = "This field is required";
+    } else {
+      switch (name) {
+        case "firstName":
+        case "lastName":
+          if (!/^[a-zA-Z]+$/.test(newValue)) {
+            errorMessage = "Only letters are allowed";
+          }
+          break;
+        case "password":
+          if (!robustPasswordRegex.test(newValue)) {
+            errorMessage =
+              "Password must contain at least one letter, one digit, and be at least 8 characters long";
+          }
+          break;
+        case "confirmPassword":
+          if (newValue !== formValues.password) {
+            errorMessage = "Passwords do not match";
+          }
+          break;
+        case "birthdate":
+          break;
+        case "postalCode":
+          if (!/^\d+$/.test(newValue)) {
+            errorMessage = "Postal code must contain only numbers";
+          }
+          break;
+        case "address":
+          if (newValue.trim().length < 5) {
+            errorMessage = "Address must be at least 5 characters long";
+          }
+          break;
+        case "role":
+          if (newValue !== "client" && newValue !== "freelancer") {
+            errorMessage = "Please select a valid role";
+          }
+          break;
+        case "description":
+          if (newValue.length < 200) {
+            errorMessage = "Must be at least 200 characters";
+          }
+          break;
+        case "username":
+          if (!userNameReg.test(newValue)) {
+            errorMessage = "Invalid username must be more than 3 char";
+          }
+          break;
+        case "email":
+          if (!emailRegex.test(newValue)) {
+            errorMessage = "Invalid email format";
+          }
+          break;
+        default:
+          break;
+      }
+    }
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
   };
 
   const checkAvailability = async (field, value) => {
@@ -49,69 +125,46 @@ const RegisterForm = () => {
         `https://api-generator.retool.com/D8TEH0/data?${field}=${value}`
       );
       const data = response.data;
-
       if (field === "username") {
-        setUsernameExists(data.length > 0);
+        if (userNameReg.test(value)) {
+          setUsernameExists(data.length > 0);
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            username: data.length > 0 ? "Username already exists" : "",
+          }));
+        }
       } else if (field === "email") {
         setEmailExists(data.length > 0);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: data.length > 0 ? "Email already exists" : "",
+        }));
       }
     } catch (error) {
       console.error(`Error checking ${field} availability:`, error);
     }
   };
 
-  const validate = () => {
-    const tempErrors = {};
-    if (!formValues.firstName) tempErrors.firstName = "First name is required";
-    if (!formValues.lastName) tempErrors.lastName = "Last name is required";
-    if (!formValues.username) tempErrors.username = "Username is required";
-    if (!formValues.email) tempErrors.email = "Email is required";
-    if (!formValues.password) tempErrors.password = "Password is required";
-    if (formValues.password.length < 8)
-      tempErrors.password = "Must be at least 8 characters";
-    if (!formValues.confirmPassword)
-      tempErrors.confirmPassword = "Confirm your password";
-    if (formValues.confirmPassword !== formValues.password)
-      tempErrors.confirmPassword = "Passwords do not match";
-    if (!formValues.birthdate) tempErrors.birthdate = "Birthdate is required";
-    if (!formValues.postalCode)
-      tempErrors.postalCode = "Postal code is required";
-    if (!formValues.address) tempErrors.address = "Address is required";
-    if (!formValues.role) tempErrors.role = "Role selection is required";
-    if (!formValues.description)
-      tempErrors.description = "Description is required";
-    if (formValues.description.length < 200)
-      tempErrors.description = "Must be at least 200 characters";
-
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
-  };
+  const isFormValid =
+    Object.values(errors).every((error) => error === "") &&
+    Object.values(formValues).every((value) => value.trim() !== "");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validate()) return;
-
     if (usernameExists || emailExists) {
       setSnackbarMessage("Username or Email already exists!");
       setShowSnackbar(true);
       return;
     }
-
     try {
-      const response = await axios.post(
+      await axios.post(
         "https://api-generator.retool.com/D8TEH0/data",
         { ...formValues, confirmPassword: undefined },
         { headers: { "Content-Type": "application/json" } }
       );
-
-      //   console.log("Form submitted successfully", response.data);
       setSnackbarMessage("Registration successful!");
       setShowSnackbar(true);
-
-      setTimeout(() => {
-        history.push("/login"); // هتحط هنا صفحة اللوجين بتاعتك
-      }, 2000);
+      setTimeout(() => history.push("/login"), 2000); // هنا هتحط صفحة اللوجين بتاعتك
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -149,19 +202,19 @@ const RegisterForm = () => {
             name="username"
             value={formValues.username}
             onChange={handleChange}
-            isInvalid={Boolean(errors.username) || usernameExists}
-            feedback={
-              usernameExists ? "Username already exists" : errors.username
-            }
+            onBlur={handleBlur}
+            isInvalid={Boolean(errors.username)}
+            feedback={errors.username}
           />
           <InputField
             label="Email"
-            type="email"
+            type="text"
             name="email"
             value={formValues.email}
             onChange={handleChange}
-            isInvalid={Boolean(errors.email) || emailExists}
-            feedback={emailExists ? "Email already exists" : errors.email}
+            onBlur={handleBlur}
+            isInvalid={Boolean(errors.email)}
+            feedback={errors.email}
           />
           <InputField
             label="Password"
@@ -229,15 +282,23 @@ const RegisterForm = () => {
             feedback={errors.description}
             rows={4}
           />
-          <Button variant="primary" type="submit" className="w-75 mt-3">
-            Register
-          </Button>
+          <div className="d-flex justify-content-center">
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-75 mt-3"
+              disabled={!isFormValid}
+            >
+              Register
+            </Button>
+          </div>
+          <div>
+            <p className="mt-3 d-flex justify-content-center">
+              Already have an account?{" "}
+              <Link to="/Freelancia-Front-End/login">Login</Link>
+            </p>
+          </div>
         </Form>
-        {showSnackbar && (
-          <Alert variant="success" className="mt-3">
-            {snackbarMessage}
-          </Alert>
-        )}
       </Card>
     </Container>
   );
