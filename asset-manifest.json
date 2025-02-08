@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Freelancia-Front-End/static/css/main.1163f07f.css",
-    "main.js": "/Freelancia-Front-End/static/js/main.13093e0a.js",
+    "main.js": "/Freelancia-Front-End/static/js/main.9e19bc2c.js",
     "static/js/453.62f13541.chunk.js": "/Freelancia-Front-End/static/js/453.62f13541.chunk.js",
     "static/media/fa-solid-900.ttf": "/Freelancia-Front-End/static/media/fa-solid-900.2582b0e4bcf85eceead0.ttf",
     "static/media/fa-brands-400.ttf": "/Freelancia-Front-End/static/media/fa-brands-400.1815e00441357e01619e.ttf",
@@ -18,11 +18,11 @@
     "static/media/logo.svg": "/Freelancia-Front-End/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/Freelancia-Front-End/index.html",
     "main.1163f07f.css.map": "/Freelancia-Front-End/static/css/main.1163f07f.css.map",
-    "main.13093e0a.js.map": "/Freelancia-Front-End/static/js/main.13093e0a.js.map",
+    "main.9e19bc2c.js.map": "/Freelancia-Front-End/static/js/main.9e19bc2c.js.map",
     "453.62f13541.chunk.js.map": "/Freelancia-Front-End/static/js/453.62f13541.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.1163f07f.css",
-    "static/js/main.13093e0a.js"
+    "static/js/main.9e19bc2c.js"
   ]
 }
