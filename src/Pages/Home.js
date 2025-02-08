@@ -15,20 +15,20 @@ function Home() {
   const user = useSelector((state) => state.auth.user);
   console.log("Logged in User:", user);
   return (
-    <Container>
+    <Container className="text-center text-lg-start">
       <Row>
         <Col xs={10} md={6} className="d-flex align-content-center flex-wrap">
           <div>
             <h2>
-              Professional WordPress Themes & Website Templates for any project
+              Welcome to <span className="text-primary">FreeLancia</span> were
+              your Buisness Dream Can Be Real
             </h2>
           </div>
           <p className="fs-5">
-            Discover thousands of easy to customize themes, templates & CMS
-            products, made by world-class developers.
+            Discover world of Freelance and Make Your Dreams Real
           </p>
 
-          <Row>
+          <Row className="mx-auto mb-4">
             <Col xs="auto">
               <Form.Control
                 type="text"
@@ -36,7 +36,7 @@ function Home() {
                 className=" mr-sm-2 w-100"
               />
             </Col>
-            <Col xs="auto">
+            <Col xs="auto" className="d-none d-lg-inline">
               <Button type="submit">Search</Button>
             </Col>
           </Row>
@@ -45,7 +45,7 @@ function Home() {
           <img width={"350%"} src={proImage} />
         </Col>
       </Row>
-      <div className="row row-cols-1 row-cols-md-3 g-3 ms-1 mt-2">
+      <div className="d-flex flex-wrap row row-cols-1 row-cols-md-3 g-3 ms-1 mt-2 mb-4 justify-content-center align-items-center">
         <Cards
           title={"WordPress Themes"}
           pragraph={"Email, newsletter and landing page."}
@@ -60,9 +60,9 @@ function Home() {
         />
       </div>
 
-      <div className="d-flex flex-row justify-content-center align-items-center text-center mt-3 mb-5">
+      {/* <div className="d-flex flex-row justify-content-center align-items-center text-center mt-3 mb-5">
         <Btn title={"View all categories"} />
-      </div>
+      </div> */}
 
       <Row>
         <Col xs={10} md={6} className="d-flex align-content-center flex-wrap">
@@ -74,10 +74,10 @@ function Home() {
           </div>
         </Col>
         <Col xs={6} md={4} className="d-flex align-content-center flex-wrap">
-          <h2>
+          <h2 className="text-center text-lg-start">
             Unique themes and templates for every budget and every project.
           </h2>
-          <Btn title={"View all themes"} />
+          <Btn title={"View all Projects"} />
         </Col>
       </Row>
 
@@ -96,10 +96,10 @@ function Home() {
           <Row xs={1} md={2} className="g-4">
             {Array.from({ length: 4 }).map((_, idx) => (
               <Col key={idx}>
-                <Card>
+                <Card className="shadow-lg">
                   <Card.Img variant="top" src={proImages} />
                   <Card.Body>
-                    <Card.Title>Card title</Card.Title>
+                    <Card.Title>{`User ${idx + 1}`}</Card.Title>
                     <Card.Text>
                       This is a longer card with supporting text below as a
                       natural lead-in to additional content. This content is a

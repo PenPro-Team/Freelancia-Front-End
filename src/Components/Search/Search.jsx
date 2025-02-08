@@ -15,6 +15,8 @@ export default function Search() {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [showResult,setShowResult] = useState(false)
+
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -25,6 +27,10 @@ export default function Search() {
 
     axios.get('https://api-generator.retool.com/SHY6hX/projects')
       .then(response => {
+        setShowResult(true)
+        // const searchedResult = document.getElementById('searchedResult')
+        // searchedResult.classList.remove("d-none")
+        
         console.log(response.data);
         const filteredResults = response.data.filter(project =>
           project.required_skills && project.required_skills.toLowerCase().includes(searchQuery.toLowerCase())
@@ -48,7 +54,8 @@ export default function Search() {
   const CloseSearch = (e) => {
     console.log(e.target.parentElement);
     let searchParent = e.target.parentElement
-    searchParent.className = "d-none";
+    // searchParent.classList.add("d-none")
+    setShowResult(false)
   }
 
 
@@ -77,10 +84,16 @@ export default function Search() {
         </div>}
       
       {searched && searchResults.length > 0 ? (
-        <div className='border-2 border rounded-3 p-4 mb-4 position-relative'>
+        <div id='searchedResult' className={`border-2 border rounded-3 p-4 mb-4 position-relative ${showResult ? "d-block" : "d-none"}`}>
           <Button variant="dark" className='position-absolute top-0 end-0' onClick={(e) => CloseSearch(e)}>X</Button>
           <h4>Search Results:</h4>
             {searchResults.map((project) => (
+               <Link
+                          to={`/Freelancia-Front-End/job_details/${project.id}`}
+                          key={project.id}
+                          className="text-decoration-none"
+                          style={{ height: "50px" }}
+                        >
               <Card className='mb-3 h-50 border'>
               <Card.Header className='bg-primary-subtle'>{project.required_skills}</Card.Header>
               <Card.Body>
@@ -90,6 +103,7 @@ export default function Search() {
                 </Card.Text>
               </Card.Body>
             </Card>
+            </Link>
             ))}
         </div>
       ) : (

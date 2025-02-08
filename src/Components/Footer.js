@@ -7,28 +7,34 @@ const Footer = () => {
   // Contact
   return (
     <>
-      <div className='container-fluid blackBack mt-5'>
-                <div className='d-flex row text-light text-center'>
-                    <div className='col-4'>
-                       <p>mohamed</p>
-                       <Link to="">Links</Link><br/>
-                       <Link to="">Home</Link><br/>
-                       <Link to="">Portfolio</Link>
-                    </div>
-                    <div className='col-4'>
-                       <p>Jack</p>
-                       <Link to="">Links</Link><br/>
-                       <Link to="">Home</Link><br/>
-                       <Link to="">Portfolio</Link>
-                    </div>
-                    <div className='col-4'>
-                       <p>Abdo</p>
-                       <Link to="">Links</Link><br/>
-                       <Link to="">Home</Link><br/>
-                       <Link to="">Portfolio</Link>
-                    </div>
-                </div>
-            </div>
+      <div className="container-fluid blackBack mt-5 p-5">
+        <div className="d-flex row text-light text-center">
+          <div className="col-4">
+            <p>mohamed</p>
+            <Link to="">Links</Link>
+            <br />
+            <Link to="">Home</Link>
+            <br />
+            <Link to="">Portfolio</Link>
+          </div>
+          <div className="col-4">
+            <p>Jack</p>
+            <Link to="">Links</Link>
+            <br />
+            <Link to="">Home</Link>
+            <br />
+            <Link to="">Portfolio</Link>
+          </div>
+          <div className="col-4">
+            <p>Abdo</p>
+            <Link to="">Links</Link>
+            <br />
+            <Link to="">Home</Link>
+            <br />
+            <Link to="">Portfolio</Link>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
