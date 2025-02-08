@@ -1,5 +1,4 @@
 import './App.css';
-import Projects from './components/Projects/Projects';
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
 import "../node_modules/bootstrap/dist/js/bootstrap.bundle.js"
 import "../node_modules/react-popper/dist/index.umd.js"
@@ -7,8 +6,7 @@ import "react-popper"
 import "./App.css";
 import { BrowserRouter, Route, Switch} from 'react-router-dom';
 import "@fortawesome/fontawesome-free"
-import Home from './components/Home/Home.jsx';
-
+import JobList from "./Pages/JobList.jsx"
 
 
 function App() {
@@ -16,7 +14,7 @@ function App() {
     <div>
       <BrowserRouter>
       <Switch>
-            <Route path="/" component={Home} exact />
+            <Route path="/" component={JobList} exact />
       </Switch>
         </BrowserRouter>
     </div>
