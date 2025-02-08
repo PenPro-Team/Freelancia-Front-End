@@ -36,6 +36,10 @@ const RegisterForm = () => {
   const [emailExists, setEmailExists] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const robustPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
   const handleBlur = (e) => {
     const { name, value } = e.target;
     if (name === "username" || name === "email") {
@@ -43,23 +47,64 @@ const RegisterForm = () => {
     }
   };
 
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-
     let newValue = value;
     if (name === "username") {
       newValue = value.replace(/\s+/g, "").replace(/[^a-z0-9._]/gi, "");
     }
-
     setFormValues({ ...formValues, [name]: newValue });
 
-    if (newValue.trim() === "") {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: "This field is required",
-      }));
-    } else {
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+    if (!["username", "email"].includes(name)) {
+      let errorMessage = "";
+      if (newValue.trim() === "") {
+        errorMessage = "This field is required";
+      } else {
+        switch (name) {
+          case "firstName":
+          case "lastName":
+            if (!/^[a-zA-Z]+$/.test(newValue)) {
+              errorMessage = "Only letters are allowed";
+            }
+            break;
+          case "password":
+            if (!robustPasswordRegex.test(newValue)) {
+              errorMessage =
+                "Password must contain at least one letter, one digit, and be at least 8 characters long";
+            }
+            break;
+          case "confirmPassword":
+            if (newValue !== formValues.password) {
+              errorMessage = "Passwords do not match";
+            }
+            break;
+          case "birthdate":
+            break;
+          case "postalCode":
+            if (!/^\d+$/.test(newValue)) {
+              errorMessage = "Postal code must contain only numbers";
+            }
+            break;
+          case "address":
+            if (newValue.trim().length < 5) {
+              errorMessage = "Address must be at least 5 characters long";
+            }
+            break;
+          case "role":
+            if (newValue !== "client" && newValue !== "freelancer") {
+              errorMessage = "Please select a valid role";
+            }
+            break;
+          case "description":
+            if (newValue.length < 200) {
+              errorMessage = "Must be at least 200 characters";
+            }
+            break;
+          default:
+            break;
+        }
+      }
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
     }
   };
 
@@ -69,7 +114,6 @@ const RegisterForm = () => {
         `https://api-generator.retool.com/D8TEH0/data?${field}=${value}`
       );
       const data = response.data;
-
       if (field === "username") {
         setUsernameExists(data.length > 0);
         setErrors((prevErrors) => ({
@@ -88,45 +132,17 @@ const RegisterForm = () => {
     }
   };
 
-  const validate = () => {
-    const tempErrors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-
-    Object.keys(formValues).forEach((key) => {
-      if (!formValues[key]) {
-        tempErrors[key] = "This field is required";
-      }
-    });
-
-    if (formValues.email && !emailRegex.test(formValues.email)) {
-      tempErrors.email = "Invalid email format";
-    }
-
-    if (formValues.password && !passwordRegex.test(formValues.password)) {
-      tempErrors.password =
-        "Password must contain at least one uppercase letter, one lowercase letter, one digit, and be at least 8 characters long";
-    }
-
-    if (formValues.confirmPassword !== formValues.password)
-      tempErrors.confirmPassword = "Passwords do not match";
-    if (formValues.description.length < 200)
-      tempErrors.description = "Must be at least 200 characters";
-
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
-  };
+  const isFormValid =
+    Object.values(errors).every((error) => error === "") &&
+    Object.values(formValues).every((value) => value.trim() !== "");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
-
     if (usernameExists || emailExists) {
       setSnackbarMessage("Username or Email already exists!");
       setShowSnackbar(true);
       return;
     }
-
     try {
       await axios.post(
         "https://api-generator.retool.com/D8TEH0/data",
@@ -135,11 +151,12 @@ const RegisterForm = () => {
       );
       setSnackbarMessage("Registration successful!");
       setShowSnackbar(true);
-      setTimeout(() => history.push("/login"), 2000);
+      setTimeout(() => history.push("/login"), 2000); // هنا هتحط صفحة اللوجين بتاعتك
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
+
   return (
     <Container className="my-5 d-flex justify-content-center">
       <Card className="shadow p-4" style={{ maxWidth: "800px", width: "100%" }}>
@@ -176,7 +193,6 @@ const RegisterForm = () => {
             isInvalid={Boolean(errors.username)}
             feedback={errors.username}
           />
-
           <InputField
             label="Email"
             type="text"
@@ -187,7 +203,6 @@ const RegisterForm = () => {
             isInvalid={Boolean(errors.email)}
             feedback={errors.email}
           />
-
           <InputField
             label="Password"
             type="password"
@@ -254,17 +269,18 @@ const RegisterForm = () => {
             feedback={errors.description}
             rows={4}
           />
-          <Button variant="primary" type="submit" className="w-75 mt-3">
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-75 mt-3"
+            disabled={!isFormValid}
+          >
             Register
           </Button>
         </Form>
-        {showSnackbar && (
-          <Alert variant="" className="mt-3">
-            {snackbarMessage}
-          </Alert>
-        )}
       </Card>
     </Container>
   );
 };
+
 export default RegisterForm;
