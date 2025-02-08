@@ -2,8 +2,8 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import proImage from './assets/hero-image--popular-items-2963d5759f434e6691a0bb5363bf2d1707c8885ab10b6dba3b0648f8c5f94da5.webp'
 import { Button, Form } from 'react-bootstrap';
-import Cards from './components/cards';
-import Btn from './components/btn';
+import Cards from './Components/Cards';
+import Btn from './Components/Btn';
 import proImages from './assets/hero-bg.jpg'
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
