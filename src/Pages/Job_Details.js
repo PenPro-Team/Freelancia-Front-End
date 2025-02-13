@@ -35,14 +35,20 @@ function Job_Details() {
             <Client_Details_Card />
           </div>
         </div>
-        <Propose_Card
-          project_id={project.id}
-          disabled={
-            !["open", "contract canceled and reopened"].includes(
-              project.job_state
-            )
-          }
-        />
+        {["open", "contract canceled and reopened"].includes(
+          project.job_state
+        ) && (
+          <div>
+            <Propose_Card
+              project_id={project.id}
+              disabled={
+                !["open", "contract canceled and reopened"].includes(
+                  project.job_state
+                )
+              }
+            />
+          </div>
+        )}
       </div>
     </>
   );
