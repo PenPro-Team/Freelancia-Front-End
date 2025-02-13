@@ -31,11 +31,14 @@
   color: #61dafb;
 }
 
-.GridCustom {
+.bgControl {
+  background-color: #f2f4f7;
   min-height: 100vh;
+}
+
+.GridCustom {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  background-color: #f2f4f7;
 }
 
 @keyframes App-logo-spin {

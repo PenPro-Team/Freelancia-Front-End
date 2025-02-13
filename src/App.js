@@ -12,10 +12,10 @@ import { Container } from "react-bootstrap";
 
 function App() {
   return (
-    <div className="" style={{}}>
+    <div className="bgControl" style={{}}>
       {/* <Container style={{ minHeight: "100vh", backgroundColor: "yellow" }}> */}
       <BrowserRouter>
-        <div className="GridCustom" style={{}}>
+        <div className="" style={{}}>
           <NavBar />
 
           <Switch>
