@@ -8,7 +8,7 @@ import { IoLocationSharp } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
-function Client_Details_Card() {
+function Client_Details_Card(props) {
   const [clientDetails, setClientDetails] = useState({
     name: "",
     email: "",
@@ -19,16 +19,20 @@ function Client_Details_Card() {
   });
 
   useEffect(() => {
-    let id = Math.floor(Math.random() * 50) + 1;
-    axios
-      .get(`https://api-generator.retool.com/Esur5x/dummyUsers/${id}`)
-      .then((res) => {
-        setClientDetails(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    // let id = Math.floor(Math.random() * 50) + 1;
+    if (props.project.owner_id) {
+      axios
+        .get(
+          `https://api-generator.retool.com/Esur5x/dummyUsers/${props.project.owner_id}`
+        )
+        .then((res) => {
+          setClientDetails(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [props.project.owner_id]);
   return (
     <>
       <Card>
