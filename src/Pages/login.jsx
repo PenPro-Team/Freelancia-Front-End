@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,6 +8,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../Redux/Actions/authAction";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { getFromLocalStorage, setToLocalStorage } from "../network/local/LocalStorage";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,16 @@ const LoginForm = () => {
 
   const isEmailValid = emailRegex.test(email);
   const isPasswordValid = passwordRegex.test(password);
+
+  useEffect(() => {
+
+    //let user=JSON.parse(localStorage.getItem("auth"));
+    let user = getFromLocalStorage("auth");
+    if(user && user.isAuthenticated){
+      
+      history.push("/Freelancia-Front-End");
+    }
+  },{});
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
@@ -66,12 +77,7 @@ const LoginForm = () => {
           isAuthenticated:true,
          
         }
-        localStorage.setItem(
-          
-          "auth", JSON.stringify(auth),
-          
-        
-        );
+    setToLocalStorage("auth",auth);
         dispatch(loginSuccess(response.data[0]));
         setError("");
         setIsLoading(true);

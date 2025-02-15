@@ -11,8 +11,8 @@ import ClientHistory from "./ClientHistory";
 
 function Job_Details_Card(props) {
   const [activeTab, setActiveTab] = useState("first");
-
   const renderContent = () => {
+
     switch (activeTab) {
       case "first":
         return (
@@ -62,7 +62,7 @@ function Job_Details_Card(props) {
       case "third":
         return <All_Proposals />;
         case "fourth":  
-        return <ClientHistory />; //pass the clinte 
+        return <ClientHistory owner_id={props.project.owner_id}/>; //pass the clinte 
       default:
         return "Disabled content or default content here.";
     }
