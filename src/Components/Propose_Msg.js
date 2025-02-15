@@ -41,7 +41,8 @@ function Propose_Msg(props) {
           deadline_date: itemInfo.deadline,
           // These Will be changed
           project_id: props.project_id,
-          user_id: 1,
+          user_id: props.user.id,
+          user_name: props.user.name,
           user_rate: 3,
           user_img: "https://logo.clearbit.com/sohu.com",
         })

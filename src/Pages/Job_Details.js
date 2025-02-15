@@ -5,15 +5,17 @@ import axios from "axios";
 import Job_Details_Card from "../Components/Job_Details_Card";
 import Client_Details_Card from "../Components/Client_Details_Card";
 import Propose_Card from "../Components/Propose_Card";
+import { useSelector } from "react-redux";
 
 function Job_Details() {
   const [project, setProject] = useState({});
+  const user = useSelector((state) => state.auth.user);
   //  location history match
   const params = useParams();
   useEffect(() => {
     axios
       .get(
-        `https://api-generator.retool.com/DqiAfb/projects/${params.project_id}`
+        `https://api-generator.retool.com/6wGsbQ/projects/${params.project_id}`
       )
       .then((res) => {
         setProject(res.data);
@@ -43,6 +45,7 @@ function Job_Details() {
           <div>
             <Propose_Card
               project_id={project.id}
+              user={user}
               disabled={
                 !["open", "contract canceled and reopened"].includes(
                   project.job_state
