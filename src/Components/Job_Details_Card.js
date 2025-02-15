@@ -60,6 +60,8 @@ function Job_Details_Card(props) {
         return <Project_Proposals />;
       case "third":
         return <All_Proposals />;
+        // case "fourth":  content of client history
+        // return </>;
       default:
         return "Disabled content or default content here.";
     }
@@ -98,6 +100,17 @@ function Job_Details_Card(props) {
                 setActiveTab("third");
               }}
               active={activeTab === "third"}
+            >
+              All Proposals
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("fourth");
+              }}
+              active={activeTab === "fourth"}
             >
               All Proposals
             </Nav.Link>
