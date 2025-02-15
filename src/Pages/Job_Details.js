@@ -13,15 +13,17 @@ function Job_Details() {
   useEffect(() => {
     axios
       .get(
-        `curl "https://api-generator.retool.com/3C9Io3/projects/${params.project_id}`
+        `https://api-generator.retool.com/DqiAfb/projects/${params.project_id}`
       )
       .then((res) => {
         setProject(res.data);
+        console.log(res.data);
+        console.log(params.project_id);
       })
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, []);
 
   return (
     <>
@@ -32,7 +34,7 @@ function Job_Details() {
             <Job_Details_Card project={project} />
           </div>
           <div className="col-lg-3 col-md-4 col-sm-8 col-9">
-            <Client_Details_Card />
+            <Client_Details_Card project={project} />
           </div>
         </div>
         {["open", "contract canceled and reopened"].includes(
