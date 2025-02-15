@@ -9,6 +9,7 @@ import { useState } from "react";
 import Propose_Msg from "./Propose_Msg";
 
 function Propose_Card(props) {
+
   return (
     <div>
       <Accordion>
@@ -20,6 +21,7 @@ function Propose_Card(props) {
                 <h5 className="card-title">Proposal Title</h5>
                 <div>
                   <Propose_Msg
+                    user = {props.user}
                     project_id={props.project_id}
                     disabled={props.disabled}
                   />
