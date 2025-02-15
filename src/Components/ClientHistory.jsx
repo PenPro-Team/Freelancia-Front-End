@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import Rate_Stars from "./Rate_Stars";
 
 function ClientHistory(props) {
-  const [proposals, setProposals] = useState([]);
+  const [clientReviews, setclientReviews] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [clientDetails, setClientDetails] = useState({
@@ -47,9 +47,8 @@ function ClientHistory(props) {
         { observe: "response" }
       )
       .then((res) => {
-        setProposals(res.data);
+        setclientReviews(res.data);
 
-        // Extract total count from headers and calculate total pages
         const totalRecords = parseInt(res.headers["x-total-count"], 10) || 0;
         setPageInfo((prevState) => ({
           ...prevState,
@@ -80,18 +79,18 @@ function ClientHistory(props) {
           <p>Loading...</p>
         ) : error ? (
           <p className="text-danger">{error}</p>
-        ) : proposals.length === 0 ? (
+        ) : clientReviews.length === 0 ? (
           <p>No reviews available.</p>
         ) : (
-          proposals.map((proposal) => (
-            <Card key={proposal.id} className="mb-3">
+          clientReviews.map((review) => (
+            <Card key={review.id} className="mb-3">
               <Card.Body>
                 <Card.Title>
                   <div className="d-flex align-items-center">
                     <Image
-                      src={proposal.img}
+                      src={review.img}
                       roundedCircle
-                      alt={proposal.user_reviewr}
+                      alt={clientDetails.name}
                       width={50}
                       height={50}
                       className="me-2"
@@ -99,13 +98,13 @@ function ClientHistory(props) {
                     <div className="d-flex flex-column">
                       <div>{clientDetails.name}</div>
                       <div className="text-muted">
-                        <Rate_Stars rating={proposal.rate} />
+                        <Rate_Stars rating={review.rate} />
                       </div>
                     </div>
                   </div>
                 </Card.Title>
                 <div className="fw-bold">Review Message:</div>
-                <div>{proposal.message}</div>
+                <div>{review.message}</div>
               </Card.Body>
             </Card>
           ))
