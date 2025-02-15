@@ -13,7 +13,7 @@ function Job_Details() {
   useEffect(() => {
     axios
       .get(
-        `https://api-generator.retool.com/SHY6hX/projects/${params.project_id}`
+        `curl "https://api-generator.retool.com/3C9Io3/projects/${params.project_id}`
       )
       .then((res) => {
         setProject(res.data);
