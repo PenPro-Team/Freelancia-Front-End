@@ -51,7 +51,12 @@ function App() {
               component={Job_Details}
               exact
             />
-            <Route path="/create-job" component={Createjob} exact />
+            <Route
+              path="/Freelancia-Front-End/postjob"
+              component={Createjob}
+              exact
+            />
+            {/* <Route path="/create-job" component={} exact /> */}
             <Route path="/unauthrizedpage" component={unauthrizedpage} exact />
             <Route path="*" component={Home} />
           </Switch>
