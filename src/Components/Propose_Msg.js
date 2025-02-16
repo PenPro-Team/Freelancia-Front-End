@@ -10,7 +10,8 @@ import {
 function Propose_Msg(props) {
   const auth = getFromLocalStorage("auth");
   const user = auth.user;
-  const project_id = useParams();
+  const params = useParams();
+  const project_id = params.project_id;
   const history = useHistory();
   console.log(history);
   console.log(project_id);
@@ -33,7 +34,7 @@ function Propose_Msg(props) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [AlreadyPropsed, setAlreadyProposed] = useState(true);
-
+  const [proposal_id, setProposal_id] = useState(0);
   // Check if the user Already Made A porposed
   useEffect(() => {
     axios
@@ -56,6 +57,8 @@ function Propose_Msg(props) {
             price: res.data[0].price,
             deadline: res.data[0].deadline,
           });
+          console.log("Proposal Saved ID: ", res.data[0].id);
+          setProposal_id(res.data[0].id);
         } else {
           setAlreadyProposed(false);
         }
@@ -64,6 +67,78 @@ function Propose_Msg(props) {
         console.log(err);
       });
   }, []);
+
+  const propsal_object = () => {
+    return {
+      propose_text: itemInfo.propose_text,
+      price: itemInfo.price,
+      deadline: itemInfo.deadline,
+      project_id: project_id,
+      user_id: user.id,
+      user_name: user.username,
+      user_rate: user.user_rate,
+      user_image: "https://logo.clearbit.com/sohu.com",
+    };
+  };
+
+  // Save the data into the API
+  const saveData = (isUpdate = false) => {
+    setIsLoading(true);
+    axios
+      // .post("https://api-generator.retool.com/kPlGjn/proposals", { //Main API
+      .post("https://api-generator.retool.com/XeFxNH/data", propsal_object())
+      .then((response) => {
+        // Handle success response
+        console.log("Form data successfully sent:", response.data);
+        // Call your callback function after success (you can pass the data back if needed)
+        if (props.callback) {
+          props.callback(
+            itemInfo.propose_text,
+            itemInfo.price,
+            itemInfo.deadline
+          );
+        }
+      })
+      .catch((error) => {
+        // Handle error response
+        console.error("Error sending form data:", error);
+      })
+      .finally(() => {
+        console.log("Finsished");
+        setIsLoading(false);
+      });
+  };
+
+  // Save the data into the API
+  const updateData = (isUpdate = true) => {
+    setIsLoading(true);
+    axios
+      // .post("https://api-generator.retool.com/kPlGjn/proposals", { //Main API
+      .put(
+        `https://api-generator.retool.com/XeFxNH/data/${proposal_id}`,
+        propsal_object()
+      )
+      .then((response) => {
+        // Handle success response
+        console.log("Form data successfully sent:", response.data);
+        // Call your callback function after success (you can pass the data back if needed)
+        if (props.callback) {
+          props.callback(
+            itemInfo.propose_text,
+            itemInfo.price,
+            itemInfo.deadline
+          );
+        }
+      })
+      .catch((error) => {
+        // Handle error response
+        console.error("Error sending form data:", error);
+      })
+      .finally(() => {
+        console.log("Finsished");
+        setIsLoading(false);
+      });
+  };
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -87,46 +162,28 @@ function Propose_Msg(props) {
       console.log(user);
       setIsLoading(true);
       // Push the data to the database
-      axios
-        // .post("https://api-generator.retool.com/kPlGjn/proposals", { //Main API
-        .post("https://api-generator.retool.com/XeFxNH/data", {
-          // Test API
-          propose_text: itemInfo.propose_text,
-          price: itemInfo.price,
-          deadline: itemInfo.deadline,
-          // These Will be changed
-          // project_id: props.project_id,
-          project_id: project_id,
-          user_id: user.id,
-          user_name: user.username,
-          user_rate: user.user_rate,
-          user_image: "https://logo.clearbit.com/sohu.com",
-        })
-        .then((response) => {
-          // Handle success response
-          console.log("Form data successfully sent:", response.data);
-          // Call your callback function after success (you can pass the data back if needed)
-          if (props.callback) {
-            props.callback(
-              itemInfo.propose_text,
-              itemInfo.price,
-              itemInfo.deadline
-            );
-          }
-        })
-        .catch((error) => {
-          // Handle error response
-          console.error("Error sending form data:", error);
-        })
-        .finally(() => {
-          console.log("Finsished");
-          setIsLoading(false);
-        });
+      saveData(false);
     }
   };
 
   const handleUpdate = (e) => {
     e.preventDefault();
+    // Update the item info
+    setIsLoading(true);
+    console.log("In Handle Update");
+    console.log("itemInfo", itemInfo);
+    console.log("savedItem", savedItem);
+    if (
+      itemInfo.deadline !== savedItem.deadline ||
+      itemInfo.price !== savedItem.price ||
+      itemInfo.propose_text !== savedItem.propose_text
+    ) {
+      console.log("Updating");
+      updateData(true);
+    } else {
+      console.log("Not Updating");
+      setIsLoading(false);
+    }
   };
 
   // Handle input change and validation
