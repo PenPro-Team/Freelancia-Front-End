@@ -19,7 +19,7 @@ function All_Proposals(props) {
   useEffect(() => {
     axios
       .get(
-        `https://api-generator.retool.com/XeFxNH/data?_page=${pageInfo.page}&_limit=10`
+        `https://api-generator.retool.com/kPlGjn/proposals?_page=${pageInfo.page}&_limit=10`
       )
       .then((res) => {
         setProposals(res.data);

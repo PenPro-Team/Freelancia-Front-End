@@ -14,7 +14,7 @@ function Project_Proposals(props) {
   useEffect(() => {
     axios
       .get(
-        `https://api-generator.retool.com/XeFxNH/data?project_id=${params.project_id}`
+        `https://api-generator.retool.com/kPlGjn/proposals?project_id=${params.project_id}`
       )
       .then((res) => {
         setProposals(res.data);
