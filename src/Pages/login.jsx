@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,6 +8,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../Redux/Actions/authAction";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { getFromLocalStorage, setToLocalStorage } from "../network/local/LocalStorage";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,16 @@ const LoginForm = () => {
   const isEmailValid = emailRegex.test(email);
   const isPasswordValid = passwordRegex.test(password);
 
+  useEffect(() => {
+
+    //let user=JSON.parse(localStorage.getItem("auth"));
+    let user = getFromLocalStorage("auth");
+    if(user && user.isAuthenticated){
+      
+      history.push("/Freelancia-Front-End");
+    }
+  },{});
+
   const HandleSubmit = async (e) => {
     e.preventDefault();
     setisSpin(true);
@@ -40,6 +51,15 @@ const LoginForm = () => {
       setError("Please enter valid email and password.");
       setisSpin(false);
       return;
+    }
+    const now = new Date();
+    const expiration = new Date(now.setMonth(now.getMonth() + 3)).getTime(); // Expiry in 3 months
+
+   let auth={
+      user:null,
+      isAuthenticated:false,
+      expiresAt:expiration,
+
     }
 
     try {
@@ -51,6 +71,13 @@ const LoginForm = () => {
       );
 
       if (response.data.length > 0) {
+        auth={
+           ...auth,
+          user:response.data[0],
+          isAuthenticated:true,
+         
+        }
+    setToLocalStorage("auth",auth);
         dispatch(loginSuccess(response.data[0]));
         setError("");
         setIsLoading(true);
@@ -69,14 +96,25 @@ const LoginForm = () => {
     <div style={{ backgroundColor: "#f2f4f7" }}>
       <div className="container ">
         <div
-          className="row justify-content-center align-items-center "
+          className="row d-flex flex-column justify-content-center align-items-center "
           style={{ height: "100vh" }}
+
         >
-          <div className="col-md-6">
+
+<p
+          className="text-center fw-bold display-3 mb-5"
+          style={{
+            background: "linear-gradient(90deg, #007bff, #6610f2)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          FreeLanceia
+        </p>          <div className="col-md-6">
             <Card className="p-4 border-0 shadow">
               {error && <Alert variant="danger">{error}</Alert>}
               {isLoading && <Alert variant="success">Login successful</Alert>}
-              <Card.Header>Login</Card.Header>
+              <h3 className="text-center mb-4">Login</h3>
               <Card.Body>
                 <Form noValidate onSubmit={HandleSubmit}>
                   {/* Email Field */}

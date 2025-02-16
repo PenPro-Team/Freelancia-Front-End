@@ -7,11 +7,12 @@ import Propose_Card from "./Propose_Card";
 import Project_Proposals from "./Project_Proposals";
 import { Badge } from "react-bootstrap";
 import All_Proposals from "./All_Proposals";
+import ClientHistory from "./ClientHistory";
 
 function Job_Details_Card(props) {
   const [activeTab, setActiveTab] = useState("first");
-
   const renderContent = () => {
+
     switch (activeTab) {
       case "first":
         return (
@@ -60,6 +61,8 @@ function Job_Details_Card(props) {
         return <Project_Proposals />;
       case "third":
         return <All_Proposals />;
+        case "fourth":  
+        return <ClientHistory owner_id={props.project.owner_id}/>; //pass the clinte 
       default:
         return "Disabled content or default content here.";
     }
@@ -100,6 +103,17 @@ function Job_Details_Card(props) {
               active={activeTab === "third"}
             >
               All Proposals
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("fourth");
+              }}
+              active={activeTab === "fourth"}
+            >
+             Clinte History
             </Nav.Link>
           </Nav.Item>
         </Nav>
