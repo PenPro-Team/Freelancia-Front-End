@@ -43,6 +43,9 @@ function NavBar() {
               Post a Job
             </Nav.Link>
           ) : ""}
+          <Nav.Link as={Link} to="/Freelancia-Front-End/clientjoblist">
+            Client Job List
+          </Nav.Link>
         </Nav>
         {isAuth ? (
           <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
