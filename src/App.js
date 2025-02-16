@@ -11,7 +11,6 @@ import JobList from "./Pages/JobList";
 import Createjob from "./Components/CreateJob"; 
 import { Container } from "react-bootstrap";
 import unauthrizedpage from "./Pages/unauthrizedpage";
-import PostJob from "./PostJob";
 
 function App() {
   return (
