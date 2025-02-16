@@ -20,6 +20,7 @@ function Propose_Card(props) {
                 <h5 className="card-title">Proposal Title</h5>
                 <div>
                   <Propose_Msg
+                    user={props.user}
                     project_id={props.project_id}
                     disabled={props.disabled}
                   />
