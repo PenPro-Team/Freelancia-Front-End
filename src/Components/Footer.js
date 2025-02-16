@@ -8,30 +8,31 @@ const Footer = () => {
   return (
     <>
       <div className="container-fluid blackBack mt-5 p-5">
-        <div className="d-flex row text-light text-center">
-          <div className="col-4">
-            <p>mohamed</p>
-            <Link to="">Links</Link>
-            <br />
-            <Link to="">Home</Link>
-            <br />
-            <Link to="">Portfolio</Link>
+        <div className="d-flex text-light flex-wrap flex-column flex-lg-row ">
+          <div className="col-12 col-md-6 mb-3 mb-1 ">
+            <h2>Lat's Take</h2>
+            <p>
+              Evrey Project Starts with a chat. Joven leads our client converstation <br/> and will be happy to discuss your Project. He will also Pull in the Right <br/> people from the team when needed
+            </p>
+            <button className="btn btn-primary w-50">Tell Us about your Project</button>
           </div>
-          <div className="col-4">
-            <p>Jack</p>
-            <Link to="">Links</Link>
+          <div className="col-3">
+          <p>Our Responsers</p>
+            <Link className="text-decoration-none text-primary" to="">Links</Link>
             <br />
-            <Link to="">Home</Link>
+            <Link className="text-decoration-none text-primary" to="">Home</Link>
             <br />
-            <Link to="">Portfolio</Link>
+            <Link className="text-decoration-none text-primary" to="">Portfolio</Link>
           </div>
-          <div className="col-4">
-            <p>Abdo</p>
-            <Link to="">Links</Link>
-            <br />
-            <Link to="">Home</Link>
-            <br />
-            <Link to="">Portfolio</Link>
+          <div className="col-3">
+            <br/>
+            <div className="d-flex flex-column">
+              <div className="d-flex">
+                <input type="text" placeholder="Take a look in PlateForm" className="form-control w-100"/><button className="btn btn-primary ms-2">Search</button>
+              </div>
+              
+              <div className="mt-5">© 2025, FreeLancia.com for PenPro Team</div>
+            </div>
           </div>
         </div>
       </div>
