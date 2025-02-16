@@ -33,7 +33,7 @@ export default function Search() {
         
         console.log(response.data);
         const filteredResults = response.data.filter(project =>
-          project.required_skills && project.required_skills.toLowerCase().includes(searchQuery.toLowerCase())
+          project.project_name && project.project_name.toLowerCase().includes(searchQuery.toLowerCase())
         );
         
         if (filteredResults.length > 0) {
