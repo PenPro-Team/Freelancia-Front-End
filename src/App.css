@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .App-logo {
@@ -26,6 +29,16 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.bgControl {
+  background-color: #f2f4f7;
+  min-height: 100vh;
+}
+
+.GridCustom {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
 @keyframes App-logo-spin {
