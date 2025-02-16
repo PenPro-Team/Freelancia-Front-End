@@ -6,10 +6,14 @@ import Job_Details_Card from "../Components/Job_Details_Card";
 import Client_Details_Card from "../Components/Client_Details_Card";
 import Propose_Card from "../Components/Propose_Card";
 import { useSelector } from "react-redux";
+import { getFromLocalStorage } from "../network/local/LocalStorage";
 
 function Job_Details() {
   const [project, setProject] = useState({});
-  const user = useSelector((state) => state.auth.user);
+  // const user = useSelector((state) => state.auth.user);
+  const auth = getFromLocalStorage("auth");
+  const user = auth.user;
+  const isAuth = auth.isAuthenticated;
   //  location history match
   const params = useParams();
   useEffect(() => {
@@ -42,21 +46,24 @@ function Job_Details() {
             <Client_Details_Card project={project} />
           </div>
         </div>
-        {["open", "contract canceled and reopened"].includes(
-          project.job_state
-        ) && (
-          <div>
-            <Propose_Card
-              project_id={project.id}
-              user={user}
-              disabled={
-                !["open", "contract canceled and reopened"].includes(
-                  project.job_state
-                )
-              }
-            />
-          </div>
-        )}
+        {auth &&
+          isAuth &&
+          user.role === "freelancer" &&
+          ["open", "contract canceled and reopened"].includes(
+            project.job_state
+          ) && (
+            <div>
+              <Propose_Card
+                project_id={project.id}
+                user={user}
+                disabled={
+                  !["open", "contract canceled and reopened"].includes(
+                    project.job_state
+                  )
+                }
+              />
+            </div>
+          )}
       </div>
     </>
   );
