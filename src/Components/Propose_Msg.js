@@ -1,10 +1,27 @@
 import { Form } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { getFromLocalStorage } from "../network/local/LocalStorage";
+import {
+  useHistory,
+  useParams,
+} from "react-router-dom/cjs/react-router-dom.min";
 
 function Propose_Msg(props) {
+  const auth = getFromLocalStorage("auth");
+  const user = auth.user;
+  const project_id = useParams();
+  const history = useHistory();
+  console.log(history);
+  console.log(project_id);
+  console.log("------------------------------");
   const [itemInfo, setItemInfo] = useState({
-    msg: "",
+    propose_text: "",
+    price: "",
+    deadline: "",
+  });
+  const [savedItem, setSavedItem] = useState({
+    propose_text: "",
     price: "",
     deadline: "",
   });
@@ -14,10 +31,44 @@ function Propose_Msg(props) {
     deadlineErr: null,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [AlreadyPropsed, setAlreadyProposed] = useState(true);
+
+  // Check if the user Already Made A porposed
+  useEffect(() => {
+    axios
+      .get(
+        `https://api-generator.retool.com/XeFxNH/data?user_id=${user.id}&project_id=${project_id}`
+      )
+      .then((res) => {
+        if (res.data.length > 0) {
+          console.log("Already Made A Proposal");
+          // console.log(res.data.length);
+          // console.log(res.data);
+          setAlreadyProposed(true);
+          setItemInfo({
+            propose_text: res.data[0].propose_text,
+            price: res.data[0].price,
+            deadline: res.data[0].deadline,
+          });
+          setSavedItem({
+            propose_text: res.data[0].propose_text,
+            price: res.data[0].price,
+            deadline: res.data[0].deadline,
+          });
+        } else {
+          setAlreadyProposed(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (itemInfo.msg.trim() === "") {
+    if (itemInfo.propose_text.trim() === "") {
       setErrors({
         ...errors,
         errText: "Message cannot be empty",
@@ -33,29 +84,49 @@ function Propose_Msg(props) {
         deadlineErr: "Deadline cannot be empty",
       });
     } else {
+      console.log(user);
+      setIsLoading(true);
       // Push the data to the database
       axios
-        .post("https://api-generator.retool.com/CDcXqj/data", {
-          message: itemInfo.msg,
-          price_value: itemInfo.price,
-          deadline_date: itemInfo.deadline,
+        // .post("https://api-generator.retool.com/kPlGjn/proposals", { //Main API
+        .post("https://api-generator.retool.com/XeFxNH/data", {
+          // Test API
+          propose_text: itemInfo.propose_text,
+          price: itemInfo.price,
+          deadline: itemInfo.deadline,
           // These Will be changed
-          project_id: props.project_id,
-          user_id: 1,
-          user_rate: 3,
-          user_img: "https://logo.clearbit.com/sohu.com",
+          // project_id: props.project_id,
+          project_id: project_id,
+          user_id: user.id,
+          user_name: user.username,
+          user_rate: user.user_rate,
+          user_image: "https://logo.clearbit.com/sohu.com",
         })
         .then((response) => {
           // Handle success response
           console.log("Form data successfully sent:", response.data);
           // Call your callback function after success (you can pass the data back if needed)
-          props.callback(itemInfo.msg, itemInfo.price, itemInfo.deadline);
+          if (props.callback) {
+            props.callback(
+              itemInfo.propose_text,
+              itemInfo.price,
+              itemInfo.deadline
+            );
+          }
         })
         .catch((error) => {
           // Handle error response
           console.error("Error sending form data:", error);
+        })
+        .finally(() => {
+          console.log("Finsished");
+          setIsLoading(false);
         });
     }
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
   };
 
   // Handle input change and validation
@@ -115,9 +186,9 @@ function Propose_Msg(props) {
               as="textarea"
               rows={5}
               placeholder="Enter an Attractive Message"
-              value={itemInfo.msg}
+              value={itemInfo.propose_text}
               onChange={handleChange}
-              name="msg"
+              name="propose_text"
               isInvalid={errors.errText !== "" && errors.errText !== null}
               disabled={props.disabled}
             />
@@ -167,17 +238,35 @@ function Propose_Msg(props) {
         <button
           type="submit"
           className="btn btn-primary"
-          onClick={handleSubmit}
+          onClick={
+            AlreadyPropsed
+              ? isLoading
+                ? null
+                : handleUpdate
+              : isLoading
+              ? null
+              : handleSubmit
+          }
           disabled={
             errors.errText ||
-            errors.errText == null ||
+            itemInfo.propose_text === "" ||
             errors.priceErr ||
-            errors.priceErr == null ||
+            itemInfo.price === "" ||
             errors.deadlineErr ||
-            errors.deadlineErr == null
+            itemInfo.deadline === "" ||
+            isLoading ||
+            (itemInfo.propose_text === savedItem.propose_text &&
+              itemInfo.price === savedItem.price &&
+              itemInfo.deadline === savedItem.deadline)
           }
         >
-          Propose
+          {AlreadyPropsed
+            ? isLoading
+              ? "Loading…"
+              : "Update"
+            : isLoading
+            ? "Loading…"
+            : "Propose"}
         </button>
       </Form>
     </div>
