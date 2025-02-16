@@ -26,8 +26,12 @@ const Footer = () => {
           </div>
           <div className="col-3">
             <br/>
-            <div className="d-flex">
-              <input type="text" placeholder="Take a look in PlateForm" className="form-control w-100"/><button className="btn btn-primary ms-2">Search</button>
+            <div className="d-flex flex-column">
+              <div className="d-flex">
+                <input type="text" placeholder="Take a look in PlateForm" className="form-control w-100"/><button className="btn btn-primary ms-2">Search</button>
+              </div>
+              
+              <div className="mt-5">© 2025, FreeLancia.com for PenPro Team</div>
             </div>
           </div>
         </div>
