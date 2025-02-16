@@ -27,6 +27,9 @@ function Job_Details() {
       });
   }, []);
 
+  const hello = (value) => {
+    console.log("hello", value);
+  };
   return (
     <>
       <div className="fs-1 fw-bold text-center m-3">{project.project_name}</div>
