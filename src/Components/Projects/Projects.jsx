@@ -13,7 +13,11 @@ export default function Projects(props) {
             <Search />
             <div>
               <FilterJobs />
-              <ProjectCard skills={props.skills} jobStates={props.jobStates}/>
+              <ProjectCard 
+              skills={props.skills} 
+              jobStates={props.jobStates} 
+              priceRange={props.priceRange}
+              />
             </div>
           </div>
         </div>

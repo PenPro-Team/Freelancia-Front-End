@@ -10,12 +10,17 @@ import { useSelector } from "react-redux";
 import persImg from "../../assets/hero-bg.jpg";
 import FilterSkills from "../FilterJobs/FilterSkills";
 import JobStateFilter from "../FilterJobs/JobStateFilter";
+import { getFromLocalStorage } from "../../network/local/LocalStorage";
+import PriceRangeFilter from "../FilterJobs/PriceRangeFilter";
+
 
 export default function Sidebar(props) {
-  const state = useSelector((state) => state.auth);
-  const user = state ? state.user : null;
-  const isAuth = state ? state.isAuthenticated : null;
-
+  const auth = getFromLocalStorage("auth");
+  // const state = useSelector((state) => state.auth);
+  const user = auth ? auth.user : null;
+  const isAuth = auth ? auth.isAuthenticated : null;
+  // const [priceRange, setPriceRange] = useState({ min:0, max :9999  });
+  
   return (
     <>
       <div
@@ -72,6 +77,10 @@ export default function Sidebar(props) {
           <h6 className="mb-3">Filter Based On Job States</h6>
           <JobStateFilter cb={props.selectedJobCb} />
         </div>
+        <div className="mt-3 border border-1 bg-primary-subtle p-3 rounded-4 mb-3 w-100">
+            <h6>Filter by Price Range</h6>
+            <PriceRangeFilter onChange={props.setPriceRange} />
+          </div>
       </div>
     </>
   );

@@ -5,8 +5,9 @@ import axios from "axios";
 import RequiredSkills from "../RequiredSkills/RequiredSkills";
 import PaginationButton from "../Pagination/Pagination";
 import Placeholder from "react-bootstrap/Placeholder";
+import { Badge } from "react-bootstrap";
 
-export default function ProjectCard({ skills, jobStates }) {
+export default function ProjectCard({ skills, jobStates,priceRange }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +17,7 @@ export default function ProjectCard({ skills, jobStates }) {
     console.log("Selected Skills:", skills, "Selected Job States:", jobStates);
     axios
       .get(
-        `https://api-generator.retool.com/SHY6hX/projects?_page=${currentPage}&_limit=10`
+        `https://api-generator.retool.com/6wGsbQ/projects?_page=${currentPage}&_limit=10`
       )
       .then((response) => {
         setData(response.data);
@@ -35,8 +36,8 @@ export default function ProjectCard({ skills, jobStates }) {
         const projectSkills = Array.isArray(project.required_skills)
           ? project.required_skills
           : typeof project.required_skills === "string"
-            ? project.required_skills.split(",").map((skill) => skill.trim())
-            : [];
+          ? project.required_skills.split(",").map((skill) => skill.trim())
+          : [];
         skillsMatch = projectSkills.some((skill) => skills.includes(skill));
       }
 
@@ -45,10 +46,20 @@ export default function ProjectCard({ skills, jobStates }) {
         jobStateMatch = jobStates.includes(project.job_state);
       }
 
-      return skillsMatch && jobStateMatch;
+      const price = project.suggested_budget || 0;
+
+      
+      let priceMatch = true;
+      if (priceRange) {
+        priceMatch = price >= priceRange.min && price <= priceRange.max;
+      }
+
+      console.log("Price:", price, "Range:", priceRange);
+      // console.log("Skills match:", skillsMatch, "Job state match:", jobStateMatch, "Price match:", priceMatch);
+      return skillsMatch && jobStateMatch && priceMatch;
     });
     setFilteredData(filtered);
-  }, [data, skills, jobStates]);
+  }, [data, skills, jobStates, priceRange]);
 
   return (
     <>
@@ -69,6 +80,25 @@ export default function ProjectCard({ skills, jobStates }) {
                   skills={project.required_skills}
                   key={project.id}
                 />
+                <Badge
+                style={{position:"absolute",top:"10px",right:"10px",opacity:"75%"}}
+                bg={
+                  project.job_state === "finished"
+                    ? "dark"
+                    : project.job_state === "open"
+                    ? "primary"
+                    : project.job_state === "ongoing"
+                    ? "success"
+                    : project.job_state === "canceled"
+                    ? "danger"
+                    : project.job_state ===
+                      "contract canceled and reopened"
+                    ? "success"
+                    : "secondary"
+                }
+              >
+                {project.job_state}
+              </Badge>
                 <p className="card-text truncate">
                   {project.project_description}
                 </p>
