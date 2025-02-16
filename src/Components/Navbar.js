@@ -1,22 +1,30 @@
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import personalImg from "../assets/hero-bg.jpg";
-import JobList from "../Pages/JobList";
-import { useDispatch } from "react-redux";
-import { logout } from "../Redux/Actions/authAction";
+import { getFromLocalStorage, logout } from "../network/local/LocalStorage";
+import { logout as userLogout } from "../Redux/Actions/authAction";
+
 function NavBar() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.auth);
-  const user = state ? state.user : null;
-  const isAuth = state ? state.isAuthenticated : null;
+  const auth = getFromLocalStorage("auth");
+  const user = auth ? auth.user : null;
+  const isAuth = auth ? auth.isAuthenticated : null;
+  const history = useHistory();
+
+  const handleLogout = () => {
+    logout();
+    dispatch(userLogout());
+    history.push("/Freelancia-Front-End/login");
+  };
 
   return (
     <Navbar bg="dark" data-bs-theme="dark">
       <Container className="d-flex justify-content-between">
-        <Navbar.Brand to="/Freelancia-Front-End/">
+        <Navbar.Brand as={Link} to="/Freelancia-Front-End/">
           <span className="text-primary">Free</span>Lanceia
         </Navbar.Brand>
         <Nav className="me-auto">
@@ -26,6 +34,15 @@ function NavBar() {
           <Nav.Link as={Link} to="/Freelancia-Front-End/Job_List">
             Projects
           </Nav.Link>
+          {isAuth ? user.role === "client" ? (
+            <Nav.Link as={Link} to="/Freelancia-Front-End/postjob">
+              Post a Job
+            </Nav.Link>
+          ) : (
+            <Nav.Link as={Link} to="/Freelancia-Front-End/postjob" className="d-none">
+              Post a Job
+            </Nav.Link>
+          ) : ""}
         </Nav>
         {isAuth ? (
           <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
@@ -37,15 +54,9 @@ function NavBar() {
                 src={personalImg}
               />
             </div>
-
             <div className="fs-5">{user.firstName}</div>
-            <Nav.Link to="/">
-              <span
-                className="text-danger ms-2"
-                onClick={() => {
-                  dispatch(logout());
-                }}
-              >
+            <Nav.Link as={Link} to="/" onClick={handleLogout}>
+              <span className="text-danger ms-2">
                 Logout
               </span>
             </Nav.Link>
