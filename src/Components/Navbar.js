@@ -7,12 +7,15 @@ import personalImg from "../assets/hero-bg.jpg";
 import JobList from "../Pages/JobList";
 import { useDispatch } from "react-redux";
 import { logout } from "../Redux/Actions/authAction";
+import { getFromLocalStorage, removeFromLocalStorage } from "../network/local/LocalStorage";
+
 function NavBar() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.auth);
-  const user = state ? state.user : null;
-  const isAuth = state ? state.isAuthenticated : null;
-
+  const auth = getFromLocalStorage("auth");
+  const user = auth ? auth.user : null;
+  const isAuth = auth ? auth.isAuthenticated : null;
+  
   return (
     <Navbar bg="dark" data-bs-theme="dark">
       <Container className="d-flex justify-content-between">
@@ -26,6 +29,15 @@ function NavBar() {
           <Nav.Link as={Link} to="/Freelancia-Front-End/Job_List">
             Projects
           </Nav.Link>
+          {auth.isAuthenticated && auth.user.role == "client" ? (
+            <Nav.Link as={Link} to="/Freelancia-Front-End/postjob">
+              Post a Job
+            </Nav.Link>
+          ) : (
+            <Nav.Link as={Link} to="/Freelancia-Front-End/postjob" className="d-none">
+              Post a Job
+            </Nav.Link>
+          )}
         </Nav>
         {isAuth ? (
           <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
@@ -37,13 +49,12 @@ function NavBar() {
                 src={personalImg}
               />
             </div>
-
             <div className="fs-5">{user.firstName}</div>
             <Nav.Link to="/">
               <span
                 className="text-danger ms-2"
                 onClick={() => {
-                  dispatch(logout());
+                  removeFromLocalStorage("auth");
                 }}
               >
                 Logout
