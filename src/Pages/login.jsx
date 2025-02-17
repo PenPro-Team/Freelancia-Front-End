@@ -132,7 +132,7 @@ const LoginForm = () => {
                       className={
                         emailTouched
                           ? isEmailValid
-                            ? "is-valid"
+                            ? ""
                             : "is-invalid"
                           : ""
                       }
@@ -155,7 +155,7 @@ const LoginForm = () => {
                         className={
                           passwordTouched
                             ? isPasswordValid
-                              ? "is-valid"
+                              ? ""
                               : "is-invalid"
                             : ""
                         }
