@@ -10,9 +10,9 @@ import {
   Container,
   Card,
   InputGroup,
-  EyeSlash,
-  Eye,
 } from "react-bootstrap";
+import { EyeSlash, Eye } from "react-bootstrap-icons";
+
 import InputField from "../Components/InputField";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
@@ -29,8 +29,11 @@ const RegisterForm = () => {
     postalCode: "",
     address: "",
     role: "",
-    description: "",
+    // description: "" 
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [errors, setErrors] = useState({});
   const [usernameExists, setUsernameExists] = useState(false);
@@ -39,7 +42,7 @@ const RegisterForm = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const robustPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const robustPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
   const userNameReg = /^[a-z0-9\._]{3,}$/;
 
   const handleBlur = (e) => {
@@ -97,14 +100,14 @@ const RegisterForm = () => {
             errorMessage = "Please select a valid role";
           }
           break;
-        case "description":
-          if (newValue.length < 200) {
-            errorMessage = "Must be at least 200 characters";
-          }
-          break;
+        // case "description":
+        //   if (newValue.length < 200) {
+        //     errorMessage = "Must be at least 200 characters";     --- later
+        //   }
+        //   break;
         case "username":
           if (!userNameReg.test(newValue)) {
-            errorMessage = "Invalid username must be more than 3 char";
+            errorMessage = "Invalid username must be in the right form and more than 3 char ";
           }
           break;
         case "email":
@@ -159,7 +162,7 @@ const RegisterForm = () => {
     try {
       await axios.post(
         "https://api-generator.retool.com/D8TEH0/data",
-        { ...formValues, confirmPassword: undefined },
+        { ...formValues, confirmPassword: undefined, description: "" },
         { headers: { "Content-Type": "application/json" } }
       );
       setSnackbarMessage("Registration successful!");
@@ -272,7 +275,7 @@ const RegisterForm = () => {
             <option value="client">Client</option>
             <option value="freelancer">Freelancer</option>
           </InputField>
-          <InputField
+          {/* <InputField
             label="Description"
             as="textarea"
             name="description"
@@ -281,7 +284,7 @@ const RegisterForm = () => {
             isInvalid={Boolean(errors.description)}
             feedback={errors.description}
             rows={4}
-          />
+          /> */}
           <div className="d-flex justify-content-center">
             <Button
               variant="primary"
