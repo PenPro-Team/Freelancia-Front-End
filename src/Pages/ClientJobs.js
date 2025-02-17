@@ -1,10 +1,10 @@
 
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
-import ClientJobList from "./ClientJobList";
+import ClientJobList from "../Components/ClientJobList";
 import { useEffect } from "react";
 
-function DesplayJobDetails() {
+function ClientJobs() {
       const auth = getFromLocalStorage("auth");
     //   const user = auth ? auth.user : null;
     //   const isAuth = auth ? auth.isAuthenticated : null;
@@ -46,6 +46,7 @@ function DesplayJobDetails() {
             </>
             
           ) : (
+            
             History.push("/Freelancia-Front-End/403")
           )} 
         
@@ -53,4 +54,4 @@ function DesplayJobDetails() {
   );
 }
 
-export default DesplayJobDetails;
+export default ClientJobs;
