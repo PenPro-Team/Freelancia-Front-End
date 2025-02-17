@@ -57,7 +57,7 @@ function Job_Details() {
             <Client_Details_Card project={project} />
           </div>
         </div>
-        {auth &&
+        {auth ? (
           auth.isAuthenticated &&
           auth.user.role === "freelancer" &&
           ["open", "contract canceled and reopened"].includes(
@@ -74,7 +74,10 @@ function Job_Details() {
                 }
               />
             </div>
-          )}
+          )
+        ) : (
+          <div className="d-none d-lg-block" style={{ height: "20vh" }}></div>
+        )}
       </div>
     </>
   );
