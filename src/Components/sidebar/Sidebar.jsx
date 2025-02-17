@@ -14,7 +14,7 @@ export default function Sidebar() {
   const state = useSelector((state) => state.auth);
   const user = state ? state.user : null;
   const isAuth = state ? state.isAuthenticated : null;
-  console.log("User: ", user);
+  // console.log("User: ", user);
   useEffect(() => {
     axios
       .get(`https://api-generator.retool.com/SHY6hX/projects`)
