@@ -12,13 +12,11 @@ import ClientHistory from "./ClientHistory";
 function Job_Details_Card(props) {
   const [activeTab, setActiveTab] = useState("first");
   const renderContent = () => {
-
     switch (activeTab) {
       case "first":
         return (
           <div>
-            <div>
-              {/* <span className="fw-bold">Project State: </span> */}
+            <div className="text-start fs-5 opacity-75">
               <Badge
                 bg={
                   props.project.job_state === "finished"
@@ -61,8 +59,8 @@ function Job_Details_Card(props) {
         return <Project_Proposals />;
       case "third":
         return <All_Proposals />;
-        case "fourth":  
-        return <ClientHistory owner_id={props.project.owner_id}/>; //pass the clinte 
+      case "fourth":
+        return <ClientHistory owner_id={props.project.owner_id} />; //pass the clinte
       default:
         return "Disabled content or default content here.";
     }
@@ -113,7 +111,7 @@ function Job_Details_Card(props) {
               }}
               active={activeTab === "fourth"}
             >
-             Clinte History
+              Client History
             </Nav.Link>
           </Nav.Item>
         </Nav>
