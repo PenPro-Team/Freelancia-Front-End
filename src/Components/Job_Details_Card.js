@@ -8,6 +8,7 @@ import Project_Proposals from "./Project_Proposals";
 import { Badge } from "react-bootstrap";
 import All_Proposals from "./All_Proposals";
 import ClientHistory from "./ClientHistory";
+import DrawRequiredSkills from "./DrawRequiredSkills";
 
 function Job_Details_Card(props) {
   const [activeTab, setActiveTab] = useState("first");
@@ -15,7 +16,7 @@ function Job_Details_Card(props) {
     switch (activeTab) {
       case "first":
         return (
-          <div>
+          <div style={{ position: "relative" }}>
             <div className="text-start fs-5 opacity-75">
               <Badge
                 bg={
@@ -43,15 +44,44 @@ function Job_Details_Card(props) {
             <div>
               <span className="fw-bold">Suggested Budget: </span>
               {props.project.suggested_budget}
-              <span className="fw-bold">$</span>
+              <span className="fw-bold"> $</span>
             </div>
             <div>
-              <span className="fw-bold">Project Deadline: </span>{" "}
-              {props.project.expected_deadline}
+              <span className="fw-bold">Estimated Project Deadline: </span>{" "}
+              {props.project.expected_deadline} Days
             </div>
-            <div>
+            {/* <div>
               <span className="fw-bold">Required Skills:</span>{" "}
               <Badge bg="secondary">{props.project.required_skills}</Badge>
+            </div> */}
+            {/* <div>
+              <span className="fw-bold">Required Skills:</span>{" "}
+              {(Array.isArray(props.project.required_skills)
+                ? props.project.required_skills
+                : (props.project.required_skills || "")
+                    .split(",")
+                    .map((skill) => skill.trim())
+              ).map(
+                (skill) =>
+                  skill && (
+                    <Badge key={skill} bg="secondary" className="me-1">
+                      {skill}
+                    </Badge>
+                  )
+              )}
+            </div> */}
+            <div>
+              <DrawRequiredSkills
+                required_skills={props.project.required_skills}
+              />
+            </div>
+            <div>
+              <span
+                className="text-secondary small fw-bold"
+                style={{ position: "absolute", bottom: "1px", right: "1px" }}
+              >
+                Created at:{props.project.creation_date}
+              </span>
             </div>
           </div>
         );
