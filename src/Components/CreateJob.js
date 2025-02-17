@@ -157,10 +157,10 @@ const ClientJobForm = () => {
   const user_dont_exist = getFromLocalStorage("auth");
 
   if (!user_dont_exist || !user_dont_exist.user) {
-    return <Redirect to="/unauthrizedpage" />;
+    return <Redirect to="/403" />;
   }
   if (!user || user.user.role != "client") {
-    return <Redirect to="/unauthrizedpage" />;
+    return <Redirect to="/403" />;
   }
 
   return (
