@@ -93,25 +93,29 @@ const LoginForm = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#f2f4f7" }}>
+    <div style={{ backgroundColor: "#f2f4f7" ,height: "100vh",marginTop:"50px"}} className="d-flex justify-content-center align-items-center">
       <div className="container ">
         <div
           className="row d-flex flex-column justify-content-center align-items-center "
-          style={{ height: "100vh" }}
+          // style={{ height: "100vh" }}
 
         >
 
 <p
-          className="text-center fw-bold display-3 mb-5"
-          style={{
-            background: "linear-gradient(90deg, #007bff, #6610f2)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
-          FreeLanceia
-        </p>          <div className="col-md-6">
-            <Card className="p-4 border-0 shadow">
+      className="text-center fw-bold display-3 mb-4"
+      style={{
+        background: "linear-gradient(90deg, #007bff, #6610f2)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+      }}
+    >
+      Freelancia
+    </p>     
+        
+           <div className="col-md-6 d-flex justify-content-center"
+          
+           >
+            <Card className="p-4 border-0 shadow" style={{ width: "100%", maxWidth: "450px" }}>
               {error && <Alert variant="danger">{error}</Alert>}
               {isLoading && <Alert variant="success">Login successful</Alert>}
               <h3 className="text-center mb-4">Login</h3>
