@@ -22,13 +22,20 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
 import axios from 'axios';
-import Job_Details_Card from '../Components/Job_Details_Card';
+import Job_Details_Card from './Job_Details_Card';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 const ClientJobList = ({ userId }) => {
-  userId = 2
+  // userId = 2
+ const History = useHistory()
   
-  const [projects, setProjects] = useState([]);
+const [projects, setProjects] = useState([]);
+
+function toPostalJob(){
+  History.push("/Freelancia-Front-End/postjob")
+}
+
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -45,9 +52,14 @@ const ClientJobList = ({ userId }) => {
 
   return (
     <div className="d-flex flex-column gap-3">
-      {projects.map((project) => (
-        <Job_Details_Card key={project.id} project={project} />
-      ))}
+      {
+        projects.length >= 1 ? projects.map((project) => (
+          <Job_Details_Card key={project.id} project={project} />
+        )) : <div className='mx-auto'><p className='text-center text-danger fs-4'>You Don't Have Any Jobs Yet
+                  <button className='btn btn-primary mx-auto ms-2' onClick={toPostalJob}>Create a Job</button>
+                </p>
+             </div>
+      }
     </div>
   );
 };
