@@ -8,9 +8,12 @@ import NavBar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import Job_Details from "./Pages/Job_Details";
 import JobList from "./Pages/JobList";
-import Createjob from "./Components/CreateJob"; 
+import Createjob from "./Components/CreateJob";
 import { Container } from "react-bootstrap";
 import unauthrizedpage from "./Pages/unauthrizedpage";
+import ClientJobList from "./Pages/ClientJobList";
+import DesplayJobDetails from "./Pages/DesplayJobDetails";
+import page404 from "./Pages/page404";
 
 function App() {
   return (
@@ -56,8 +59,20 @@ function App() {
               component={Createjob}
               exact
             />
+            <Route
+              path="/Freelancia-Front-End/clientjoblist"
+              component={DesplayJobDetails}
+              exact
+            />
             {/* <Route path="/create-job" component={} exact /> */}
-            <Route path="/unauthrizedpage" component={unauthrizedpage} exact />
+            <Route path="/403" component={unauthrizedpage} exact />
+            <Route
+              path="/Freelancia-Front-End/403"
+              component={unauthrizedpage}
+              exact
+            />
+            <Route path="/404" component={page404} exact />
+            <Route path="/Freelancia-Front-End/404" component={page404} exact />
             <Route path="*" component={Home} />
           </Switch>
 

@@ -3,7 +3,8 @@ import ProjectCard from "../project-card/ProjectCard";
 import Search from "../Search/Search";
 import FilterJobs from "../FilterJobs/FilterJobs";
 
-export default function Projects() {
+export default function Projects(props) {
+  console.log("projects file", props.skills);
   return (
     <>
       <div className="container">
@@ -12,7 +13,11 @@ export default function Projects() {
             <Search />
             <div>
               <FilterJobs />
-              <ProjectCard />
+              <ProjectCard 
+              skills={props.skills} 
+              jobStates={props.jobStates} 
+              priceRange={props.priceRange}
+              />
             </div>
           </div>
         </div>

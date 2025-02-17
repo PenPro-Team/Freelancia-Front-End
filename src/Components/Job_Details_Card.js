@@ -111,7 +111,7 @@ function Job_Details_Card(props) {
               }}
               active={activeTab === "fourth"}
             >
-              Clinte History
+              Client History
             </Nav.Link>
           </Nav.Item>
         </Nav>
