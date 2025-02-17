@@ -27,7 +27,7 @@ function Project_Proposals(props) {
     <div>
       {proposals.map((proposal) => (
         <Card key={proposal.id} className="mb-3">
-          <Card.Body>
+          <Card.Body style={{ position: "relative" }}>
             <Card.Title>
               <div className="d-flex align-items-center">
                 <Image
@@ -58,7 +58,16 @@ function Project_Proposals(props) {
             {/* <Card.Text> */}
             <div className="fw-bold">Propose Message:</div>
             <div>{proposal.propose_text}</div>
-
+            {proposal.creation_date && (
+              <div>
+                <span
+                  className="text-secondary small fw-bold"
+                  style={{ position: "absolute", bottom: "5px", right: "5px" }}
+                >
+                  {proposal.creation_date}
+                </span>
+              </div>
+            )}
             {/* </Card.Text> */}
           </Card.Body>
         </Card>
