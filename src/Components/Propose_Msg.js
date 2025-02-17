@@ -6,6 +6,7 @@ import {
   useHistory,
   useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
+import { AxiosProposalsInstance } from "../network/API/AxiosInstance";
 
 function Propose_Msg(props) {
   const auth = getFromLocalStorage("auth");
@@ -20,11 +21,13 @@ function Propose_Msg(props) {
     propose_text: "",
     price: "",
     deadline: "",
+    creation_date: "",
   });
   const [savedItem, setSavedItem] = useState({
     propose_text: "",
     price: "",
     deadline: "",
+    creation_date: "",
   });
   const [errors, setErrors] = useState({
     errText: null,
@@ -46,10 +49,7 @@ function Propose_Msg(props) {
 
   // Check if the user Already Made A porposed
   useEffect(() => {
-    axios
-      .get(
-        `https://api-generator.retool.com/XeFxNH/data?user_id=${user.id}&project_id=${project_id}`
-      )
+    AxiosProposalsInstance.get(`?user_id=${user.id}&project_id=${project_id}`)
       .then((res) => {
         if (res.data.length > 0) {
           console.log("Already Made A Proposal");
@@ -60,11 +60,13 @@ function Propose_Msg(props) {
             propose_text: res.data[0].propose_text,
             price: res.data[0].price,
             deadline: res.data[0].deadline,
+            creation_date: res.data[0].creation_date,
           });
           setSavedItem({
             propose_text: res.data[0].propose_text,
             price: res.data[0].price,
             deadline: res.data[0].deadline,
+            creation_date: res.data[0].creation_date,
           });
           console.log("Proposal Saved ID: ", res.data[0].id);
           setProposal_id(res.data[0].id);
@@ -79,6 +81,13 @@ function Propose_Msg(props) {
   }, [callingAPI]);
 
   const propsal_object = () => {
+    const date = new Date();
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    const formattedDate = date.toLocaleDateString("en-US", options);
+    setItemInfo({
+      ...itemInfo,
+      creation_date: date,
+    });
     return {
       propose_text: itemInfo.propose_text,
       price: itemInfo.price,
@@ -88,17 +97,14 @@ function Propose_Msg(props) {
       user_name: user.username,
       user_rate: user.user_rate,
       user_image: "https://logo.clearbit.com/sohu.com",
+      creation_date: formattedDate,
     };
   };
 
   // Save the data into the API
   const saveData = (isUpdate = false) => {
     setIsLoading(true);
-    axios
-      .post(
-        "https://api-generator.retool.com/kPlGjn/proposals",
-        propsal_object()
-      )
+    AxiosProposalsInstance.post("", propsal_object())
       .then((response) => {
         // Handle success response
         console.log("Form data successfully sent:", response.data);
@@ -107,7 +113,8 @@ function Propose_Msg(props) {
           props.callback(
             itemInfo.propose_text,
             itemInfo.price,
-            itemInfo.deadline
+            itemInfo.deadline,
+            itemInfo.creation_date
           );
         }
         setAPIError(false);
@@ -133,11 +140,7 @@ function Propose_Msg(props) {
   // Save the data into the API
   const updateData = (isUpdate = true) => {
     setIsLoading(true);
-    axios
-      .put(
-        `https://api-generator.retool.com/kPlGjn/proposals/${proposal_id}`,
-        propsal_object()
-      )
+    AxiosProposalsInstance.put(`/${proposal_id}`, propsal_object())
       .then((response) => {
         // Handle success response
         console.log("Form data successfully sent:", response.data);
@@ -225,7 +228,7 @@ function Propose_Msg(props) {
 
     const textReg = /^[a-zA-Z0-9\s\.\_\*]+$/;
     const priceReg = /^[0-9]*\.?[0-9]{0,2}$/;
-    const deadlineReg = /^\d{4}-\d{2}-\d{2}$/;
+    const deadlineReg = /^\d{1,}$/;
 
     // console.log(e.target);
 
@@ -339,12 +342,13 @@ function Propose_Msg(props) {
 
         <div className="mb-3">
           <Form.Group className="mb-3" controlId="formDeadline">
-            <Form.Label>Deadline</Form.Label>
+            <Form.Label>Deadline In Days</Form.Label>
             <Form.Control
-              type="date"
+              type="number"
               value={itemInfo.deadline}
               onChange={handleChange}
               name="deadline"
+              placeholder="Enter Estimated Deadline in Days"
               isInvalid={
                 errors.deadlineErr !== "" && errors.deadlineErr !== null
               }

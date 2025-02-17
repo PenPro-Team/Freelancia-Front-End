@@ -7,6 +7,7 @@ import Client_Details_Card from "../Components/Client_Details_Card";
 import Propose_Card from "../Components/Propose_Card";
 import { useSelector } from "react-redux";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
+import { AxiosProjectsInstance } from "../network/API/AxiosInstance";
 
 function Job_Details() {
   const [project, setProject] = useState({});
@@ -19,10 +20,7 @@ function Job_Details() {
   //  location history match
   const params = useParams();
   useEffect(() => {
-    axios
-      .get(
-        `https://api-generator.retool.com/6wGsbQ/projects/${params.project_id}`
-      )
+    AxiosProjectsInstance.get(`/${params.project_id}`)
       .then((res) => {
         setProject(res.data);
         console.log(res.data);
