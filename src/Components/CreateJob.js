@@ -133,6 +133,9 @@ const ClientJobForm = () => {
         job_state: "open",
         owner_id: user.user.id,
       };
+      // await axios.delete(
+      //   "https://api-generator.retool.com/6wGsbQ/projects/80"
+      // );
       await axios.post(
         "https://api-generator.retool.com/6wGsbQ/projects",
         payload
@@ -151,9 +154,13 @@ const ClientJobForm = () => {
     setSubmitting(false);
   };
   //   console.log(user.user.id);
+  const user_dont_exist = getFromLocalStorage("auth");
 
+  if (!user_dont_exist || !user_dont_exist.user) {
+    return <Redirect to="/unauthrizedpage" />;
+  }
   if (!user || user.user.role != "client") {
-    return <Redirect to="/pagenotfound" />;
+    return <Redirect to="/unauthrizedpage" />;
   }
 
   return (
