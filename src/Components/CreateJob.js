@@ -9,6 +9,7 @@ import {
 } from "../network/local/LocalStorage";
 import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import {AxiosProjectsInstance,AxiosSkillsInstance} from "../network/API/AxiosInstance";
 
 const getUser = () => {
   return getFromLocalStorage("auth");
@@ -45,8 +46,11 @@ const ClientJobForm = () => {
         }
         break;
       case "expected_deadline":
+        // الفاليديشن
         if (!value) {
           error = "Deadline is required";
+        } else if (isNaN(value) || Number(value) < 1 || Number(value) > 100) {
+          error = "Deadline must be a number between 1 and 100";
         }
         break;
       case "project_description":
@@ -61,8 +65,8 @@ const ClientJobForm = () => {
   };
 
   useEffect(() => {
-    axios
-      .get("https://api-generator.retool.com/CGw7tS/skills")
+    AxiosSkillsInstance
+      .get("")
       .then((response) => {
         setSkillsOptions(response.data);
       })
@@ -124,10 +128,16 @@ const ClientJobForm = () => {
     setSubmitting(true);
     setMessage("");
     try {
+      //تاريخ دلوقتي
+      const date = new Date();
+      const options = { year: "numeric", month: "short", day: "numeric" };
+      const formattedDate = date.toLocaleDateString("en-US", options);
+
       const payload = {
         project_name: formData.project_name,
         suggested_budget: formData.suggested_budget,
         expected_deadline: formData.expected_deadline,
+        creation_date: formattedDate, // هباصيه علي السبمت
         project_description: formData.project_description,
         required_skills: formData.requiredSkills.join(", "),
         job_state: "open",
@@ -136,8 +146,9 @@ const ClientJobForm = () => {
       // await axios.delete(
       //   "https://api-generator.retool.com/6wGsbQ/projects/80"
       // );
-      await axios.post(
-        "https://api-generator.retool.com/6wGsbQ/projects",
+      
+      await AxiosProjectsInstance.post(
+        "",
         payload
       );
       setMessage("Job Created successfully");
@@ -189,10 +200,11 @@ const ClientJobForm = () => {
           }}
           error={errors.suggested_budget}
         />
+  
         <InputFieldForJobCreate
           label="Deadline"
           name="expected_deadline"
-          type="date"
+          type="number"
           value={formData.expected_deadline}
           onChange={handleChange}
           error={errors.expected_deadline}
