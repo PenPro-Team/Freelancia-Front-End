@@ -12,8 +12,10 @@ function Job_Details() {
   const [project, setProject] = useState({});
   // const user = useSelector((state) => state.auth.user);
   const auth = getFromLocalStorage("auth");
-  const user = auth.user;
-  const isAuth = auth.isAuthenticated;
+  // if (auth) {
+  //   const user = auth.user;
+  //   const isAuth = auth.isAuthenticated;
+  // }
   //  location history match
   const params = useParams();
   useEffect(() => {
@@ -36,7 +38,16 @@ function Job_Details() {
   };
   return (
     <>
-      <div className="fs-1 fw-bold text-center m-3">{project.project_name}</div>
+      <p
+        className="text-center fs-1 fw-bold display-3 m-3"
+        style={{
+          background: "linear-gradient(90deg, #007bff, #6610f2)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }}
+      >
+        {project.project_name}
+      </p>
       <div>
         <div className="d-flex flex-row flex-wrap gap-3 justify-content-center m-2 mb-5">
           <div className="col-lg-8 col-md-7 col-sm-12 col-12">
@@ -46,16 +57,16 @@ function Job_Details() {
             <Client_Details_Card project={project} />
           </div>
         </div>
-        {auth &&
-          isAuth &&
-          user.role === "freelancer" &&
+        {auth ? (
+          auth.isAuthenticated &&
+          auth.user.role === "freelancer" &&
           ["open", "contract canceled and reopened"].includes(
             project.job_state
           ) && (
             <div>
               <Propose_Card
                 project_id={project.id}
-                user={user}
+                user={auth.user}
                 disabled={
                   !["open", "contract canceled and reopened"].includes(
                     project.job_state
@@ -63,7 +74,10 @@ function Job_Details() {
                 }
               />
             </div>
-          )}
+          )
+        ) : (
+          <div className="d-none d-lg-block" style={{ height: "20vh" }}></div>
+        )}
       </div>
     </>
   );
