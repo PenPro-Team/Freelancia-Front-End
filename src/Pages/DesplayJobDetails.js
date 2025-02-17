@@ -11,17 +11,17 @@ function DesplayJobDetails() {
     const History = useHistory()
     useEffect(() => {
         if (!auth){
-            History.push("/Freelancia-Front-End")
+            History.push("/Freelancia-Front-End/403")
         }
         else{
             if(!auth.isAuthenticated){
-                History.push("/Freelancia-Front-End")
+                History.push("/Freelancia-Front-End/403")
             }else{
                 if(!auth.user){
-                    History.push("/Freelancia-Front-End")
+                    History.push("/Freelancia-Front-End/403")
                 }else{
                     if(auth.user.role !== "client"){
-                        History.push("/Freelancia-Front-End")
+                        History.push("/Freelancia-Front-End/403")
                     }
                 }
             }
@@ -30,20 +30,23 @@ function DesplayJobDetails() {
     },[])
   return (
     <div className="m-3">
-        <p
-          className="text-center fs-1 fw-bold display-3 mb-3"
-          style={{
-            background: "linear-gradient(90deg, #007bff, #6610f2)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
-          Job Lists
-        </p> 
         {auth && auth.isAuthenticated && auth.user && auth.user.role === "client" ? (
-            <ClientJobList userId={auth.user.id} />
+            <>
+                <p
+                className="text-center fs-1 fw-bold display-3 mb-3"
+                style={{
+                    background: "linear-gradient(90deg, #007bff, #6610f2)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                }}
+                >
+                Job Lists
+                </p> 
+                <ClientJobList userId={auth.user.id} />
+            </>
+            
           ) : (
-            History.push("/unauthrizedpage")
+            History.push("/Freelancia-Front-End/403")
           )} 
         
     </div>
