@@ -11,9 +11,10 @@ import JobList from "./Pages/JobList";
 import Createjob from "./Components/CreateJob";
 import { Container } from "react-bootstrap";
 import unauthrizedpage from "./Pages/unauthrizedpage";
-import ClientJobList from "./Pages/ClientJobList";
-import DesplayJobDetails from "./Pages/DesplayJobDetails";
+import ClientJobList from "./Components/ClientJobList";
+import DesplayJobDetails from "./Pages/ClientJobs";
 import page404 from "./Pages/page404";
+import ClientJobs from "./Pages/ClientJobs";
 
 function App() {
   return (
@@ -61,7 +62,7 @@ function App() {
             />
             <Route
               path="/Freelancia-Front-End/clientjoblist"
-              component={DesplayJobDetails}
+              component={ClientJobs}
               exact
             />
             {/* <Route path="/create-job" component={} exact /> */}
