@@ -11,6 +11,8 @@ import JobList from "./Pages/JobList";
 import Createjob from "./Components/CreateJob"; 
 import { Container } from "react-bootstrap";
 import unauthrizedpage from "./Pages/unauthrizedpage";
+import ClientJobList from "./Pages/ClientJobList";
+import DesplayJobDetails from "./Pages/DesplayJobDetails";
 
 function App() {
   return (
@@ -54,6 +56,11 @@ function App() {
             <Route
               path="/Freelancia-Front-End/postjob"
               component={Createjob}
+              exact
+            />
+            <Route
+              path="/Freelancia-Front-End/clientjoblist"
+              component={DesplayJobDetails}
               exact
             />
             {/* <Route path="/create-job" component={} exact /> */}
