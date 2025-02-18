@@ -22,7 +22,7 @@ export default function ProjectCard({ skills, jobStates, priceRange }) {
       )
       .then((response) => {
         setData(response.data);
-        const totalCount = 60;
+        const totalCount = 100;
         setTotalPages(Math.ceil(totalCount / 10));
       })
       .catch((error) =>
@@ -76,10 +76,10 @@ export default function ProjectCard({ skills, jobStates, priceRange }) {
                   Price: {project.suggested_budget}$
                 </p>
                 <h5 className="card-title">{project.project_name}</h5>
-                <RequiredSkills
+                {/* <RequiredSkills
                   skills={project.required_skills}
                   key={project.id}
-                />
+                /> */}
                 <Badge
                 style={{position:"absolute",top:"10px",right:"10px",opacity:"75%"}}
                 bg={
