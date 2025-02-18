@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <>
       <div className="container-fluid blackBack mt-5 p-5">
-        <div className="d-flex text-light flex-wrap flex-column flex-lg-row ">
+        <div className="d-flex text-light flex-wrap flex-column flex-lg-row justify-content-between">
           <div className="col-12 col-md-6 mb-3 mb-1 ">
             <h2>Lat's Take</h2>
             <p>
@@ -16,7 +16,7 @@ const Footer = () => {
             </p>
             <button className="btn btn-primary w-50">Tell Us about your Project</button>
           </div>
-          <div className="col-3">
+          <div className="col-2 ms-1">
           <p>Our Responsers</p>
             <Link className="text-decoration-none text-primary" to="">Links</Link>
             <br />

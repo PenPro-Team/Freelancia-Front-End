@@ -34,15 +34,28 @@ function NavBar() {
           <Nav.Link as={Link} to="/Freelancia-Front-End/Job_List">
             Projects
           </Nav.Link>
-          {isAuth ? user.role === "client" ? (
-            <Nav.Link as={Link} to="/Freelancia-Front-End/postjob">
-              Post a Job
-            </Nav.Link>
+          {isAuth ? (
+            user.role === "client" ? (
+              <Nav.Link as={Link} to="/Freelancia-Front-End/postjob">
+                Post a Job
+              </Nav.Link>
+            ) : (
+              ""
+            )
           ) : (
-            <Nav.Link as={Link} to="/Freelancia-Front-End/postjob" className="d-none">
-              Post a Job
-            </Nav.Link>
-          ) : ""}
+            ""
+          )}
+          {isAuth ? (
+            user.role === "client" ? (
+              <Nav.Link as={Link} to="/Freelancia-Front-End/clientjoblist">
+                Client Job List
+              </Nav.Link>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
         </Nav>
         {isAuth ? (
           <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
@@ -56,9 +69,7 @@ function NavBar() {
             </div>
             <div className="fs-5">{user.firstName}</div>
             <Nav.Link as={Link} to="/" onClick={handleLogout}>
-              <span className="text-danger ms-2">
-                Logout
-              </span>
+              <span className="text-danger ms-2">Logout</span>
             </Nav.Link>
           </div>
         ) : (

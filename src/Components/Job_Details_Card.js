@@ -5,20 +5,19 @@ import Nav from "react-bootstrap/Nav";
 import { useState } from "react";
 import Propose_Card from "./Propose_Card";
 import Project_Proposals from "./Project_Proposals";
-import { Badge } from "react-bootstrap";
+import { Badge, Placeholder } from "react-bootstrap";
 import All_Proposals from "./All_Proposals";
 import ClientHistory from "./ClientHistory";
+import DrawRequiredSkills from "./DrawRequiredSkills";
 
 function Job_Details_Card(props) {
   const [activeTab, setActiveTab] = useState("first");
   const renderContent = () => {
-
     switch (activeTab) {
       case "first":
         return (
-          <div>
-            <div>
-              {/* <span className="fw-bold">Project State: </span> */}
+          <div style={{ position: "relative" }}>
+            <div className="text-start fs-5 opacity-75">
               <Badge
                 bg={
                   props.project.job_state === "finished"
@@ -40,29 +39,79 @@ function Job_Details_Card(props) {
             </div>
             <div>
               <span className="fw-bold">project Description: </span>{" "}
-              <span className="w-75">{props.project.project_description}</span>
+              <span className="w-75">
+                {props.project.project_description ? (
+                  props.project.project_description
+                ) : (
+                  <Placeholder xs={4} />
+                )}
+              </span>
             </div>
             <div>
               <span className="fw-bold">Suggested Budget: </span>
-              {props.project.suggested_budget}
-              <span className="fw-bold">$</span>
+              {props.project.suggested_budget ? (
+                props.project.suggested_budget
+              ) : (
+                <Placeholder xs={2} />
+              )}
+              <span className="fw-bold"> $</span>
             </div>
             <div>
-              <span className="fw-bold">Project Deadline: </span>{" "}
-              {props.project.expected_deadline}
+              <span className="fw-bold">Estimated Project Deadline: </span>
+
+              {props.project.expected_deadline ? (
+                <>{props.project.expected_deadline} Days</>
+              ) : (
+                <Placeholder xs={2} />
+              )}
             </div>
-            <div>
+            {/* <div>
               <span className="fw-bold">Required Skills:</span>{" "}
               <Badge bg="secondary">{props.project.required_skills}</Badge>
+            </div> */}
+            {/* <div>
+              <span className="fw-bold">Required Skills:</span>{" "}
+              {(Array.isArray(props.project.required_skills)
+                ? props.project.required_skills
+                : (props.project.required_skills || "")
+                    .split(",")
+                    .map((skill) => skill.trim())
+              ).map(
+                (skill) =>
+                  skill && (
+                    <Badge key={skill} bg="secondary" className="me-1">
+                      {skill}
+                    </Badge>
+                  )
+              )}
+            </div> */}
+            <div>
+              {props.project.required_skills && (
+                <DrawRequiredSkills
+                  required_skills={props.project.required_skills}
+                />
+              )}
+            </div>
+            <div>
+              <span
+                className="text-secondary small fw-bold"
+                style={{ position: "absolute", bottom: "1px", right: "1px" }}
+              >
+                {props.project.creation_date ? (
+                  <>Created at:{props.project.creation_date}</>
+                ) : (
+                  <Placeholder xs={3} size="sm" />
+                )}
+              </span>
             </div>
           </div>
         );
       case "second":
         return <Project_Proposals />;
-      case "third":
-        return <All_Proposals />;
-        case "fourth":  
-        return <ClientHistory owner_id={props.project.owner_id}/>; //pass the clinte 
+      // case "third":
+      //   return <All_Proposals />;
+      case "fourth":
+        return <ClientHistory owner_id={props.project.owner_id} />; //pass the clinte
       default:
         return "Disabled content or default content here.";
     }
@@ -94,7 +143,7 @@ function Job_Details_Card(props) {
               Proposals
             </Nav.Link>
           </Nav.Item>
-          <Nav.Item>
+          {/* <Nav.Item>
             <Nav.Link
               onClick={(e) => {
                 e.preventDefault();
@@ -104,7 +153,7 @@ function Job_Details_Card(props) {
             >
               All Proposals
             </Nav.Link>
-          </Nav.Item>
+          </Nav.Item> */}
           <Nav.Item>
             <Nav.Link
               onClick={(e) => {
@@ -113,7 +162,7 @@ function Job_Details_Card(props) {
               }}
               active={activeTab === "fourth"}
             >
-             Clinte History
+              Client History
             </Nav.Link>
           </Nav.Item>
         </Nav>
