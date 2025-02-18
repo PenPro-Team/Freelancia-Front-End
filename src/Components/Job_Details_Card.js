@@ -17,6 +17,15 @@ function Job_Details_Card(props) {
       case "first":
         return (
           <div style={{ position: "relative" }}>
+            <div>
+              <span className="text-secondary small fw-bold d-flex d-md-none">
+                {props.project.creation_date ? (
+                  <>Created at:{props.project.creation_date}</>
+                ) : (
+                  <Placeholder xs={3} size="sm" />
+                )}
+              </span>
+            </div>
             <div className="text-start fs-5 opacity-75">
               <Badge
                 bg={
@@ -94,7 +103,7 @@ function Job_Details_Card(props) {
             </div>
             <div>
               <span
-                className="text-secondary small fw-bold"
+                className="text-secondary small fw-bold d-none d-md-block"
                 style={{ position: "absolute", bottom: "1px", right: "1px" }}
               >
                 {props.project.creation_date ? (
