@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Card, Image, Pagination } from "react-bootstrap";
+import { Card, Image, Pagination, Spinner } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Rate_Stars from "./Rate_Stars";
@@ -27,7 +27,9 @@ function ClientHistory(props) {
   useEffect(() => {
     if (props.owner_id) {
       axios
-        .get(`https://api-generator.retool.com/Esur5x/dummyUsers/${props.owner_id}`)
+        .get(
+          `https://api-generator.retool.com/Esur5x/dummyUsers/${props.owner_id}`
+        )
         .then((res) => {
           setClientDetails(res.data);
         })
@@ -76,7 +78,9 @@ function ClientHistory(props) {
     <>
       <div>
         {loading ? (
-          <p>Loading...</p>
+          <div className="d-flex justify-content-center">
+            <Spinner animation="border" variant="primary" />
+          </div>
         ) : error ? (
           <p className="text-danger">{error}</p>
         ) : clientReviews.length === 0 ? (

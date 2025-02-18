@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import Rate_Stars from "./Rate_Stars";
 import { Pagination } from "react-bootstrap";
+import { AxiosProposalsInstance } from "../network/API/AxiosInstance";
 
 function All_Proposals(props) {
   const [proposals, setProposals] = useState([]);
@@ -17,10 +18,7 @@ function All_Proposals(props) {
   //  location history match
   const params = useParams();
   useEffect(() => {
-    axios
-      .get(
-        `https://api-generator.retool.com/kPlGjn/proposals?_page=${pageInfo.page}&_limit=10`
-      )
+    AxiosProposalsInstance.get(`?_page=${pageInfo.page}&_limit=10`)
       .then((res) => {
         setProposals(res.data);
       })
