@@ -7,7 +7,7 @@ import PaginationButton from "../Pagination/Pagination";
 import Placeholder from "react-bootstrap/Placeholder";
 import { Badge } from "react-bootstrap";
 
-export default function ProjectCard({ skills, jobStates,priceRange }) {
+export default function ProjectCard({ skills, jobStates, priceRange }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,7 +53,6 @@ export default function ProjectCard({ skills, jobStates,priceRange }) {
       if (priceRange) {
         priceMatch = price >= priceRange.min && price <= priceRange.max;
       }
-
       console.log("Price:", price, "Range:", priceRange);
       // console.log("Skills match:", skillsMatch, "Job state match:", jobStateMatch, "Price match:", priceMatch);
       return skillsMatch && jobStateMatch && priceMatch;
