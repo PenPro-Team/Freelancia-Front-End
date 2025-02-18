@@ -6,18 +6,19 @@ import RequiredSkills from "../RequiredSkills/RequiredSkills";
 import PaginationButton from "../Pagination/Pagination";
 import Placeholder from "react-bootstrap/Placeholder";
 import { Badge } from "react-bootstrap";
+import {AxiosProjectsInstance} from "../../network/API/AxiosInstance"
 
-export default function ProjectCard({ skills, jobStates,priceRange }) {
+
+export default function ProjectCard({ skills, jobStates, priceRange }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchResult, setSearchResult] = useState()
   useEffect(() => {
-    console.log("Selected Skills:", skills, "Selected Job States:", jobStates);
-    axios
+    AxiosProjectsInstance
       .get(
-        `https://api-generator.retool.com/6wGsbQ/projects?_page=${currentPage}&_limit=10`
+        `?_page=${currentPage}&_limit=10`
       )
       .then((response) => {
         setData(response.data);
@@ -53,7 +54,6 @@ export default function ProjectCard({ skills, jobStates,priceRange }) {
       if (priceRange) {
         priceMatch = price >= priceRange.min && price <= priceRange.max;
       }
-
       console.log("Price:", price, "Range:", priceRange);
       // console.log("Skills match:", skillsMatch, "Job state match:", jobStateMatch, "Price match:", priceMatch);
       return skillsMatch && jobStateMatch && priceMatch;
