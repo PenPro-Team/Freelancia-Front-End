@@ -7,7 +7,7 @@ import PaginationButton from "../Pagination/Pagination";
 import Placeholder from "react-bootstrap/Placeholder";
 import { Badge } from "react-bootstrap";
 import {AxiosProjectsInstance} from "../../network/API/AxiosInstance"
-
+import  DrawRequiredSkills  from "../DrawRequiredSkills"
 
 export default function ProjectCard({ skills, jobStates, priceRange }) {
   const [data, setData] = useState([]);
@@ -80,6 +80,7 @@ export default function ProjectCard({ skills, jobStates, priceRange }) {
                   skills={project.required_skills}
                   key={project.id}
                 /> */}
+                <DrawRequiredSkills required_skills={project.required_skills}/>
                 <Badge
                 style={{position:"absolute",top:"10px",right:"10px",opacity:"75%"}}
                 bg={
