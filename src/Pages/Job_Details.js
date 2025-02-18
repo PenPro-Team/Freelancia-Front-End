@@ -78,7 +78,7 @@ function Job_Details() {
           >
             {project.project_name}
           </p>
-          {
+          {/* {
             auth &&
               auth.isAuthenticated &&
               auth.user.role === "freelancer" &&
@@ -100,7 +100,7 @@ function Job_Details() {
             // : (
             //   <div className="d-none d-lg-block" style={{ height: "20vh" }}></div>
             // )
-          }
+          } */}
         </div>
       )}
       <div className="" style={{ minHeight: "48vh" }}>
@@ -110,29 +110,32 @@ function Job_Details() {
           </div>
           <div className="col-lg-3 col-md-4 col-sm-8 col-9">
             <Client_Details_Card project={project} isLoading={isLoading} />
+            {auth ? (
+              auth.isAuthenticated &&
+              auth.user.role === "freelancer" &&
+              ["open", "contract canceled and reopened"].includes(
+                project.job_state
+              ) && (
+                <div className="d-flex flex-row flex-wrap gap-3 justify-content-center mt-3">
+                  <Propose_Card
+                    project_id={project.id}
+                    user={auth.user}
+                    disabled={
+                      !["open", "contract canceled and reopened"].includes(
+                        project.job_state
+                      )
+                    }
+                  />
+                </div>
+              )
+            ) : (
+              <div
+                className="d-none d-lg-block"
+                style={{ height: "20vh" }}
+              ></div>
+            )}
           </div>
         </div>
-        {/* {auth ? (
-          auth.isAuthenticated &&
-          auth.user.role === "freelancer" &&
-          ["open", "contract canceled and reopened"].includes(
-            project.job_state
-          ) && (
-            <div>
-              <Propose_Card
-                project_id={project.id}
-                user={auth.user}
-                disabled={
-                  !["open", "contract canceled and reopened"].includes(
-                    project.job_state
-                  )
-                }
-              />
-            </div>
-          )
-        ) : (
-          <div className="d-none d-lg-block" style={{ height: "20vh" }}></div>
-        )} */}
       </div>
     </>
   );
