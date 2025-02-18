@@ -48,9 +48,6 @@ function Job_Details() {
       })
       .finally(() => {
         setIsLoading(false);
-        console.log("Heeeeeeeeeeeeeeeeeeeeeeeeere");
-        console.log(project);
-        console.log(Object.keys(project).length);
       });
   }, []);
 
