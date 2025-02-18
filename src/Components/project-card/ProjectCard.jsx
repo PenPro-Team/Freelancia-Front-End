@@ -72,10 +72,11 @@ export default function ProjectCard({ skills, jobStates, priceRange }) {
           >
             <div className="card mb-3">
               <div className="card-body">
-                <p className="mb-2 text-muted" style={{ fontSize: "14px" }}>
+                <p className="mb-1 text-muted" style={{ fontSize: "14px" }}>
                   Price: {project.suggested_budget}$
                 </p>
-                <h5 className="card-title">{project.project_name}</h5>
+                <h5 className="card-title d-flex justify-content-between">{project.project_name} <span className=""><p className="mb-1 text-muted fw-light text-end d-inline" style={{fontSize:"12px"}}>{project.creation_date}</p></span></h5>
+                
                 {/* <RequiredSkills
                   skills={project.required_skills}
                   key={project.id}
