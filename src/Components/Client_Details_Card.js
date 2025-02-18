@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Card } from "react-bootstrap";
+import { Card, Placeholder } from "react-bootstrap";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Image } from "react-bootstrap";
@@ -17,10 +17,12 @@ function Client_Details_Card(props) {
     rate: "",
     image: "",
   });
+  const [userLoading, setUserLoading] = useState(true);
 
   useEffect(() => {
     // let id = Math.floor(Math.random() * 50) + 1;
     if (props.project.owner_id) {
+      setUserLoading(true);
       axios
         .get(
           `https://api-generator.retool.com/Esur5x/dummyUsers/${props.project.owner_id}`
@@ -30,6 +32,9 @@ function Client_Details_Card(props) {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setUserLoading(false);
         });
     }
   }, [props.project.owner_id]);
@@ -40,7 +45,7 @@ function Client_Details_Card(props) {
         <Card.Body>
           <Card.Title>
             <div className="d-flex align-items-center">
-              {clientDetails.image ? (
+              {clientDetails.image || !props.isLoading || !userLoading ? (
                 <Image
                   src={clientDetails.image}
                   roundedCircle
@@ -61,7 +66,15 @@ function Client_Details_Card(props) {
                 ></div>
               )}
               <div className="d-flex flex-column">
-                <div>{clientDetails.name}</div>
+                <div>
+                  {props.isLoading || userLoading ? (
+                    <>
+                      <Placeholder xs={6} size="lg" />
+                    </>
+                  ) : (
+                    <>{clientDetails.name}</>
+                  )}
+                </div>
                 <div className="text-muted">
                   <Rate_Stars rating={clientDetails.rate} />
                 </div>
@@ -69,13 +82,35 @@ function Client_Details_Card(props) {
             </div>
           </Card.Title>
           <Card.Text>
-            <IoLocationSharp /> {clientDetails.address}
+            <IoLocationSharp />
+
+            {props.isLoading || userLoading ? (
+              <>
+                <Placeholder xs={6} />
+              </>
+            ) : (
+              <>{clientDetails.address}</>
+            )}
           </Card.Text>
           <Card.Text>
-            <FaPhoneAlt /> {clientDetails.phone}
+            <FaPhoneAlt />
+            {props.isLoading || userLoading ? (
+              <>
+                <Placeholder xs={6} />
+              </>
+            ) : (
+              <>{clientDetails.phone}</>
+            )}
           </Card.Text>
           <Card.Text>
-            <MdEmail /> {clientDetails.email}
+            <MdEmail />
+            {props.isLoading || userLoading ? (
+              <>
+                <Placeholder xs={6} />
+              </>
+            ) : (
+              <>{clientDetails.email}</>
+            )}
           </Card.Text>
         </Card.Body>
       </Card>
