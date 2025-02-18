@@ -15,7 +15,7 @@ function Client_Details_Card(props) {
     phone: "",
     address: "",
     rate: "",
-    image: "",
+    image: null,
   });
   const [userLoading, setUserLoading] = useState(true);
 
