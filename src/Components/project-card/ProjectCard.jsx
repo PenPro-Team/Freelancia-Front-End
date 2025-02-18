@@ -19,7 +19,6 @@ export default function ProjectCard({ skills, jobStates, priceRange, isSortedByR
     AxiosProjectsInstance
       .get(``)
       .then((response) => {
-        setData(response.data);
         const totalCount = response.data.length ;
         setTotalPages(Math.ceil(totalCount / 10 + 1));
       })
