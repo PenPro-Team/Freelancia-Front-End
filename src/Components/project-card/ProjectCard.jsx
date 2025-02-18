@@ -9,12 +9,24 @@ import { Badge } from "react-bootstrap";
 import {AxiosProjectsInstance} from "../../network/API/AxiosInstance"
 import  DrawRequiredSkills  from "../DrawRequiredSkills"
 
-export default function ProjectCard({ skills, jobStates, priceRange }) {
+export default function ProjectCard({ skills, jobStates, priceRange, isSortedByRecent }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchResult, setSearchResult] = useState()
+  useEffect(()=> {
+    AxiosProjectsInstance
+      .get(``)
+      .then((response) => {
+        setData(response.data);
+        const totalCount = response.data.length ;
+        setTotalPages(Math.ceil(totalCount / 10 + 1));
+      })
+      .catch((error) =>
+        console.error("There was an error fetching data", error)
+      );
+  },[])
   useEffect(() => {
     AxiosProjectsInstance
       .get(
@@ -22,12 +34,11 @@ export default function ProjectCard({ skills, jobStates, priceRange }) {
       )
       .then((response) => {
         setData(response.data);
-        const totalCount = 100;
-        setTotalPages(Math.ceil(totalCount / 10));
       })
       .catch((error) =>
         console.error("There was an error fetching data", error)
       );
+      
   }, [currentPage]);
 
   useEffect(() => {
@@ -54,12 +65,20 @@ export default function ProjectCard({ skills, jobStates, priceRange }) {
       if (priceRange) {
         priceMatch = price >= priceRange.min && price <= priceRange.max;
       }
-      console.log("Price:", price, "Range:", priceRange);
+      // console.log("Price:", price, "Range:", priceRange);
       // console.log("Skills match:", skillsMatch, "Job state match:", jobStateMatch, "Price match:", priceMatch);
       return skillsMatch && jobStateMatch && priceMatch;
     });
-    setFilteredData(filtered);
-  }, [data, skills, jobStates, priceRange]);
+
+    if (isSortedByRecent) {
+      const sortedFiltered = [...filtered].sort((old, now) => new Date(now.creation_date) - new Date(old.creation_date));
+      setFilteredData(sortedFiltered);
+    } else {
+      setFilteredData(filtered);
+      
+    }
+
+  }, [data, skills, jobStates, priceRange,isSortedByRecent]);
 
   return (
     <>
