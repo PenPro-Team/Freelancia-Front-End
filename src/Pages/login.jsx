@@ -8,7 +8,10 @@ import Spinner from "react-bootstrap/Spinner";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../Redux/Actions/authAction";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import { getFromLocalStorage, setToLocalStorage } from "../network/local/LocalStorage";
+import {
+  getFromLocalStorage,
+  setToLocalStorage,
+} from "../network/local/LocalStorage";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -34,14 +37,12 @@ const LoginForm = () => {
   const isPasswordValid = passwordRegex.test(password);
 
   useEffect(() => {
-
     //let user=JSON.parse(localStorage.getItem("auth"));
     let user = getFromLocalStorage("auth");
-    if(user && user.isAuthenticated){
-      
+    if (user && user.isAuthenticated) {
       history.push("/Freelancia-Front-End");
     }
-  },{});
+  }, []);
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
@@ -55,12 +56,11 @@ const LoginForm = () => {
     const now = new Date();
     const expiration = new Date(now.setMonth(now.getMonth() + 3)).getTime(); // Expiry in 3 months
 
-   let auth={
-      user:null,
-      isAuthenticated:false,
-      expiresAt:expiration,
-
-    }
+    let auth = {
+      user: null,
+      isAuthenticated: false,
+      expiresAt: expiration,
+    };
 
     try {
       const response = await axios.get(
@@ -71,13 +71,12 @@ const LoginForm = () => {
       );
 
       if (response.data.length > 0) {
-        auth={
-           ...auth,
-          user:response.data[0],
-          isAuthenticated:true,
-         
-        }
-    setToLocalStorage("auth",auth);
+        auth = {
+          ...auth,
+          user: response.data[0],
+          isAuthenticated: true,
+        };
+        setToLocalStorage("auth", auth);
         dispatch(loginSuccess(response.data[0]));
         setError("");
         setIsLoading(true);
@@ -93,29 +92,31 @@ const LoginForm = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#f2f4f7" ,height: "100vh",marginTop:"50px"}} className="d-flex justify-content-center align-items-center">
+    <div
+      style={{ backgroundColor: "#f2f4f7", height: "100vh", marginTop: "50px" }}
+      className="d-flex justify-content-center align-items-center"
+    >
       <div className="container ">
         <div
           className="row d-flex flex-column justify-content-center align-items-center "
           // style={{ height: "100vh" }}
-
         >
+          <p
+            className="text-center fw-bold display-3 mb-4"
+            style={{
+              background: "linear-gradient(90deg, #007bff, #6610f2)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Freelancia
+          </p>
 
-<p
-      className="text-center fw-bold display-3 mb-4"
-      style={{
-        background: "linear-gradient(90deg, #007bff, #6610f2)",
-        WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent",
-      }}
-    >
-      Freelancia
-    </p>     
-        
-           <div className="col-md-6 d-flex justify-content-center"
-          
-           >
-            <Card className="p-4 border-0 shadow" style={{ width: "100%", maxWidth: "450px" }}>
+          <div className="col-md-6 d-flex justify-content-center">
+            <Card
+              className="p-4 border-0 shadow"
+              style={{ width: "100%", maxWidth: "450px" }}
+            >
               {error && <Alert variant="danger">{error}</Alert>}
               {isLoading && <Alert variant="success">Login successful</Alert>}
               <h3 className="text-center mb-4">Login</h3>
@@ -130,11 +131,7 @@ const LoginForm = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       onBlur={() => setEmailTouched(true)}
                       className={
-                        emailTouched
-                          ? isEmailValid
-                            ? ""
-                            : "is-invalid"
-                          : ""
+                        emailTouched ? (isEmailValid ? "" : "is-invalid") : ""
                       }
                       required
                     />

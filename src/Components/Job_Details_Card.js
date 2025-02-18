@@ -5,7 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import { useState } from "react";
 import Propose_Card from "./Propose_Card";
 import Project_Proposals from "./Project_Proposals";
-import { Badge } from "react-bootstrap";
+import { Badge, Placeholder } from "react-bootstrap";
 import All_Proposals from "./All_Proposals";
 import ClientHistory from "./ClientHistory";
 import DrawRequiredSkills from "./DrawRequiredSkills";
@@ -39,16 +39,31 @@ function Job_Details_Card(props) {
             </div>
             <div>
               <span className="fw-bold">project Description: </span>{" "}
-              <span className="w-75">{props.project.project_description}</span>
+              <span className="w-75">
+                {props.project.project_description ? (
+                  props.project.project_description
+                ) : (
+                  <Placeholder xs={4} />
+                )}
+              </span>
             </div>
             <div>
               <span className="fw-bold">Suggested Budget: </span>
-              {props.project.suggested_budget}
+              {props.project.suggested_budget ? (
+                props.project.suggested_budget
+              ) : (
+                <Placeholder xs={2} />
+              )}
               <span className="fw-bold"> $</span>
             </div>
             <div>
-              <span className="fw-bold">Estimated Project Deadline: </span>{" "}
-              {props.project.expected_deadline} Days
+              <span className="fw-bold">Estimated Project Deadline: </span>
+
+              {props.project.expected_deadline ? (
+                <>{props.project.expected_deadline} Days</>
+              ) : (
+                <Placeholder xs={2} />
+              )}
             </div>
             {/* <div>
               <span className="fw-bold">Required Skills:</span>{" "}
@@ -71,24 +86,30 @@ function Job_Details_Card(props) {
               )}
             </div> */}
             <div>
-              <DrawRequiredSkills
-                required_skills={props.project.required_skills}
-              />
+              {props.project.required_skills && (
+                <DrawRequiredSkills
+                  required_skills={props.project.required_skills}
+                />
+              )}
             </div>
             <div>
               <span
                 className="text-secondary small fw-bold"
                 style={{ position: "absolute", bottom: "1px", right: "1px" }}
               >
-                Created at:{props.project.creation_date}
+                {props.project.creation_date ? (
+                  <>Created at:{props.project.creation_date}</>
+                ) : (
+                  <Placeholder xs={3} size="sm" />
+                )}
               </span>
             </div>
           </div>
         );
       case "second":
         return <Project_Proposals />;
-      case "third":
-        return <All_Proposals />;
+      // case "third":
+      //   return <All_Proposals />;
       case "fourth":
         return <ClientHistory owner_id={props.project.owner_id} />; //pass the clinte
       default:
@@ -122,7 +143,7 @@ function Job_Details_Card(props) {
               Proposals
             </Nav.Link>
           </Nav.Item>
-          <Nav.Item>
+          {/* <Nav.Item>
             <Nav.Link
               onClick={(e) => {
                 e.preventDefault();
@@ -132,7 +153,7 @@ function Job_Details_Card(props) {
             >
               All Proposals
             </Nav.Link>
-          </Nav.Item>
+          </Nav.Item> */}
           <Nav.Item>
             <Nav.Link
               onClick={(e) => {
