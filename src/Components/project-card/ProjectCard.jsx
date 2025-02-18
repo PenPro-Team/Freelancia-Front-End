@@ -6,6 +6,8 @@ import RequiredSkills from "../RequiredSkills/RequiredSkills";
 import PaginationButton from "../Pagination/Pagination";
 import Placeholder from "react-bootstrap/Placeholder";
 import { Badge } from "react-bootstrap";
+import {AxiosProjectsInstance} from "../../network/API/AxiosInstance"
+
 
 export default function ProjectCard({ skills, jobStates, priceRange }) {
   const [data, setData] = useState([]);
@@ -14,10 +16,9 @@ export default function ProjectCard({ skills, jobStates, priceRange }) {
   const [totalPages, setTotalPages] = useState(0);
   const [searchResult, setSearchResult] = useState()
   useEffect(() => {
-    console.log("Selected Skills:", skills, "Selected Job States:", jobStates);
-    axios
+    AxiosProjectsInstance
       .get(
-        `https://api-generator.retool.com/6wGsbQ/projects?_page=${currentPage}&_limit=10`
+        `?_page=${currentPage}&_limit=10`
       )
       .then((response) => {
         setData(response.data);
