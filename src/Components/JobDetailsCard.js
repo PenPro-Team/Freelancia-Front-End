@@ -1,16 +1,13 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Nav from "react-bootstrap/Nav";
 import { useState } from "react";
-import Propose_Card from "./Propose_Card";
-import Project_Proposals from "./Project_Proposals";
+import ProjectProposals from "./ProjectProposals";
 import { Badge, Placeholder } from "react-bootstrap";
-import All_Proposals from "./All_Proposals";
 import ClientHistory from "./ClientHistory";
 import DrawRequiredSkills from "./DrawRequiredSkills";
 
-function Job_Details_Card(props) {
+function JobDetailsCard(props) {
   const [activeTab, setActiveTab] = useState("first");
   const renderContent = () => {
     switch (activeTab) {
@@ -74,26 +71,7 @@ function Job_Details_Card(props) {
                 <Placeholder xs={2} />
               )}
             </div>
-            {/* <div>
-              <span className="fw-bold">Required Skills:</span>{" "}
-              <Badge bg="secondary">{props.project.required_skills}</Badge>
-            </div> */}
-            {/* <div>
-              <span className="fw-bold">Required Skills:</span>{" "}
-              {(Array.isArray(props.project.required_skills)
-                ? props.project.required_skills
-                : (props.project.required_skills || "")
-                    .split(",")
-                    .map((skill) => skill.trim())
-              ).map(
-                (skill) =>
-                  skill && (
-                    <Badge key={skill} bg="secondary" className="me-1">
-                      {skill}
-                    </Badge>
-                  )
-              )}
-            </div> */}
+
             <div>
               {props.project.required_skills && (
                 <DrawRequiredSkills
@@ -116,7 +94,7 @@ function Job_Details_Card(props) {
           </div>
         );
       case "second":
-        return <Project_Proposals />;
+        return <ProjectProposals />;
       // case "third":
       //   return <All_Proposals />;
       case "fourth":
@@ -185,4 +163,4 @@ function Job_Details_Card(props) {
   );
 }
 
-export default Job_Details_Card;
+export default JobDetailsCard;

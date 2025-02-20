@@ -4,26 +4,20 @@ import {
   useHistory,
   useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
-import axios from "axios";
-import Job_Details_Card from "../Components/Job_Details_Card";
-import Client_Details_Card from "../Components/Client_Details_Card";
-import Propose_Card from "../Components/Propose_Card";
-import { useSelector } from "react-redux";
+import JobDetailsCard from "../Components/JobDetailsCard";
+import ClientDetailsCard from "../Components/ClientDetailsCard";
+import ProposeCard from "../Components/ProposeCard";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { AxiosProjectsInstance } from "../network/API/AxiosInstance";
 import { Placeholder } from "react-bootstrap";
+import HeaderColoredText from "../Components/HeaderColoredText";
 
-function Job_Details() {
+function JobDetails() {
   const [project, setProject] = useState({});
-  // const user = useSelector((state) => state.auth.user);
+
   const auth = getFromLocalStorage("auth");
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
-  // if (auth) {
-  //   const user = auth.user;
-  //   const isAuth = auth.isAuthenticated;
-  // }
-  //  location history match
   const params = useParams();
   const history = useHistory();
   useEffect(() => {
@@ -49,7 +43,7 @@ function Job_Details() {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [history, params.project_id]);
 
   return (
     <>
@@ -64,49 +58,15 @@ function Job_Details() {
           </p>
         </div>
       ) : (
-        <div className="d-flex flex-row flex-wrap justify-content-evenly align-items-center">
-          <p
-            className="text-center fs-1 fw-bold display-3 m-3"
-            style={{
-              background: "linear-gradient(90deg, #007bff, #6610f2)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            {project.project_name}
-          </p>
-          {/* {
-            auth &&
-              auth.isAuthenticated &&
-              auth.user.role === "freelancer" &&
-              ["open", "contract canceled and reopened"].includes(
-                project.job_state
-              ) && (
-                <div>
-                  <Propose_Card
-                    project_id={project.id}
-                    user={auth.user}
-                    disabled={
-                      !["open", "contract canceled and reopened"].includes(
-                        project.job_state
-                      )
-                    }
-                  />
-                </div>
-              )
-            // : (
-            //   <div className="d-none d-lg-block" style={{ height: "20vh" }}></div>
-            // )
-          } */}
-        </div>
+        <HeaderColoredText text={project.project_name} />
       )}
       <div className="" style={{ minHeight: "48vh" }}>
         <div className="d-flex flex-row flex-wrap gap-3 justify-content-center m-2 mb-5">
           <div className="col-lg-8 col-md-7 col-sm-12 col-12">
-            <Job_Details_Card project={project} isLoading={isLoading} />
+            <JobDetailsCard project={project} isLoading={isLoading} />
           </div>
           <div className="col-lg-3 col-md-4 col-sm-8 col-9">
-            <Client_Details_Card project={project} isLoading={isLoading} />
+            <ClientDetailsCard project={project} isLoading={isLoading} />
             {auth ? (
               auth.isAuthenticated &&
               auth.user.role === "freelancer" &&
@@ -114,7 +74,7 @@ function Job_Details() {
                 project.job_state
               ) && (
                 <div className="d-flex flex-row flex-wrap gap-3 justify-content-center mt-3">
-                  <Propose_Card
+                  <ProposeCard
                     project_id={project.id}
                     user={auth.user}
                     disabled={
@@ -137,4 +97,4 @@ function Job_Details() {
     </>
   );
 }
-export default Job_Details;
+export default JobDetails;
