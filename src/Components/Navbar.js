@@ -2,14 +2,13 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Container } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import personalImg from "../assets/hero-bg.jpg";
 import { getFromLocalStorage, logout } from "../network/local/LocalStorage";
 import { logout as userLogout } from "../Redux/Actions/authAction";
 
 function NavBar() {
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.auth);
   const auth = getFromLocalStorage("auth");
   const user = auth ? auth.user : null;
   const isAuth = auth ? auth.isAuthenticated : null;
@@ -34,6 +33,17 @@ function NavBar() {
           <Nav.Link as={Link} to="/Freelancia-Front-End/Job_List">
             Projects
           </Nav.Link>
+          {isAuth ? (
+            user.role === "freelancer" ? (
+              <Nav.Link as={Link} to="/Freelancia-Front-End/proposals">
+                My Proposals
+              </Nav.Link>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
           {isAuth ? (
             user.role === "client" ? (
               <Nav.Link as={Link} to="/Freelancia-Front-End/postjob">
@@ -65,6 +75,7 @@ function NavBar() {
                 width={"48px"}
                 height={"48px"}
                 src={personalImg}
+                alt=""
               />
             </div>
             <div className="fs-5">{user.firstName}</div>
