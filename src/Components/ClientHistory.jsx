@@ -1,8 +1,7 @@
 import axios from "axios";
 import { Card, Image, Pagination, Spinner } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import Rate_Stars from "./Rate_Stars";
+import RateStars from "./RateStars";
 
 function ClientHistory(props) {
   const [clientReviews, setclientReviews] = useState([]);
@@ -20,8 +19,6 @@ function ClientHistory(props) {
     page: 1,
     total_pages: 1, // Initially 1 to prevent unnecessary empty state
   });
-
-  const params = useParams();
 
   // Fetch client details
   useEffect(() => {
@@ -102,7 +99,7 @@ function ClientHistory(props) {
                     <div className="d-flex flex-column">
                       <div>{clientDetails.name}</div>
                       <div className="text-muted">
-                        <Rate_Stars rating={review.rate} />
+                        <RateStars rating={review.rate} />
                       </div>
                     </div>
                   </div>

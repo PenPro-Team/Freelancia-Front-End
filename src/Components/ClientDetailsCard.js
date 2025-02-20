@@ -3,12 +3,12 @@ import { Card, Placeholder } from "react-bootstrap";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Image } from "react-bootstrap";
-import Rate_Stars from "./Rate_Stars";
+import RateStars from "./RateStars";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
-function Client_Details_Card(props) {
+function ClientDetailsCard(props) {
   const [clientDetails, setClientDetails] = useState({
     name: "",
     email: "",
@@ -76,7 +76,7 @@ function Client_Details_Card(props) {
                   )}
                 </div>
                 <div className="text-muted">
-                  <Rate_Stars rating={clientDetails.rate} />
+                  <RateStars rating={clientDetails.rate} />
                 </div>
               </div>
             </div>
@@ -118,4 +118,4 @@ function Client_Details_Card(props) {
   );
 }
 
-export default Client_Details_Card;
+export default ClientDetailsCard;
