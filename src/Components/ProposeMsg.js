@@ -1,22 +1,14 @@
 import { Alert, Form, Spinner } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
-import {
-  useHistory,
-  useParams,
-} from "react-router-dom/cjs/react-router-dom.min";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { AxiosProposalsInstance } from "../network/API/AxiosInstance";
 
-function Propose_Msg(props) {
+function ProposeMsg(props) {
   const auth = getFromLocalStorage("auth");
   const user = auth.user;
   const params = useParams();
   const project_id = params.project_id;
-  const history = useHistory();
-  // console.log(history);
-  // console.log(project_id);
-  // console.log("------------------------------");
   const [itemInfo, setItemInfo] = useState({
     propose_text: "",
     price: "",
@@ -78,7 +70,7 @@ function Propose_Msg(props) {
       .catch((err) => {
         console.log(err);
       });
-  }, [callingAPI]);
+  }, [callingAPI, project_id, props, user.id]);
 
   const propsal_object = () => {
     const date = new Date();
@@ -226,7 +218,7 @@ function Propose_Msg(props) {
     const name = e.target.name;
     const value = e.target.value;
 
-    const textReg = /^[a-zA-Z0-9\s\.\_\*]+$/;
+    const textReg = /^[a-zA-Z0-9\s._*]+$/;
     const priceReg = /^[0-9]*\.?[0-9]{0,2}$/;
     const deadlineReg = /^\d{1,}$/;
 
@@ -404,4 +396,4 @@ function Propose_Msg(props) {
   );
 }
 
-export default Propose_Msg;
+export default ProposeMsg;

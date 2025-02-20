@@ -4,7 +4,7 @@ import "react-popper";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import axios from "axios";
-import Rate_Stars from "../Rate_Stars";
+import RateStars from "../RateStars";
 import { Image, Placeholder } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import persImg from "../../assets/hero-bg.jpg";
@@ -13,14 +13,13 @@ import JobStateFilter from "../FilterJobs/JobStateFilter";
 import { getFromLocalStorage } from "../../network/local/LocalStorage";
 import PriceRangeFilter from "../FilterJobs/PriceRangeFilter";
 
-
 export default function Sidebar(props) {
   const auth = getFromLocalStorage("auth");
   // const state = useSelector((state) => state.auth);
   const user = auth ? auth.user : null;
   const isAuth = auth ? auth.isAuthenticated : null;
   // const [priceRange, setPriceRange] = useState({ min:0, max :9999  });
-  
+
   return (
     <>
       <div
@@ -55,32 +54,27 @@ export default function Sidebar(props) {
               <div className="d-flex flex-column">
                 <div className="fw-bold fs-3">{user.firstName}</div>
                 <p className="fs-6 text-muted">Full stack developer</p>
-              <div className="text-muted">
-                <Rate_Stars rating="2" />
-              </div>
+                <div className="text-muted">
+                  <RateStars rating="2" />
+                </div>
               </div>
             </div>
           </div>
         ) : (
           ""
         )}
-        <div
-         className="border border-1 bg-primary-subtle p-3 rounded-4 mb-3 w-100"
-         >
-
-        <h6 className="mb-3">Filter Based On Skill Matching</h6>
-          <FilterSkills skillCb={props.selectSkillCb}/>
+        <div className="border border-1 bg-primary-subtle p-3 rounded-4 mb-3 w-100">
+          <h6 className="mb-3">Filter Based On Skill Matching</h6>
+          <FilterSkills skillCb={props.selectSkillCb} />
         </div>
-        <div 
-        className="border border-1 bg-primary-subtle p-3 rounded-4 mb-3 w-100"
-        >
+        <div className="border border-1 bg-primary-subtle p-3 rounded-4 mb-3 w-100">
           <h6 className="mb-3">Filter Based On Job States</h6>
           <JobStateFilter cb={props.selectedJobCb} />
         </div>
         <div className="mt-3 border border-1 bg-primary-subtle p-3 rounded-4 mb-3 w-100">
-            <h6>Filter by Price Range</h6>
-            <PriceRangeFilter onChange={props.setPriceRange} />
-          </div>
+          <h6>Filter by Price Range</h6>
+          <PriceRangeFilter onChange={props.setPriceRange} />
+        </div>
       </div>
     </>
   );
