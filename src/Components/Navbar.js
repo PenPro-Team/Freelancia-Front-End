@@ -19,7 +19,7 @@ function NavBar() {
     e.preventDefault();
     logout();
     dispatch(userLogout());
-    // history.push("/Freelancia-Front-End/login");
+    history.push("/Freelancia-Front-End");
   };
 
   return (
@@ -35,6 +35,18 @@ function NavBar() {
           <Nav.Link as={Link} to="/Freelancia-Front-End/Job_List">
             Projects
           </Nav.Link>
+
+          {isAuth ? (
+            user.role === "freelancer" ? (
+              <Nav.Link as={Link} to="/Freelancia-Front-End/proposals">
+                My Proposals
+              </Nav.Link>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
 
           {isAuth ? (
             user.role === "client" ? (
