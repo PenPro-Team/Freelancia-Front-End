@@ -80,7 +80,7 @@ const LoginForm = () => {
         dispatch(loginSuccess(response.data[0]));
         setError("");
         setIsLoading(true);
-        history.push(""); // Redirect to dashboard
+        history.push("/Freelancia-Front-End"); // Redirect to dashboard
       } else {
         setError("Invalid email or password");
         setIsLoading(false);
