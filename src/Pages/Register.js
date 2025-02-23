@@ -15,6 +15,7 @@ import { EyeSlash, Eye } from "react-bootstrap-icons";
 import Spinner from "react-bootstrap/Spinner";
 import InputField from "../Components/InputField";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import HeaderColoredText from "../Components/HeaderColoredText"; // استيراد المكون
 
 const RegisterForm = () => {
   const history = useHistory();
@@ -42,10 +43,19 @@ const RegisterForm = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const robustPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  // تعديل regex للباسوورد بحيث يتطلب حروف وأرقام إنجليزي، على الأقل 8 أحرف، حرف واحد كابتل، حرف واحد سمول ورقم واحد
+  const robustPasswordRegex = /^(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
   const userNameReg = /^[a-z0-9\._]{3,}$/;
 
   const [isLoading, setisLoading] = useState(false);
+
+  // حساب تاريخ اليوم مع خصم 18 سنة بحيث لا يتمكن المستخدم من اختيار تاريخ يجعل عمره أقل من 18 سنة
+  const today = new Date();
+  const year = today.getFullYear() - 18;
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  const maxBirthDate = `${year}-${month}-${day}`;
+
   const handleBlur = (e) => {
     const { name, value } = e.target;
     if (name === "username" || name === "email") {
@@ -76,7 +86,7 @@ const RegisterForm = () => {
         case "password":
           if (!robustPasswordRegex.test(newValue)) {
             errorMessage =
-              "Password must contain at least one letter, one digit, and be at least 8 characters long";
+              "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long ,and no white spaces";
           }
           break;
         case "confirmPassword":
@@ -85,6 +95,15 @@ const RegisterForm = () => {
           }
           break;
         case "birthdate":
+          // التحقق من أن المستخدم أكبر من 18 سنة
+          const selectedDate = new Date(newValue);
+          const currentDate = new Date();
+          const ageDifMs = currentDate - selectedDate;
+          const ageDate = new Date(ageDifMs);
+          const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+          if (age < 18) {
+            errorMessage = "You must be at least 18 years old";
+          }
           break;
         case "postalCode":
           if (!/^\d+$/.test(newValue)) {
@@ -179,7 +198,9 @@ const RegisterForm = () => {
   };
 
   return (
-    <Container className="my-5 d-flex justify-content-center">
+    <Container className="my-5 d-flex flex-column align-items-center">
+      {/* HeaderColoredText خارج الcard وفوق كلمة Register */}
+      <HeaderColoredText text="Freelancia" />
       <Card className="shadow p-4" style={{ maxWidth: "800px", width: "100%" }}>
         <h3 className="text-center mb-4">Register</h3>
         <Form onSubmit={handleSubmit}>
@@ -250,6 +271,7 @@ const RegisterForm = () => {
             onChange={handleChange}
             isInvalid={Boolean(errors.birthdate)}
             feedback={errors.birthdate}
+            max={maxBirthDate} // تقييد اختيار التاريخ بحيث لا يظهر تاريخ أقل من 18 سنة فاتت
           />
           <InputField
             label="Postal Code"
