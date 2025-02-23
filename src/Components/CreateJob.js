@@ -5,7 +5,7 @@ import InputFieldForJobCreate from "./InputFieldForJobCreate";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { Redirect, useHistory, useLocation } from "react-router-dom";
 import { AxiosProjectsInstance, AxiosSkillsInstance } from "../network/API/AxiosInstance";
-import JobActions from "./JobActions"; // استيراد مكون JobActions
+import JobActions from "./JobActions"; 
 
 const getUser = () => {
   return getFromLocalStorage("auth");
