@@ -105,7 +105,7 @@ const ClientJobList = ({ userId }) => {
         <div className="d-flex flex-column gap-3">
           {projects.length >= 1 ? (
             projects.map((project) => (
-              <JobDetailsCard key={project.id} project={project} />
+              <JobDetailsCard key={project.id} project={project} showTitle={true}/>
             ))
           ) : (
             <div className="mx-auto">

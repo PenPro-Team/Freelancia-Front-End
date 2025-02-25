@@ -6,9 +6,13 @@ import ProjectProposals from "./ProjectProposals";
 import { Badge, Placeholder } from "react-bootstrap";
 import ClientHistory from "./ClientHistory";
 import DrawRequiredSkills from "./DrawRequiredSkills";
+import { getFromLocalStorage } from "../network/local/LocalStorage";
+import { AiFillSetting } from "react-icons/ai";
+import { TiCancel } from "react-icons/ti";
 
 function JobDetailsCard(props) {
   const [activeTab, setActiveTab] = useState("first");
+  const auth = getFromLocalStorage("auth");
   const renderContent = () => {
     switch (activeTab) {
       case "first":
@@ -43,6 +47,20 @@ function JobDetailsCard(props) {
                 {props.project.job_state}
               </Badge>
             </div>
+            {
+              props.showTitle && (
+                <div>
+                  <span className="fw-bold">project tittle: </span>{" "}
+                  <span className="w-75">
+                    {props.project.project_name ? (
+                      props.project.project_name
+                    ) : (
+                      <Placeholder xs={2} />
+                    )}
+                  </span>
+            </div>
+              )
+            }
             <div>
               <span className="fw-bold">project Description: </span>{" "}
               <span className="w-75">
@@ -90,6 +108,41 @@ function JobDetailsCard(props) {
                   <Placeholder xs={3} size="sm" />
                 )}
               </span>
+            </div>
+            <div className="d-flex flex-row flex-wrap gap-1" style={{position:"absolute" , right:"1px" , top:"1px"}}>
+            {
+              auth && auth.isAuthenticated && 
+              auth.user.role === "client" && 
+              props.project.owner_id === auth.user.id && 
+              ( props.project.job_state === "open" || props.project.job_state === "contract canceled and reopened" ) && 
+              (
+                <div>
+                    <AiFillSetting color="" size="1.25rem" />
+                </div>
+              )
+            }
+            {
+              auth && auth.isAuthenticated && 
+              auth.user.role === "client" && 
+              props.project.owner_id === auth.user.id && 
+              ( props.project.job_state === "open" || props.project.job_state === "contract canceled and reopened" ) && 
+              (
+                <div>
+                    <TiCancel className="" color="red" size="1.5rem" />
+                </div>
+              )
+            }
+            {
+              auth && auth.isAuthenticated && 
+              auth.user.role === "client" && 
+              props.project.owner_id === auth.user.id && 
+              props.project.job_state === "ongoing" && 
+              (
+                <div>
+                    <TiCancel className="" color="red" size="1.5rem" />
+                </div>
+              )
+            }
             </div>
           </div>
         );
