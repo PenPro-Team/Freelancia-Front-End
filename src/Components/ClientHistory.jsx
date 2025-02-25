@@ -1,74 +1,111 @@
 import axios from "axios";
-import { Card, Image, Pagination, Spinner } from "react-bootstrap";
+import { Card, Image, Spinner, Modal, Button, Form, Alert } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import RateStars from "./RateStars";
+import { getFromLocalStorage } from "../network/local/LocalStorage";
 
-function ClientHistory(props) {
-  const [clientReviews, setclientReviews] = useState([]);
-  const [error, setError] = useState(null);
+function ClientHistory({ owner_id }) {
+  const [clientReviews, setClientReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [clientDetails, setClientDetails] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    rate: "",
-    image: "",
-  });
-  const [pageInfo, setPageInfo] = useState({
-    page: 1,
-    total_pages: 1, // Initially 1 to prevent unnecessary empty state
-  });
+  const [clientDetails, setClientDetails] = useState({});
+  const [feedback, setFeedback] = useState("");
+  const [rating, setRating] = useState(5);
+  const [userFeedback, setUserFeedback] = useState(null);
+
+  const currentUser = getFromLocalStorage("auth");
+
+  // Modal state
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingReview, setEditingReview] = useState(null);
+  const [editError, setEditError] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingReview, setDeletingReview] = useState(null);
 
   // Fetch client details
   useEffect(() => {
-    if (props.owner_id) {
-      axios
-        .get(
-          `https://api-generator.retool.com/Esur5x/dummyUsers/${props.owner_id}`
-        )
-        .then((res) => {
-          setClientDetails(res.data);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  }, [props.owner_id]);
+    if (!owner_id) return;
+    axios.get(`https://api-generator.retool.com/Esur5x/dummyUsers/${owner_id}`)
+      .then(res => setClientDetails(res.data))
+      .catch(console.error);
+  }, [owner_id]);
 
-  // Fetch proposals and calculate total pages
+  // Fetch reviews
   useEffect(() => {
-    if (!props.owner_id) return;
+    if (!owner_id) return;
 
-    axios
-      .get(
-        `https://api-generator.retool.com/ECRLlk/feedback?user_reviewed=${props.owner_id}&_page=${pageInfo.page}&_limit=10`,
-        { observe: "response" }
-      )
-      .then((res) => {
-        setclientReviews(res.data);
+    axios.get(`https://api-generator.retool.com/ECRLlk/feedback?user_reviewed=${owner_id}`)
+      .then(res => {
+        setClientReviews(res.data);
 
-        const totalRecords = parseInt(res.headers["x-total-count"], 10) || 0;
-        setPageInfo((prevState) => ({
-          ...prevState,
-          total_pages: Math.ceil(totalRecords / 10),
-        }));
+        // Check if the current user has already submitted feedback
+        const existingFeedback = res.data.find(review => review.user_reviewr === currentUser?.user?.id);
+        setUserFeedback(existingFeedback);
+
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err);
-        setError("Failed to load data");
         setLoading(false);
       });
-  }, [pageInfo.page, props.owner_id]);
+  }, [owner_id, currentUser]);
 
-  const changeCurrentPage = (newPage) => {
-    if (newPage >= 1 && newPage <= pageInfo.total_pages) {
-      setPageInfo((prevState) => ({
-        ...prevState,
-        page: newPage,
-      }));
+  // Submit feedback
+  const makeFeedback = () => {
+    if (!feedback.trim() || userFeedback) return;
+
+    axios.post("https://api-generator.retool.com/ECRLlk/feedback", {
+      user_reviewr: currentUser.user.id,
+      user_reviewed: owner_id,
+      rate: rating,
+      message: feedback,
+      img: "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_640.png",
+    }).then(res => {
+      setClientReviews([res.data, ...clientReviews]);
+      setUserFeedback(res.data);
+      setFeedback("");
+      setRating(5);
+    }).catch(console.error);
+  };
+
+  // Open edit modal
+  const openEditModal = (review) => {
+    setEditingReview({ ...review });
+    setEditError("");
+    setShowEditModal(true);
+  };
+
+  // Update feedback
+  const updateFeedback = () => {
+    if (!editingReview.message.trim()) {
+      setEditError("Feedback message cannot be empty.");
+      return;
     }
+
+    axios.patch(`https://api-generator.retool.com/ECRLlk/feedback/${editingReview.id}`, {
+      message: editingReview.message,
+      rate: editingReview.rate,
+    }).then(res => {
+      setClientReviews(clientReviews.map(review => review.id === res.data.id ? res.data : review));
+      setUserFeedback(res.data);
+      setShowEditModal(false);
+    }).catch(console.error);
+  };
+
+  // Open delete modal
+  const openDeleteModal = (review) => {
+    setDeletingReview(review);
+    setShowDeleteModal(true);
+  };
+
+  // Delete feedback
+  const deleteFeedback = () => {
+    axios.delete(`https://api-generator.retool.com/ECRLlk/feedback/${deletingReview.id}`)
+      .then(() => {
+        setClientReviews(clientReviews.filter(review => review.id !== deletingReview.id));
+        setUserFeedback(null);
+        setShowDeleteModal(false);
+      })
+      .catch(console.error);
   };
 
   return (
@@ -78,64 +115,97 @@ function ClientHistory(props) {
           <div className="d-flex justify-content-center">
             <Spinner animation="border" variant="primary" />
           </div>
-        ) : error ? (
-          <p className="text-danger">{error}</p>
         ) : clientReviews.length === 0 ? (
-          <p>No reviews available.</p>
+          <Alert variant="info">No reviews available.</Alert>
         ) : (
           clientReviews.map((review) => (
             <Card key={review.id} className="mb-3">
               <Card.Body>
                 <Card.Title>
                   <div className="d-flex align-items-center">
-                    <Image
-                      src={review.img}
-                      roundedCircle
-                      alt={clientDetails.name}
-                      width={50}
-                      height={50}
-                      className="me-2"
-                    />
-                    <div className="d-flex flex-column">
+                    <Image src={review.img} roundedCircle width={50} height={50} className="me-2" />
+                    <div>
                       <div>{clientDetails.name}</div>
-                      <div className="text-muted">
-                        <RateStars rating={review.rate} />
-                      </div>
+                      <RateStars rating={review.rate} />
                     </div>
                   </div>
                 </Card.Title>
                 <div className="fw-bold">Review Message:</div>
                 <div>{review.message}</div>
+
+                {/* Show actions only for the current user's feedback */}
+                {currentUser?.user?.id === review.user_reviewr && (
+                  <div className="mt-2 d-flex">
+                    <Button variant="warning" className="me-2" onClick={() => openEditModal(review)}>Update</Button>
+                    <Button variant="danger" onClick={() => openDeleteModal(review)}>Delete</Button>
+                  </div>
+                )}
               </Card.Body>
             </Card>
           ))
         )}
       </div>
 
-      {/* Pagination */}
-      {pageInfo.total_pages > 1 && (
-        <div className="d-flex justify-content-center">
-          <Pagination>
-            <Pagination.Prev
-              onClick={() => changeCurrentPage(pageInfo.page - 1)}
-              disabled={pageInfo.page === 1}
+      {/* Feedback Form - Show only if user is logged in and hasn't submitted feedback */}
+      {currentUser==null && !userFeedback && (
+        <Card className="mt-3">
+          <Card.Body>
+            <Card.Title>Leave a Review</Card.Title>
+            <Form.Control
+              as="textarea"
+              rows="3"
+              placeholder="Write your review here"
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
             />
-            {[...Array(pageInfo.total_pages)].map((_, i) => (
-              <Pagination.Item
-                key={i + 1}
-                active={pageInfo.page === i + 1}
-                onClick={() => changeCurrentPage(i + 1)}
-              >
-                {i + 1}
-              </Pagination.Item>
-            ))}
-            <Pagination.Next
-              onClick={() => changeCurrentPage(pageInfo.page + 1)}
-              disabled={pageInfo.page === pageInfo.total_pages}
-            />
-          </Pagination>
-        </div>
+            <Form.Select className="mt-2" value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+              {[1, 2, 3, 4, 5].map(num => <option key={num} value={num}>{num} Star{num > 1 && "s"}</option>)}
+            </Form.Select>
+            <Button className="mt-2" variant="primary" onClick={makeFeedback} disabled={!feedback.trim()}>
+              Submit
+            </Button>
+          </Card.Body>
+        </Card>
       )}
+
+      {/* Edit Modal */}
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Feedback</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {editError && <Alert variant="danger">{editError}</Alert>}
+          <Form.Control
+            as="textarea"
+            rows="3"
+            value={editingReview?.message}
+            onChange={(e) => setEditingReview({ ...editingReview, message: e.target.value })}
+          />
+          <Form.Select
+            className="mt-2"
+            value={editingReview?.rate}
+            onChange={(e) => setEditingReview({ ...editingReview, rate: Number(e.target.value) })}
+          >
+            {[1, 2, 3, 4, 5].map(num => <option key={num} value={num}>{num} Star{num > 1 && "s"}</option>)}
+          </Form.Select>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
+          <Button variant="primary" onClick={updateFeedback}>Save Changes</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this feedback?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+          <Button variant="danger" onClick={deleteFeedback}>Delete</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
