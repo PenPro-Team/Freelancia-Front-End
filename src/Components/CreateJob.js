@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Form, Button, Container, InputGroup, Modal, Alert } from "react-bootstrap";
 import InputFieldForJobCreate from "./InputFieldForJobCreate";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { Redirect, useHistory, useLocation } from "react-router-dom";
 import { AxiosProjectsInstance, AxiosSkillsInstance } from "../network/API/AxiosInstance";
-import JobActions from "./JobActions"; 
 
 const getUser = () => {
   return getFromLocalStorage("auth");
@@ -16,7 +14,7 @@ const ClientJobForm = () => {
   const location = useLocation();
   const user = getUser();
 
-  // تحديد إذا كنا في وضع التعديل (Update Mode) بناءً على وجود بيانات الـ job في الـ location.state
+  // Determine if we are in update mode based on the presence of job data
   const updateMode = location.state && location.state.jobData ? true : false;
   const jobData = updateMode ? location.state.jobData : null;
 
@@ -27,7 +25,7 @@ const ClientJobForm = () => {
     project_description: "",
     requiredSkills: [],
   });
-  // لتخزين البيانات الأصلية عند دخول وضع التعديل
+  // To store the original data when entering update mode
   const [initialData, setInitialData] = useState(null);
 
   const [errors, setErrors] = useState({});
@@ -35,7 +33,7 @@ const ClientJobForm = () => {
   const [message, setMessage] = useState("");
   const [skillsOptions, setSkillsOptions] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState("");
-  // حالة عرض Modal لتأكيد الإلغاء
+  // State for displaying the cancel confirmation modal
   const [showCancelModal, setShowCancelModal] = useState(false);
 
   const validateField = (name, value) => {
@@ -79,7 +77,7 @@ const ClientJobForm = () => {
       });
   }, []);
 
-  // تعبئة الفورم بالبيانات الحالية في وضع التعديل
+  // Populate the form with existing data in update mode
   useEffect(() => {
     if (updateMode && jobData) {
       setFormData({
@@ -103,7 +101,7 @@ const ClientJobForm = () => {
     }
   }, [updateMode, jobData]);
 
-  // useEffect للاستماع لتغير location وإعادة تعيين الفورم لوضع الإنشاء (create)
+  // Reset the form for create mode
   useEffect(() => {
     if (!location.state || !location.state.jobData) {
       setFormData({
@@ -151,7 +149,7 @@ const ClientJobForm = () => {
     return Object.values(tempErrors).every((err) => !err);
   };
 
-  // دالة للتحقق مما إذا كانت البيانات قد تغيرت في وضع التعديل
+  // Check if data has changed in update mode
   const isDataChanged = () => {
     if (!initialData) return true;
     return (
@@ -163,7 +161,7 @@ const ClientJobForm = () => {
     );
   };
 
-  // دالة إنشاء الـ job (create)
+  // Function to create the job
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -181,21 +179,21 @@ const ClientJobForm = () => {
         creation_date: formattedDate,
         project_description: formData.project_description,
         required_skills: formData.requiredSkills.join(", "),
-        job_state: "open",
+        // For testing purposes, job_state is set to "ongoing" temporarily
+        job_state: "ongoing",
         owner_id: user.user.id,
       };
 
       await AxiosProjectsInstance.post("", payload);
 
-      // عرض رسالة نجاح منسقة باستخدام Alert مع لون أخضر
       setMessage("Job Created successfully");
 
-      // بعد ثانية واحدة، يتم التوجيه إلى صفحة قائمة الوظائف
+      // After one second, navigate to the job list page
       setTimeout(() => {
         history.push("/Freelancia-Front-End/clientjoblist");
       }, 1000);
 
-      // إعادة تعيين الفورم
+      // Reset the form
       setFormData({
         project_name: "",
         suggested_budget: "",
@@ -209,7 +207,7 @@ const ClientJobForm = () => {
     setSubmitting(false);
   };
 
-  // دالة تحديث الـ job (update)
+  // Function to update the job
   const handleUpdate = async (jobId) => {
     if (!isDataChanged()) {
       setMessage("No changes made.");
@@ -225,6 +223,7 @@ const ClientJobForm = () => {
         expected_deadline: formData.expected_deadline,
         project_description: formData.project_description,
         required_skills: formData.requiredSkills.join(", "),
+        // you can change it to ongoing to test the ongoing state on the joblisting page
         job_state: "open",
       });
       setMessage("Job Updated successfully");
@@ -235,17 +234,30 @@ const ClientJobForm = () => {
     setSubmitting(false);
   };
 
-  // دالة إلغاء الـ job دون استخدام window.confirm، بل من خلال Modal
-  const handleCancelJob = async (jobId) => {
+  // Function to cancel the job with different logic based on the job state
+  const handleCancelJob = async (jobId, cancelType) => {
     setSubmitting(true);
     setMessage("");
     try {
+      let newJobState;
+      if (jobData.job_state === "ongoing" && cancelType) {
+        if (cancelType === "contract") {
+          newJobState = "contract canceled and reopened";
+        } else if (cancelType === "full") {
+          newJobState = "canceled";
+        }
+      } else {
+        newJobState = "canceled";
+      }
       await AxiosProjectsInstance.patch(`/${jobId}`, {
-        job_state: "canceled",
+        job_state: newJobState,
       });
-      setMessage("Job canceled successfully");
+      setMessage(
+        newJobState === "canceled"
+          ? "Job canceled successfully"
+          : "Contract canceled successfully, job reopened"
+      );
       setShowCancelModal(false);
-      // إعادة توجيه المستخدم إلى صفحة قائمة الوظائف بعد الإلغاء
       history.push("/Freelancia-Front-End/clientjoblist");
     } catch (error) {
       setMessage("Failed to cancel job.");
@@ -370,30 +382,53 @@ const ClientJobForm = () => {
         )}
       </Form>
 
-      {/* Modal لتأكيد إلغاء الوظيفة */}
-      <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Cancelation</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to cancel this job?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
-            No
-          </Button>
-          <Button variant="danger" onClick={() => handleCancelJob(jobData.id)}>
-            Yes, Cancel Job
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* مكون JobActions يظهر في وضع التعديل فقط */}
+      {/* Cancel confirmation modal */}
       {updateMode && jobData && (
-        <div className="mt-3">
-          <JobActions
-            job={jobData}
-            onActionComplete={() => history.push("/Freelancia-Front-End/clientjoblist")}
-          />
-        </div>
+        <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Cancelation</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {jobData.job_state === "ongoing" ? (
+              <p>
+                Do you want to end the contract with the current client and reopen the job, or do you want to cancel the job entirely?
+              </p>
+            ) : (
+              <p>Are you sure you want to cancel this job?</p>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
+              No
+            </Button>
+            {jobData.job_state === "ongoing" ? (
+              <>
+                <Button
+                  variant="warning"
+                  onClick={() => handleCancelJob(jobData.id, "contract")}
+                  disabled={submitting}
+                >
+                  {submitting ? "Processing..." : "End Contract & Reopen Job"}
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => handleCancelJob(jobData.id, "full")}
+                  disabled={submitting}
+                >
+                  {submitting ? "Processing..." : "Cancel Job"}
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="danger"
+                onClick={() => handleCancelJob(jobData.id)}
+                disabled={submitting}
+              >
+                {submitting ? "Processing..." : "Yes, Cancel Job"}
+              </Button>
+            )}
+          </Modal.Footer>
+        </Modal>
       )}
     </Container>
   );
