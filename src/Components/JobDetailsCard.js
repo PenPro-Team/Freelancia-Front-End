@@ -26,6 +26,8 @@ function JobDetailsCard(props) {
   const [cancelSubmitting, setCancelSubmitting] = useState(false);
   const [cancelMessage, setCancelMessage] = useState("");
 
+
+
   const handleCancelJob = async (cancelType) => {
     setCancelSubmitting(true);
     setCancelMessage("");
@@ -161,11 +163,13 @@ function JobDetailsCard(props) {
                   props.project.job_state === "ongoing") && (
                   <div
                     style={{ cursor: "pointer" }}
-                    onClick={() =>
+                    onClick={() => {
                       history.push("/Freelancia-Front-End/postjob", {
                         mode: "update",
                         jobData: props.project,
                       })
+                      props.actionCB()
+                    }
                     }
                   >
                     <AiFillSetting color="" size="1.25rem" />
@@ -177,7 +181,10 @@ function JobDetailsCard(props) {
                 props.project.owner_id === auth.user.id &&
                 (props.project.job_state === "open" ||
                   props.project.job_state === "contract canceled and reopened") && (
-                  <div style={{ cursor: "pointer" }} onClick={() => setShowCancelModal(true)}>
+                  <div style={{ cursor: "pointer" }} onClick={() => {
+                    setShowCancelModal(true)
+                    props.actionCB()
+                  }}>
                     <TiCancel color="red" size="1.5rem" />
                   </div>
                 )}
@@ -186,7 +193,10 @@ function JobDetailsCard(props) {
                 auth.user.role === "client" &&
                 props.project.owner_id === auth.user.id &&
                 props.project.job_state === "ongoing" && (
-                  <div style={{ cursor: "pointer" }} onClick={() => setShowCancelModal(true)}>
+                  <div style={{ cursor: "pointer" }} onClick={() => {
+                    setShowCancelModal(true) 
+                    props.actionCB()
+                }}>
                     <TiCancel color="red" size="1.5rem" />
                   </div>
                 )}
