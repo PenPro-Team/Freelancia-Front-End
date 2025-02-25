@@ -23,6 +23,7 @@ function ClientDetailsCard(props) {
     // let id = Math.floor(Math.random() * 50) + 1;
     if (props.project.owner_id) {
       setUserLoading(true);
+      console.log("Client ID:" , props.project.owner_id)
       axios
         .get(
           `https://api-generator.retool.com/Esur5x/dummyUsers/${props.project.owner_id}`
@@ -32,6 +33,12 @@ function ClientDetailsCard(props) {
         })
         .catch((err) => {
           console.log(err);
+          axios.get(`https://api-generator.retool.com/D8TEH0/data/${props.project.owner_id}`)
+          .then((res) => {
+            setClientDetails(res.data);
+          }).catch((err) => {
+            console.log(err);
+          })
         })
         .finally(() => {
           setUserLoading(false);
