@@ -224,7 +224,7 @@ const ClientJobForm = () => {
         project_description: formData.project_description,
         required_skills: formData.requiredSkills.join(", "),
         // you can change it to ongoing to test the ongoing state on the joblisting page
-        job_state: "ongoing",
+        job_state: "open",
       });
       setMessage("Job Updated successfully");
       setInitialData({ ...formData });
