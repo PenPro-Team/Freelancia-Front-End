@@ -180,7 +180,8 @@ const ClientJobForm = () => {
         project_description: formData.project_description,
         required_skills: formData.requiredSkills.join(", "),
         // For testing purposes, job_state is set to "ongoing" temporarily
-        job_state: "ongoing",
+        // job_state: "ongoing",
+        job_state: "open",
         owner_id: user.user.id,
       };
 
