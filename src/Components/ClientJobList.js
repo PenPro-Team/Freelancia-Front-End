@@ -72,8 +72,15 @@ const ClientJobList = ({ userId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
+  const [updataAPI , setUpdateAPI] = useState(false)
+
   function toPostalJob() {
     history.push("/Freelancia-Front-End/postjob");
+  }
+
+  const toggleCallingAPI = () => {
+    console.log("Calling Toggle Updating")
+    setUpdateAPI(!updataAPI)
   }
 
   useEffect(() => {
@@ -91,7 +98,7 @@ const ClientJobList = ({ userId }) => {
     };
 
     fetchProjects();
-  }, [userId]);
+  }, [userId , updataAPI]);
 
   return (
     <div>
@@ -105,7 +112,7 @@ const ClientJobList = ({ userId }) => {
         <div className="d-flex flex-column gap-3">
           {projects.length >= 1 ? (
             projects.map((project) => (
-              <JobDetailsCard key={project.id} project={project} showTitle={true}/>
+              <JobDetailsCard key={project.id} project={project} showTitle={true} actionCB={toggleCallingAPI}/>
             ))
           ) : (
             <div className="mx-auto">
