@@ -25,16 +25,13 @@ export default function EditClientInfo() {
         birthdate: "",
         postalCode: "",
         address: "",
-        description: ""
+        description: "",
+        profilePicture: ""
     });
     console.log(formValues.firstName);
     const [isFormValid, setIsFormValid] = useState(false);
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // تعديل regex للباسوورد بحيث يتطلب حروف وأرقام إنجليزي، على الأقل 8 أحرف، حرف واحد كابتل، حرف واحد سمول ورقم واحد
-    const robustPasswordRegex = /^(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-    const userNameReg = /^[a-z0-9\._]{3,}$/;
-
+    const userRegex = /^[a-zA-Z]+$/
     // console.log(params);
 
     const handleChange = (e) => {
@@ -52,7 +49,7 @@ export default function EditClientInfo() {
             switch (name) {
                 case "firstName":
                 case "lastName":
-                    if (!/^[a-zA-Z]+$/.test(newValue)) {
+                    if (!userRegex.test(newValue)) {
                         errorMessage = "Only letters are allowed";
                     }
                     break;
@@ -62,7 +59,9 @@ export default function EditClientInfo() {
                     const currentDate = new Date();
                     const ageDifMs = currentDate - selectedDate;
                     const ageDate = new Date(ageDifMs);
-                    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+                    const age = ageDate.getUTCFullYear() - 1970;
+                    console.log(age);
+                    
                     if (age < 18) {
                         errorMessage = "You must be at least 18 years old";
                     }
@@ -176,8 +175,24 @@ export default function EditClientInfo() {
                                         ""
                                     }
                                     <Form onSubmit={handleSubmit}>
-                                        <Row className="mb-3">
+                                        <Row className="mb-3 ">
+                                            <Form.Group controlId="formFile" className="mb-3" name="profilePicture">
+                                                <div className='d-flex flex-wrap mb-4'>
+                                                    <img
+                                                        className="rounded-circle mb-2 mx-3"
+                                                        width={"128px"}
+                                                        height={"128px"}
+                                                        src={personalImg}
+                                                    />
+                                                    <div className='w-100 mx-3'>
+                                                        <Button variant="outline-danger" >Delete image</Button>
+                                                    </div>
+                                                </div>
+                                                <Form.Label>Default file input example</Form.Label>
+                                                <Form.Control type="file" />
+                                            </Form.Group>
                                             <Form.Group as={Col} controlId="formGridEmail">
+
                                                 <Form.Label>First Name</Form.Label>
                                                 <Form.Control
                                                     name='firstName'
@@ -188,6 +203,9 @@ export default function EditClientInfo() {
                                                     isInvalid={Boolean(errors.firstName)}
                                                     feedback={errors.firstName}
                                                 />
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.firstName}
+                                                </Form.Control.Feedback>
                                             </Form.Group>
 
                                             <Form.Group as={Col} controlId="formGridPassword">
@@ -198,7 +216,12 @@ export default function EditClientInfo() {
                                                     placeholder="Last Name"
                                                     value={formValues.lastName}
                                                     onChange={handleChange}
+                                                    isInvalid={Boolean(errors.lastName)}
+                                                    feedback={errors.lastName}
                                                 />
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.lastName}
+                                                </Form.Control.Feedback>
                                             </Form.Group>
                                         </Row>
 
@@ -209,7 +232,12 @@ export default function EditClientInfo() {
                                                 placeholder="1234 Main St"
                                                 value={formValues.address}
                                                 onChange={handleChange}
+                                                isInvalid={Boolean(errors.address)}
+                                                feedback={errors.address}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.address}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
 
                                         <Form.Group className="mb-3" controlId="formGridAddress2">
@@ -219,7 +247,12 @@ export default function EditClientInfo() {
                                                 placeholder="62511 i.e"
                                                 value={formValues.postalCode}
                                                 onChange={handleChange}
+                                                isInvalid={Boolean(errors.postalCode)}
+                                                feedback={errors.postalCode}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.postalCode}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
 
                                         <Row className="mb-3">
@@ -230,7 +263,13 @@ export default function EditClientInfo() {
                                                     type="date"
                                                     value={formValues.birthdate}
                                                     onChange={handleChange}
+                                                    isInvalid={Boolean(errors.birthdate)}
+                                                    feedback={errors.birthdate}
+                                                    min="1980-01-01"
                                                 />
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.birthdate}
+                                                </Form.Control.Feedback>
                                             </Form.Group>
                                         </Row>
                                         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
@@ -240,13 +279,18 @@ export default function EditClientInfo() {
                                                 name='description'
                                                 value={formValues.description}
                                                 onChange={handleChange}
+                                                isInvalid={Boolean(errors.description)}
+                                                feedback={errors.description}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.description}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
-                                        <Button variant="primary" type="submit" disabled={!isFormValid || (userData.firstName == formValues.firstName && userData.lastName == formValues.lastName && userData.address == formValues.address && userData.postalCode == formValues.postalCode && userData.birthdate == formValues.birthdate && userData.description == formValues.description)} >
+                                        <Button variant="primary" type="submit" disabled={!isFormValid || (userData.firstName == formValues.firstName && userData.lastName == formValues.lastName && userData.address == formValues.address && userData.postalCode == formValues.postalCode && userData.birthdate == formValues.birthdate && userData.description == formValues.description && !formValues.profilePicture)} >
                                             Submit
                                         </Button>
                                     </Form>
-                                <Link to={`/Freelancia-Front-End/Dashboard/security/${userData.id}`}>Edit Information</Link>
+                                    <Link to={`/Freelancia-Front-End/Dashboard/security/${userData.id}`}>Security & Password</Link>
                                 </>
                             }
                         </Card.Body>
