@@ -26,10 +26,13 @@ function JobDetailsCard(props) {
   const [cancelSubmitting, setCancelSubmitting] = useState(false);
   const [cancelMessage, setCancelMessage] = useState("");
 
-  const handleCancelJob = async (cancelType) => {
+
+
+  const handleCancelJob = (cancelType) => {
     setCancelSubmitting(true);
     setCancelMessage("");
     let newJobState;
+  
     if (props.project.job_state === "ongoing" && cancelType) {
       if (cancelType === "contract") {
         newJobState = "contract canceled and reopened";
@@ -39,22 +42,30 @@ function JobDetailsCard(props) {
     } else {
       newJobState = "canceled";
     }
-    try {
-      await AxiosProjectsInstance.patch(`/${props.project.id}`, {
-        job_state: newJobState,
+  
+    AxiosProjectsInstance.patch(`/${props.project.id}`, {
+      job_state: newJobState,
+    })
+      .then((res) => {
+        console.log(res.data);
+        console.log("refresh");
+        props.actionCB();
+        setCancelMessage(
+          newJobState === "canceled"
+            ? "Job canceled successfully"
+            : "Contract canceled successfully, job reopened"
+        );
+        setShowCancelModal(false);
+      })
+      .catch((error) => {
+        console.error("Error canceling job:", error);
+        setCancelMessage("Failed to cancel job.");
+      })
+      .finally(() => {
+        setCancelSubmitting(false);
       });
-      setCancelMessage(
-        newJobState === "canceled"
-          ? "Job canceled successfully"
-          : "Contract canceled successfully, job reopened"
-      );
-      setShowCancelModal(false);
-      // Optionally, trigger a refresh of the project data here.
-    } catch (error) {
-      setCancelMessage("Failed to cancel job.");
-    }
-    setCancelSubmitting(false);
   };
+  
 // ----------
   
   const renderContent = () => {
@@ -161,11 +172,12 @@ function JobDetailsCard(props) {
                   props.project.job_state === "ongoing") && (
                   <div
                     style={{ cursor: "pointer" }}
-                    onClick={() =>
+                    onClick={() => {
                       history.push("/Freelancia-Front-End/postjob", {
                         mode: "update",
                         jobData: props.project,
                       })
+                    }
                     }
                   >
                     <AiFillSetting color="" size="1.25rem" />
@@ -177,7 +189,9 @@ function JobDetailsCard(props) {
                 props.project.owner_id === auth.user.id &&
                 (props.project.job_state === "open" ||
                   props.project.job_state === "contract canceled and reopened") && (
-                  <div style={{ cursor: "pointer" }} onClick={() => setShowCancelModal(true)}>
+                  <div style={{ cursor: "pointer" }} onClick={() => {
+                    setShowCancelModal(true)
+                  }}>
                     <TiCancel color="red" size="1.5rem" />
                   </div>
                 )}
@@ -186,7 +200,9 @@ function JobDetailsCard(props) {
                 auth.user.role === "client" &&
                 props.project.owner_id === auth.user.id &&
                 props.project.job_state === "ongoing" && (
-                  <div style={{ cursor: "pointer" }} onClick={() => setShowCancelModal(true)}>
+                  <div style={{ cursor: "pointer" }} onClick={() => {
+                    setShowCancelModal(true) 
+                }}>
                     <TiCancel color="red" size="1.5rem" />
                   </div>
                 )}
