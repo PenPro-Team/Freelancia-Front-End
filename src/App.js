@@ -20,6 +20,7 @@ import FreelancerProfile from "./Pages/FreelancerProfile";
 import ClientInfo from "./Components/client-dashboard/ClientInfo";
 import EditClientInfo from "./Components/client-dashboard/EditClientInfo";
 import EditSecurity from "./Components/client-dashboard/EditSecurity";
+import Dashboard from "./Pages/Dashboard";
 
 function App() {
   return (
@@ -33,21 +34,6 @@ function App() {
           <Route
             path="/Freelancia-Front-End/login"
             component={LoginForm}
-            exact
-          />
-          <Route
-            path="/Freelancia-Front-End/Dashboard/:user_id"
-            component={ClientInfo}
-            exact
-          />
-          <Route
-            path="/Freelancia-Front-End/Dashboard/edit/:user_id"
-            component={EditClientInfo}
-            exact
-          />
-          <Route
-            path="/Freelancia-Front-End/Dashboard/security/:user_id"
-            component={EditSecurity}
             exact
           />
           <Route path="/login" component={LoginForm} exact />
@@ -89,6 +75,12 @@ function App() {
           <Route
             path="/Freelancia-Front-End/freelancerprofile"
             component={FreelancerProfile}
+            exact
+          />
+
+          <Route
+            path="/Freelancia-Front-End/dashboard/:user_id"
+            component={Dashboard}
             exact
           />
 
