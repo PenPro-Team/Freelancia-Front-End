@@ -16,6 +16,7 @@ import DesplayJobDetails from "./Pages/ClientJobs";
 import page404 from "./Pages/page404";
 import ClientJobs from "./Pages/ClientJobs";
 import FreelancerProposals from "./Pages/FreelancerProposals";
+import FreelancerProfile from "./Pages/FreelancerProfile";
 import ClientInfo from "./Components/client-dashboard/ClientInfo";
 import EditClientInfo from "./Components/client-dashboard/EditClientInfo";
 import EditSecurity from "./Components/client-dashboard/EditSecurity";
@@ -82,6 +83,12 @@ function App() {
           <Route
             path="/Freelancia-Front-End/proposals"
             component={FreelancerProposals}
+            exact
+          />
+
+          <Route
+            path="/Freelancia-Front-End/freelancerprofile"
+            component={FreelancerProfile}
             exact
           />
 

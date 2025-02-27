@@ -47,6 +47,21 @@ function NavBar() {
           ) : (
             ""
           )}
+          
+
+          {isAuth ? (
+            user.role === "freelancer" ? (
+              <Nav.Link as={Link} to="/Freelancia-Front-End/freelancerprofile">
+                Your Profile
+              </Nav.Link>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
+
+
 
           {isAuth ? (
             user.role === "client" ? (
@@ -100,6 +115,7 @@ function NavBar() {
             </Nav.Link>
           </div>
         )}
+        
       </Container>
     </Navbar>
   );
