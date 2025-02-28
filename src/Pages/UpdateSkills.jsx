@@ -120,11 +120,13 @@ function UpdateSkills(props) {
                                             isInvalid={!!errors.skill}
                                         >
                                             <option value="">Select a skill</option>
-                                            {skillsOptions.map((skill) => (
-                                                <option key={skill.id} value={skill.skill}>
-                                                    {skill.skill}
-                                                </option>
-                                            ))}
+                                            {
+                                                skillsOptions.map((skill) => (
+                                                    <option key={skill.id} value={skill.skill}>
+                                                        {skill.skill}
+                                                    </option>
+                                                ))
+                                            }
                                         </Form.Control>
                                         <Button variant="secondary" onClick={handleAddSkill}>
                                             Add
