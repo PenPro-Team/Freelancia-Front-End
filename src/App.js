@@ -17,6 +17,9 @@ import page404 from "./Pages/page404";
 import ClientJobs from "./Pages/ClientJobs";
 import FreelancerProposals from "./Pages/FreelancerProposals";
 import FreelancerProfile from "./Pages/FreelancerProfile";
+import ClientInfo from "./Components/client-dashboard/ClientInfo";
+import EditClientInfo from "./Components/client-dashboard/EditClientInfo";
+import EditSecurity from "./Components/client-dashboard/EditSecurity";
 
 function App() {
   return (
@@ -30,6 +33,21 @@ function App() {
           <Route
             path="/Freelancia-Front-End/login"
             component={LoginForm}
+            exact
+          />
+          <Route
+            path="/Freelancia-Front-End/Dashboard/:user_id"
+            component={ClientInfo}
+            exact
+          />
+          <Route
+            path="/Freelancia-Front-End/Dashboard/edit/:user_id"
+            component={EditClientInfo}
+            exact
+          />
+          <Route
+            path="/Freelancia-Front-End/Dashboard/security/:user_id"
+            component={EditSecurity}
             exact
           />
           <Route path="/login" component={LoginForm} exact />
