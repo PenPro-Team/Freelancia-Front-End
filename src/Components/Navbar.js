@@ -47,11 +47,13 @@ function NavBar() {
           ) : (
             ""
           )}
-          
 
-          {isAuth ? (
-            user.role === "freelancer" ? (
-              <Nav.Link as={Link} to="/Freelancia-Front-End/freelancerprofile">
+          {auth ? (
+            isAuth ? (
+              <Nav.Link
+                as={Link}
+                to={`/Freelancia-Front-End/Dashboard/${user.id}`}
+              >
                 Your Profile
               </Nav.Link>
             ) : (
@@ -60,8 +62,6 @@ function NavBar() {
           ) : (
             ""
           )}
-
-
 
           {isAuth ? (
             user.role === "client" ? (
@@ -88,23 +88,32 @@ function NavBar() {
         </Nav>
         {isAuth ? (
           <div>
-              <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
-            <Nav.Link as={Link} to={`/Freelancia-Front-End/Dashboard/${user.id}`}>
-                 <div className="d-flex flex-row gap-2 justify-content-center align-items-center">
-                    <img
-                      className="rounded-circle"
-                      width={"48px"}
-                      height={"48px"}
-                      src={personalImg}
-                    />
+            <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
+              <Nav.Link
+                as={Link}
+                to={`/Freelancia-Front-End/Dashboard/${user.id}`}
+              >
+                <div className="d-flex flex-row gap-2 justify-content-center align-items-center">
+                  <img
+                    className="rounded-circle"
+                    width={"48px"}
+                    height={"48px"}
+                    src={personalImg}
+                  />
                   <span className="fs-5">{user.firstName}</span>
-                 </div>
-            </Nav.Link>
-                <Nav.Link as={Link} to="/Freelancia-Front-End" onClick={(e) => {handleLogout(e)}}>
-                  <span className="text-danger ms-2">Logout</span>
-                </Nav.Link>
-          </div>
+                </div>
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/Freelancia-Front-End"
+                onClick={(e) => {
+                  handleLogout(e);
+                }}
+              >
+                <span className="text-danger ms-2">Logout</span>
+              </Nav.Link>
             </div>
+          </div>
         ) : (
           <div className="text-light d-flex flex-row flex-wrap gap-2">
             <Nav.Link as={Link} to="/Freelancia-Front-End/login">
@@ -115,7 +124,6 @@ function NavBar() {
             </Nav.Link>
           </div>
         )}
-        
       </Container>
     </Navbar>
   );
