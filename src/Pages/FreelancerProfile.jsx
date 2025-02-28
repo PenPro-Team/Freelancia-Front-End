@@ -12,6 +12,15 @@ function FreelancerProfile(props) {
     <>
     <HeaderColoredText text="Your Profile"/>
 
+    {/* useEffect(() => {
+        AxiosSkillsInstance.get("")
+          .then((response) => {
+            setSkillsOptions(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching skills:", error);
+          });
+      }, []); */}
 
     </>
     
