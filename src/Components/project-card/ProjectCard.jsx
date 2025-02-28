@@ -6,38 +6,38 @@ import RequiredSkills from "../RequiredSkills/RequiredSkills";
 import PaginationButton from "../Pagination/Pagination";
 import Placeholder from "react-bootstrap/Placeholder";
 import { Badge } from "react-bootstrap";
-import {AxiosProjectsInstance} from "../../network/API/AxiosInstance"
-import  DrawRequiredSkills  from "../DrawRequiredSkills"
+import { AxiosProjectsInstance } from "../../network/API/AxiosInstance";
+import DrawSkills from "../DrawSkills";
 
-export default function ProjectCard({ skills, jobStates, priceRange, isSortedByRecent }) {
+export default function ProjectCard({
+  skills,
+  jobStates,
+  priceRange,
+  isSortedByRecent,
+}) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [searchResult, setSearchResult] = useState()
-  useEffect(()=> {
-    AxiosProjectsInstance
-      .get(``)
+  const [searchResult, setSearchResult] = useState();
+  useEffect(() => {
+    AxiosProjectsInstance.get(``)
       .then((response) => {
-        const totalCount = response.data.length ;
+        const totalCount = response.data.length;
         setTotalPages(Math.ceil(totalCount / 10 + 1));
       })
       .catch((error) =>
         console.error("There was an error fetching data", error)
       );
-  },[])
+  }, []);
   useEffect(() => {
-    AxiosProjectsInstance
-      .get(
-        `?_page=${currentPage}&_limit=10`
-      )
+    AxiosProjectsInstance.get(`?_page=${currentPage}&_limit=10`)
       .then((response) => {
         setData(response.data);
       })
       .catch((error) =>
         console.error("There was an error fetching data", error)
       );
-      
   }, [currentPage]);
 
   useEffect(() => {
@@ -59,7 +59,6 @@ export default function ProjectCard({ skills, jobStates, priceRange, isSortedByR
 
       const price = project.suggested_budget || 0;
 
-      
       let priceMatch = true;
       if (priceRange) {
         priceMatch = price >= priceRange.min && price <= priceRange.max;
@@ -70,14 +69,14 @@ export default function ProjectCard({ skills, jobStates, priceRange, isSortedByR
     });
 
     if (isSortedByRecent) {
-      const sortedFiltered = [...filtered].sort((old, now) => new Date(now.creation_date) - new Date(old.creation_date));
+      const sortedFiltered = [...filtered].sort(
+        (old, now) => new Date(now.creation_date) - new Date(old.creation_date)
+      );
       setFilteredData(sortedFiltered);
     } else {
       setFilteredData(filtered);
-      
     }
-
-  }, [data, skills, jobStates, priceRange,isSortedByRecent]);
+  }, [data, skills, jobStates, priceRange, isSortedByRecent]);
 
   return (
     <>
@@ -93,32 +92,46 @@ export default function ProjectCard({ skills, jobStates, priceRange, isSortedByR
                 <p className="mb-1 text-muted" style={{ fontSize: "14px" }}>
                   Price: {project.suggested_budget}$
                 </p>
-                <h5 className="card-title d-flex justify-content-between">{project.project_name} <span className=""><p className="mb-1 text-muted fw-light text-end d-inline" style={{fontSize:"12px"}}>{project.creation_date}</p></span></h5>
-                
+                <h5 className="card-title d-flex justify-content-between">
+                  {project.project_name}{" "}
+                  <span className="">
+                    <p
+                      className="mb-1 text-muted fw-light text-end d-inline"
+                      style={{ fontSize: "12px" }}
+                    >
+                      {project.creation_date}
+                    </p>
+                  </span>
+                </h5>
+
                 {/* <RequiredSkills
                   skills={project.required_skills}
                   key={project.id}
                 /> */}
-                <DrawRequiredSkills required_skills={project.required_skills}/>
+                <DrawSkills required_skills={project.required_skills} />
                 <Badge
-                style={{position:"absolute",top:"10px",right:"10px",opacity:"75%"}}
-                bg={
-                  project.job_state === "finished"
-                    ? "dark"
-                    : project.job_state === "open"
-                    ? "primary"
-                    : project.job_state === "ongoing"
-                    ? "success"
-                    : project.job_state === "canceled"
-                    ? "danger"
-                    : project.job_state ===
-                      "contract canceled and reopened"
-                    ? "success"
-                    : "secondary"
-                }
-              >
-                {project.job_state}
-              </Badge>
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    opacity: "75%",
+                  }}
+                  bg={
+                    project.job_state === "finished"
+                      ? "dark"
+                      : project.job_state === "open"
+                      ? "primary"
+                      : project.job_state === "ongoing"
+                      ? "success"
+                      : project.job_state === "canceled"
+                      ? "danger"
+                      : project.job_state === "contract canceled and reopened"
+                      ? "success"
+                      : "secondary"
+                  }
+                >
+                  {project.job_state}
+                </Badge>
                 <p className="card-text truncate">
                   {project.project_description}
                 </p>
