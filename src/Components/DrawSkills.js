@@ -5,7 +5,7 @@ function DrawSkills(props) {
   return (
     <>
       {!props.notShowingTitle && (
-        <span className="fw-bold">Required Skills:</span>
+        <span className="fw-bold">Required Skills: </span>
       )}
       {(Array.isArray(props.required_skills)
         ? props.required_skills
