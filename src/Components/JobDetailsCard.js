@@ -5,7 +5,7 @@ import { useState } from "react";
 import ProjectProposals from "./ProjectProposals";
 import { Badge, Placeholder, Modal, Button } from "react-bootstrap";
 import ClientHistory from "./ClientHistory";
-import DrawRequiredSkills from "./DrawRequiredSkills";
+import DrawSkills from "./DrawSkills";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { AiFillSetting } from "react-icons/ai";
 import { TiCancel } from "react-icons/ti";
@@ -19,20 +19,18 @@ function JobDetailsCard(props) {
   const [activeTab, setActiveTab] = useState("first");
   const history = useHistory();
   const auth = getFromLocalStorage("auth");
-  
+
   // ----------
-// Added cancel functionality state and functions
+  // Added cancel functionality state and functions
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelSubmitting, setCancelSubmitting] = useState(false);
   const [cancelMessage, setCancelMessage] = useState("");
-
-
 
   const handleCancelJob = (cancelType) => {
     setCancelSubmitting(true);
     setCancelMessage("");
     let newJobState;
-  
+
     if (props.project.job_state === "ongoing" && cancelType) {
       if (cancelType === "contract") {
         newJobState = "contract canceled and reopened";
@@ -42,7 +40,7 @@ function JobDetailsCard(props) {
     } else {
       newJobState = "canceled";
     }
-  
+
     AxiosProjectsInstance.patch(`/${props.project.id}`, {
       job_state: newJobState,
     })
@@ -65,9 +63,9 @@ function JobDetailsCard(props) {
         setCancelSubmitting(false);
       });
   };
-  
-// ----------
-  
+
+  // ----------
+
   const renderContent = () => {
     switch (activeTab) {
       case "first":
@@ -93,7 +91,8 @@ function JobDetailsCard(props) {
                     ? "success"
                     : props.project.job_state === "canceled"
                     ? "danger"
-                    : props.project.job_state === "contract canceled and reopened"
+                    : props.project.job_state ===
+                      "contract canceled and reopened"
                     ? "success"
                     : "secondary"
                 }
@@ -142,9 +141,7 @@ function JobDetailsCard(props) {
             </div>
             <div>
               {props.project.required_skills && (
-                <DrawRequiredSkills
-                  required_skills={props.project.required_skills}
-                />
+                <DrawSkills required_skills={props.project.required_skills} />
               )}
             </div>
             <div>
@@ -168,7 +165,8 @@ function JobDetailsCard(props) {
                 auth.user.role === "client" &&
                 props.project.owner_id === auth.user.id &&
                 (props.project.job_state === "open" ||
-                  props.project.job_state === "contract canceled and reopened" ||
+                  props.project.job_state ===
+                    "contract canceled and reopened" ||
                   props.project.job_state === "ongoing") && (
                   <div
                     style={{ cursor: "pointer" }}
@@ -176,9 +174,8 @@ function JobDetailsCard(props) {
                       history.push("/Freelancia-Front-End/postjob", {
                         mode: "update",
                         jobData: props.project,
-                      })
-                    }
-                    }
+                      });
+                    }}
                   >
                     <AiFillSetting color="" size="1.25rem" />
                   </div>
@@ -188,10 +185,14 @@ function JobDetailsCard(props) {
                 auth.user.role === "client" &&
                 props.project.owner_id === auth.user.id &&
                 (props.project.job_state === "open" ||
-                  props.project.job_state === "contract canceled and reopened") && (
-                  <div style={{ cursor: "pointer" }} onClick={() => {
-                    setShowCancelModal(true)
-                  }}>
+                  props.project.job_state ===
+                    "contract canceled and reopened") && (
+                  <div
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setShowCancelModal(true);
+                    }}
+                  >
                     <TiCancel color="red" size="1.5rem" />
                   </div>
                 )}
@@ -200,9 +201,12 @@ function JobDetailsCard(props) {
                 auth.user.role === "client" &&
                 props.project.owner_id === auth.user.id &&
                 props.project.job_state === "ongoing" && (
-                  <div style={{ cursor: "pointer" }} onClick={() => {
-                    setShowCancelModal(true) 
-                }}>
+                  <div
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setShowCancelModal(true);
+                    }}
+                  >
                     <TiCancel color="red" size="1.5rem" />
                   </div>
                 )}
@@ -285,7 +289,8 @@ function JobDetailsCard(props) {
           <Modal.Body>
             {props.project.job_state === "ongoing" ? (
               <p>
-                Do you want to end the contract with the current client and reopen the job, or do you want to cancel the job entirely?
+                Do you want to end the contract with the current client and
+                reopen the job, or do you want to cancel the job entirely?
               </p>
             ) : (
               <p>Are you sure you want to cancel this job?</p>
@@ -293,7 +298,10 @@ function JobDetailsCard(props) {
             {cancelMessage && <p>{cancelMessage}</p>}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
+            <Button
+              variant="secondary"
+              onClick={() => setShowCancelModal(false)}
+            >
               No
             </Button>
             {props.project.job_state === "ongoing" ? (
@@ -303,7 +311,9 @@ function JobDetailsCard(props) {
                   onClick={() => handleCancelJob("contract")}
                   disabled={cancelSubmitting}
                 >
-                  {cancelSubmitting ? "Processing..." : "End Contract & Reopen Job"}
+                  {cancelSubmitting
+                    ? "Processing..."
+                    : "End Contract & Reopen Job"}
                 </Button>
                 <Button
                   variant="danger"
