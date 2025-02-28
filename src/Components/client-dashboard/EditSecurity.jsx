@@ -4,7 +4,7 @@ import { Link, useHistory, useParams } from 'react-router-dom/cjs/react-router-d
 import { getFromLocalStorage } from '../../network/local/LocalStorage';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Card, Container, Row, Col, Placeholder, Form, Button, Alert, InputGroup } from "react-bootstrap";
+import { Card, Container, Row, Col, Placeholder, Form, Button, Alert, InputGroup, Modal } from "react-bootstrap";
 export default function EditSecurity() {
     const [userData, setUserData] = useState({})
     const auth = getFromLocalStorage("auth");
@@ -43,7 +43,8 @@ export default function EditSecurity() {
         const { name, value } = e.target;
         setNewPassword({ ...newPassword, [name]: value });
         let errorMessage = "";
-
+        console.log(newPassword);
+        
         switch (name) {
             case "newPassword":
                 if (!robustPasswordRegex.test(value)) {
@@ -66,7 +67,7 @@ export default function EditSecurity() {
                 break;
         }
         console.log(isFormValid);
-        
+
         // setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
         // setIsFormValid(true)
         setErrors((prevErrors) => {
@@ -115,6 +116,11 @@ export default function EditSecurity() {
             try {
                 const response = await axios.get(
                     `https://api-generator.retool.com/D8TEH0/data?${field}=${value}`
+                    `https://api-generator.retool.com/D8TEH0/data?${field}=${value}`
+                    `https://api-generator.retool.com/D8TEH0/data?${field}=${value}`
+                    `https://api-generator.retool.com/D8TEH0/data?${field}=${value}`
+                    `https://api-generator.retool.com/D8TEH0/data?${field}=${value}`
+                    `https://api-generator.retool./data?${field}=${value}`
                 );
                 const data = response.data;
                 if (field === "username") {
@@ -139,7 +145,7 @@ export default function EditSecurity() {
             } catch (error) {
                 console.error(`Error checking ${field} availability:`, error);
             }
-            
+
         }
     };
     const handleBlur = (e) => {
@@ -178,6 +184,9 @@ export default function EditSecurity() {
         setShowSuccess(false);
         setShowError(false);
         setShow(true);
+        console.log(userData.password);
+        console.log(newPassword.password);
+        
         if (userData.password == newPassword.password) {
             if (isFormValid) {
                 axios.put(`https://api-generator.retool.com/D8TEH0/data/${params.user_id}`, formValues)
@@ -185,22 +194,26 @@ export default function EditSecurity() {
                         console.log(res.data)
                         setShowSuccess(true)
                         setShowError(false)
-                        setUserData(formValues);
+                        setUserData(res.data);
                         setShow(true)
-    
+                        setShowModal(false);
+
                     }).catch((error) => {
                         console.log(error);
                         setShowSuccess(false)
                         setShowError(true)
                     })
             }
-        }else{
+        } else {
             setPwdError("incorrect Password! Please Try Again..")
         }
     }
-    const handleVisible = () => {
-        setIsVisible(!isVisible);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleClose = () => {
+            setShowModal(false);
     }
+    const handleShow = () => setShowModal(true);
     return (
         <>
             <Row className="justify-content-center mt-5">
@@ -268,7 +281,7 @@ export default function EditSecurity() {
 
                                         <Row className="mb-3 border border-2 rounded-3 p-3">
                                             <h3>Update Password </h3>
-                                            <Form.Group as={Col} controlId="formGridCity">
+                                            {/* <Form.Group as={Col} controlId="formGridCity">
                                                 <Form.Label>Current Password</Form.Label>
                                                 <InputGroup className="mb-3">
                                                     <Form.Control
@@ -291,10 +304,10 @@ export default function EditSecurity() {
                                                         }
                                                     </Button>
                                                 </InputGroup>
-                                            </Form.Group>
-                                            {pwdError && (<Alert variant='danger'>
-                                            {pwdError}
-                                            </Alert>)}
+                                            </Form.Group> */}
+                                            {/* {pwdError && (<Alert variant='danger'>
+                                                {pwdError}
+                                            </Alert>)} */}
                                             <Form.Group controlId="formGridCity" className='w-100'>
                                                 <Form.Label>New Password</Form.Label>
                                                 <InputGroup className="mb-3">
@@ -310,7 +323,7 @@ export default function EditSecurity() {
                                                     <Button
                                                         variant="outline-secondary"
                                                         id="button-addon2"
-                                                        onClick={()=> setIsVisible(!isVisible)}>
+                                                        onClick={() => setIsVisible(!isVisible)}>
                                                         {isVisible ?
                                                             <FaEyeSlash />
                                                             :
@@ -349,16 +362,58 @@ export default function EditSecurity() {
                                                 </InputGroup>
                                             </Form.Group>
                                         </Row>
-                                        <Button variant="primary" type="submit" disabled={!isFormValid || (userData.username == formValues.username && userData.email == formValues.email && (newPassword.password == "" || newPassword.newPassword != newPassword.confirmPassword || newPassword.newPassword == ""))} >
+                                        <Button variant="primary" onClick={handleShow} disabled={!isFormValid || (userData.username == formValues.username && userData.email == formValues.email && (newPassword.newPassword != newPassword.confirmPassword || newPassword.newPassword == ""))} >
                                             Submit
                                         </Button>
+                                        <Modal show={showModal} onHide={handleClose}>
+                                            <Modal.Header closeButton>
+                                                <Modal.Title>Modal heading</Modal.Title>
+                                            </Modal.Header>
+                                            <Modal.Body>
+                                                <Form.Group as={Col} controlId="formGridCity">
+                                                    <Form.Label>Current Password</Form.Label>
+                                                            {pwdError && (<Alert variant='danger' dismissible={false}>
+                                                                {pwdError}
+                                                            </Alert>)}
+                                                    <InputGroup className="mb-3">
+                                                        <Form.Control
+                                                            name='password'
+                                                            type={isVisibleOld ? 'text' : 'password'}
+                                                            feedback={errors.password}
+                                                            onChange={handlePassword}
+                                                            isInvalid={!!errors.password}
+                                                        />
+                                                        <Button
+                                                            variant="outline-secondary"
+                                                            id="button-addon2"
+                                                            onClick={() => setIsVisibleOld(!isVisibleOld)}
+                                                        >
+                                                            {isVisibleOld ?
+                                                                <FaEyeSlash />
+                                                                :
+                                                                <FaEye />
+                                                            }
+                                                        </Button>
+                                                    </InputGroup>
+                                                </Form.Group>
+                                            </Modal.Body>
+                                            <Modal.Footer>
+                                                <Button variant="secondary" onClick={handleClose}>
+                                                    Close
+                                                </Button>
+                                                <Button variant="primary" onClick={(e)=> handleSubmit(e)} type='submit'>
+                                                    Save Changes
+                                                </Button>
+                                            </Modal.Footer>
+                                        </Modal>
                                     </Form>
+
                                 </>
                             }
                         </Card.Body>
                     </Card>
                 </Col>
-            </Row>
+            </Row >
         </>
     )
 }
