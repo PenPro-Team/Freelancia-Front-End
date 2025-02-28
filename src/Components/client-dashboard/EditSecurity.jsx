@@ -22,42 +22,73 @@ export default function EditSecurity() {
     const [isVisible, setIsVisible] = useState(false)
     const [isVisibleOld, setIsVisibleOld] = useState(false)
     const [isVisibleConf, setIsVisibleConf] = useState(false)
+    const [newPassword, setNewPassword] = useState({
+        password: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
     const [formValues, setFormValues] = useState({
         username: "",
         email: "",
-        password: "",
     });
+    const [pwdError, setPwdError] = useState("")
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     // تعديل regex للباسوورد بحيث يتطلب حروف وأرقام إنجليزي، على الأقل 8 أحرف، حرف واحد كابتل، حرف واحد سمول ورقم واحد
     const robustPasswordRegex = /^(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     const userNameReg = /^[a-z0-9\._]{3,}$/;
     console.log(formValues.firstName);
-    const [isFormValid, setIsFormValid] = useState(false);
+    const [isFormValid, setIsFormValid] = useState(null);
+
+    const handlePassword = (e) => {
+        const { name, value } = e.target;
+        setNewPassword({ ...newPassword, [name]: value });
+        let errorMessage = "";
+
+        switch (name) {
+            case "newPassword":
+                if (!robustPasswordRegex.test(value)) {
+                    console.log(value);
+                    setIsFormValid(false)
+                    errorMessage =
+                        "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long ,and no white spaces";
+                }
+                break;
+            case "confirmPassword":
+                if (name === "confirmPassword" && value !== newPassword.newPassword) {
+                    console.log(value);
+                    errorMessage =
+                        "Passwords Do not Match!";
+                    setIsFormValid(false)
+                }
+                break;
+
+            default:
+                break;
+        }
+        console.log(isFormValid);
+        
+        // setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
+        // setIsFormValid(true)
+        setErrors((prevErrors) => {
+            const updatedErrors = { ...prevErrors, [name]: errorMessage };
+            const allValid = Object.values(updatedErrors).every((error) => error === "")
+            setIsFormValid(allValid);
+            return updatedErrors;
+        });
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         let newValue = value;
         setFormValues({ ...formValues, [name]: newValue });
         let errorMessage = "";
-        console.log(name);
-
+        // console.log(name);
         // console.log(e.target.name);
 
         if (newValue.trim() === "") {
             errorMessage = "This field is required";
         } else {
             switch (name) {
-                case "password":
-                    if (!robustPasswordRegex.test(newValue)) {
-                        errorMessage =
-                            "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long ,and no white spaces";
-                    }
-                    break;
-                case "newPassword":
-                    if (!robustPasswordRegex.test(newValue)) {
-                        errorMessage =
-                            "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long ,and no white spaces";
-                    }
-                    break;
                 case "username":
                     if (!userNameReg.test(newValue)) {
                         errorMessage =
@@ -71,20 +102,16 @@ export default function EditSecurity() {
                     break;
             }
         }
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
         setErrors((prevErrors) => {
             const updatedErrors = { ...prevErrors, [name]: errorMessage };
             const allValid = Object.values(updatedErrors).every((error) => error === "")
             setIsFormValid(allValid);
             return updatedErrors;
         });
-        const handleBlur = (e) => {
-            const { name, value } = e.target;
-            if (name === "username" || name === "email") {
-                checkAvailability(name, value);
-            }
-        };
-        const checkAvailability = async (field, value) => {
+
+    };
+    const checkAvailability = async (field, value) => {
+        if ((field == "username" && value != userData.username) || (field == "email" && userData.email != value)) {
             try {
                 const response = await axios.get(
                     `https://api-generator.retool.com/D8TEH0/data?${field}=${value}`
@@ -104,11 +131,22 @@ export default function EditSecurity() {
                         ...prevErrors,
                         email: data.length > 0 ? "Email already exists" : "",
                     }));
+
+                }
+                if (data.length > 0) {
+                    setIsFormValid(false)
                 }
             } catch (error) {
                 console.error(`Error checking ${field} availability:`, error);
             }
-        };
+            
+        }
+    };
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+        if (name === "username" || name === "email") {
+            checkAvailability(name, value);
+        }
     };
     useEffect(() => {
         setIsLoading(true);
@@ -140,20 +178,24 @@ export default function EditSecurity() {
         setShowSuccess(false);
         setShowError(false);
         setShow(true);
-        if (isFormValid) {
-            axios.put(`https://api-generator.retool.com/D8TEH0/data/${params.user_id}`, formValues)
-                .then((res) => {
-                    console.log(res.data)
-                    setShowSuccess(true)
-                    setShowError(false)
-                    setUserData(formValues);
-                    setShow(true)
-
-                }).catch((error) => {
-                    console.log(error);
-                    setShowSuccess(false)
-                    setShowError(true)
-                })
+        if (userData.password == newPassword.password) {
+            if (isFormValid) {
+                axios.put(`https://api-generator.retool.com/D8TEH0/data/${params.user_id}`, formValues)
+                    .then((res) => {
+                        console.log(res.data)
+                        setShowSuccess(true)
+                        setShowError(false)
+                        setUserData(formValues);
+                        setShow(true)
+    
+                    }).catch((error) => {
+                        console.log(error);
+                        setShowSuccess(false)
+                        setShowError(true)
+                    })
+            }
+        }else{
+            setPwdError("incorrect Password! Please Try Again..")
         }
     }
     const handleVisible = () => {
@@ -200,7 +242,12 @@ export default function EditSecurity() {
                                                 value={formValues.username}
                                                 onChange={handleChange}
                                                 feedback={errors.username}
+                                                onBlur={handleBlur}
+                                                isInvalid={!!errors.username}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.username}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
 
                                         <Form.Group className="mb-3" controlId="formGridAddress2">
@@ -210,8 +257,13 @@ export default function EditSecurity() {
                                                 placeholder="Enter Your Email Address"
                                                 value={formValues.email}
                                                 onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                isInvalid={!!errors.email}
                                                 feedback={errors.email}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.email}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
 
                                         <Row className="mb-3 border border-2 rounded-3 p-3">
@@ -222,14 +274,16 @@ export default function EditSecurity() {
                                                     <Form.Control
                                                         name='password'
                                                         type={isVisibleOld ? 'text' : 'password'}
-                                                        onChange={handleChange}
                                                         feedback={errors.password}
+                                                        onSubmit={handlePassword}
+                                                        onChange={handlePassword}
+                                                        isInvalid={!!errors.password}
                                                     />
                                                     <Button
                                                         variant="outline-secondary"
                                                         id="button-addon2"
                                                         onClick={() => setIsVisibleOld(!isVisibleOld)}
-                                                        >
+                                                    >
                                                         {isVisibleOld ?
                                                             <FaEyeSlash />
                                                             :
@@ -238,6 +292,9 @@ export default function EditSecurity() {
                                                     </Button>
                                                 </InputGroup>
                                             </Form.Group>
+                                            {pwdError && (<Alert variant='danger'>
+                                            {pwdError}
+                                            </Alert>)}
                                             <Form.Group controlId="formGridCity" className='w-100'>
                                                 <Form.Label>New Password</Form.Label>
                                                 <InputGroup className="mb-3">
@@ -246,17 +303,23 @@ export default function EditSecurity() {
                                                         type={isVisible ? 'text' : 'password'}
                                                         placeholder="Password"
                                                         aria-describedby="basic-addon2"
+                                                        onChange={handlePassword}
+                                                        isInvalid={!!errors.newPassword}
+                                                        feedback={errors.newPassword}
                                                     />
                                                     <Button
                                                         variant="outline-secondary"
                                                         id="button-addon2"
-                                                        onClick={handleVisible}>
+                                                        onClick={()=> setIsVisible(!isVisible)}>
                                                         {isVisible ?
                                                             <FaEyeSlash />
                                                             :
                                                             <FaEye />
                                                         }
                                                     </Button>
+                                                    <Form.Control.Feedback type="invalid" >
+                                                        {errors.newPassword}
+                                                    </Form.Control.Feedback>
                                                 </InputGroup>
                                                 <Form.Label>Repeat Password</Form.Label>
                                                 <InputGroup className="mb-3">
@@ -265,6 +328,9 @@ export default function EditSecurity() {
                                                         type={isVisibleConf ? 'text' : 'password'}
                                                         placeholder="Password"
                                                         aria-describedby="basic-addon2"
+                                                        onChange={handlePassword}
+                                                        isInvalid={!!errors.confirmPassword}
+                                                        feedback={errors.confirmPassword}
                                                     />
                                                     <Button
                                                         variant="outline-secondary"
@@ -277,10 +343,13 @@ export default function EditSecurity() {
                                                             <FaEye />
                                                         }
                                                     </Button>
+                                                    <Form.Control.Feedback type="invalid">
+                                                        {errors.confirmPassword}
+                                                    </Form.Control.Feedback>
                                                 </InputGroup>
                                             </Form.Group>
                                         </Row>
-                                        <Button variant="primary" type="submit" disabled={!isFormValid || (userData.username == formValues.username && userData.email == formValues.email && userData.password == formValues.password)} >
+                                        <Button variant="primary" type="submit" disabled={!isFormValid || (userData.username == formValues.username && userData.email == formValues.email && (newPassword.password == "" || newPassword.newPassword != newPassword.confirmPassword || newPassword.newPassword == ""))} >
                                             Submit
                                         </Button>
                                     </Form>
