@@ -49,7 +49,7 @@ function Dashboard() {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [history, params.project_id]);
+  }, [history, params]);
 
   return (
     <div className="container-fluid px-5">
@@ -61,7 +61,7 @@ function Dashboard() {
               <Nav.Item>
                 <Nav.Link eventKey="first">User Info</Nav.Link>
               </Nav.Item>
-              {auth && user && user.id == user_id && (
+              {auth && user && user.id == user_id && user.id == userData.id && (
                 <>
                   <Nav.Item>
                     <Nav.Link eventKey="second">Update Profile</Nav.Link>
@@ -74,21 +74,19 @@ function Dashboard() {
                       <Nav.Link eventKey="fourth">Update Skills</Nav.Link>
                     </Nav.Item>
                   )}
-                  
                 </>
               )}
               {userData.role == "freelancer" && (
                 <>
-
-                <Nav.Item>
-                  <Nav.Link eventKey="fifth">Skills</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                <Nav.Link eventKey="six">Certificate</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-                <Nav.Link eventKey="seven">Projects</Nav.Link>
-            </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="fifth">Skills</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="six">Certificate</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="seven">Projects</Nav.Link>
+                  </Nav.Item>
                 </>
               )}
             </Nav>
@@ -111,10 +109,10 @@ function Dashboard() {
                 <DesplaySkills />
               </Tab.Pane>
               <Tab.Pane eventKey="six">
-                <UpdateCertificate/>
+                <UpdateCertificate />
               </Tab.Pane>
               <Tab.Pane eventKey="seven">
-                <UpdateProjects/>
+                <UpdateProjects />
               </Tab.Pane>
             </Tab.Content>
           </Col>
