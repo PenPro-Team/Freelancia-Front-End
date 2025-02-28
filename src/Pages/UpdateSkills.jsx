@@ -1,19 +1,21 @@
 import { Alert, Button, Card, Col, Form, Image, InputGroup, Placeholder, Row } from "react-bootstrap";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
-import RateStars from './../Components/RateStars';
+import RateStars from '../Components/RateStars';
 import HeaderColoredText from "../Components/HeaderColoredText";
 import { AxiosSkillsInstance } from "../network/API/AxiosInstance";
 import { useEffect, useState } from "react";
 import { Link } from "react-bootstrap-icons";
 
-function FreelancerProfile(props) {
+function UpdateSkills(props) {
     const auth = getFromLocalStorage("auth");
     const user = auth ? auth.user : null;
     const history = useHistory();
     const [errors, setErrors] = useState({});
     const [skillsOptions, setSkillsOptions] = useState([]);
     const [selectedSkill, setSelectedSkill] = useState("");
+    const [initialData, setInitialData] = useState(null);
+    const userSkill = '';
     const [formData, setFormData] = useState({
         requiredSkills: [],
       });
@@ -29,6 +31,22 @@ function FreelancerProfile(props) {
       }, [])
 
 
+       useEffect(() => {
+          
+            setFormData({
+              requiredSkills: userSkill.required_skills
+                ? userSkill.required_skills.split(", ").filter((skill) => skill)
+                : [],
+            });
+            setInitialData({
+              requiredSkills: userSkill.required_skills
+                ? userSkill.required_skills.split(", ").filter((skill) => skill)
+                : [],
+            });
+          
+        }, []);
+
+
       const handleAddSkill = () => {
         if (selectedSkill && !formData.requiredSkills.includes(selectedSkill)) {
           setFormData((prev) => ({
@@ -41,7 +59,7 @@ function FreelancerProfile(props) {
       };
   return (
     <>
-    <HeaderColoredText text="Your Profile"/>
+    {/* <HeaderColoredText text="Your Profile"/> */}
 
 
 <Row className="justify-content-center mt-5">
@@ -85,6 +103,7 @@ function FreelancerProfile(props) {
                                     
                               </div>
                             
+                              {/* <button className="btn btn-primary" onClick={}>Update Skills</button> */}
                         </Card.Body>
                     </Card>
                 </Col>
@@ -95,4 +114,4 @@ function FreelancerProfile(props) {
   );
 }
 
-export default FreelancerProfile;
+export default UpdateSkills;

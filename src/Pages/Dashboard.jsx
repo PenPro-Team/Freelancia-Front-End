@@ -5,6 +5,9 @@ import { getFromLocalStorage } from "../network/local/LocalStorage";
 import EditClientInfo from "../Components/client-dashboard/EditClientInfo";
 import EditSecurity from "../Components/client-dashboard/EditSecurity";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import FreelancerProfile from "./UpdateSkills";
+import UpdateSkills from "./UpdateSkills";
+import DesplaySkills from "./DesplaySkills";
 
 function Dashboard() {
   const auth = getFromLocalStorage("auth");
@@ -34,6 +37,9 @@ function Dashboard() {
                       <Nav.Link eventKey="fourth">Update Skills</Nav.Link>
                     </Nav.Item>
                   )}
+                  <Nav.Item>
+                      <Nav.Link eventKey="fifth">Skills</Nav.Link>
+                  </Nav.Item>
                 </>
               )}
             </Nav>
@@ -49,7 +55,12 @@ function Dashboard() {
               <Tab.Pane eventKey="third">
                 <EditSecurity />
               </Tab.Pane>
-              <Tab.Pane eventKey="fourth">Fourth tab content</Tab.Pane>
+              <Tab.Pane eventKey="fourth">
+                <UpdateSkills/>
+              </Tab.Pane>
+              <Tab.Pane eventKey="fifth">
+                <DesplaySkills/>
+              </Tab.Pane>
             </Tab.Content>
           </Col>
         </Row>
