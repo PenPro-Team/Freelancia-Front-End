@@ -124,7 +124,7 @@ const ClientJobForm = () => {
     const fieldError = validateField(name, value);
     setErrors((prev) => ({ ...prev, [name]: fieldError }));
   };
-
+//-------------------------------------------------------------------
   const handleAddSkill = () => {
     if (selectedSkill && !formData.requiredSkills.includes(selectedSkill)) {
       setFormData((prev) => ({
@@ -135,7 +135,7 @@ const ClientJobForm = () => {
       setErrors((prev) => ({ ...prev, requiredSkills: "" }));
     }
   };
-
+//-------------------------------------------------------------------
   const validate = () => {
     let tempErrors = {};
     tempErrors.project_name = validateField("project_name", formData.project_name);
