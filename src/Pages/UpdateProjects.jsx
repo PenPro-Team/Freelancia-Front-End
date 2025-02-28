@@ -6,9 +6,9 @@ import HeaderColoredText from "../Components/HeaderColoredText";
 import { AxiosSkillsInstance } from "../network/API/AxiosInstance";
 import { useEffect, useState } from "react";
 import { Link } from "react-bootstrap-icons";
-import cert1 from "../assets/certificate (1).png"
-import cert2 from "../assets/certificate (2).png"
-import cert3 from "../assets/IMG_20250226_141719.jpg"
+import Pro1 from "../assets/Projects_Images/img1.png"
+import Pro2 from "../assets/Projects_Images/img2.png"
+import Pro3 from "../assets/Projects_Images/img3.png"
 function UpdateCertificate(props) {
     const auth = getFromLocalStorage("auth");
     const user = auth ? auth.user : null;
@@ -68,13 +68,13 @@ function UpdateCertificate(props) {
                 <Col md={24}>
                     <Card className="shadow-lg p-3 mb-5 bg-white rounded">
                         <Card.Body>
-                            <Card.Title className="text-center">Freelancer Certificate</Card.Title>
+                            <Card.Title className="text-center mb-4">Freelancer Project</Card.Title>
                             
                             <Container>
                                 <Row>
-                                  <Col sm><img src={cert1} className="w-100" alt="" /></Col>
-                                  <Col sm><img src={cert3} className="w-100 h-75" alt="" /></Col>
-                                  <Col sm><img src={cert2} className="w-100" alt="" /></Col>
+                                  <Col sm><img src={Pro1} style={{maxHeight:"30"+"vh"}} className="w-100" alt="" /></Col>
+                                  <Col sm><img src={Pro2} style={{maxHeight:"30"+"vh"}} className="w-100" alt="" /></Col>
+                                  <Col sm><img src={Pro3} style={{maxHeight:"30"+"vh"}} className="w-100" alt="" /></Col>
                                 </Row>
                             </Container>
 
