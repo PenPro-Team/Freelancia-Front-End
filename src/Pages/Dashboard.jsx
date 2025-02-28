@@ -4,16 +4,51 @@ import ClientInfo from "../Components/client-dashboard/ClientInfo";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import EditClientInfo from "../Components/client-dashboard/EditClientInfo";
 import EditSecurity from "../Components/client-dashboard/EditSecurity";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  useHistory,
+  useParams,
+} from "react-router-dom/cjs/react-router-dom.min";
 import FreelancerProfile from "./UpdateSkills";
 import UpdateSkills from "./UpdateSkills";
 import DesplaySkills from "./DesplaySkills";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function Dashboard() {
   const auth = getFromLocalStorage("auth");
   const user = auth ? auth.user : null;
   const params = useParams();
   const user_id = params.user_id;
+  const [userData, setUserData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
+  const history = useHistory();
+
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get(`https://api-generator.retool.com/D8TEH0/data/${params.user_id}`)
+      .then((res) => {
+        setUserData(res.data);
+        // console.log(params.user_id);
+
+        if (Object.keys(res.data).length) {
+          setIsEmpty(false);
+        } else {
+          setIsEmpty(true);
+          history.push("/Freelancia-Front-End/404");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        history.push("/Freelancia-Front-End/404");
+        setIsEmpty(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [history, params.project_id]);
+
   return (
     <div className="container-fluid px-5">
       <HeaderColoredText text="Dashboard" />
@@ -37,10 +72,12 @@ function Dashboard() {
                       <Nav.Link eventKey="fourth">Update Skills</Nav.Link>
                     </Nav.Item>
                   )}
-                  <Nav.Item>
-                      <Nav.Link eventKey="fifth">Skills</Nav.Link>
-                  </Nav.Item>
                 </>
+              )}
+              {userData.role == "freelancer" && (
+                <Nav.Item>
+                  <Nav.Link eventKey="fifth">Skills</Nav.Link>
+                </Nav.Item>
               )}
             </Nav>
           </Col>
@@ -56,10 +93,10 @@ function Dashboard() {
                 <EditSecurity />
               </Tab.Pane>
               <Tab.Pane eventKey="fourth">
-                <UpdateSkills/>
+                <UpdateSkills />
               </Tab.Pane>
               <Tab.Pane eventKey="fifth">
-                <DesplaySkills/>
+                <DesplaySkills />
               </Tab.Pane>
             </Tab.Content>
           </Col>
