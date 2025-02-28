@@ -12,7 +12,7 @@ function DesplaySkills(props) {
     const auth = getFromLocalStorage("auth");
     const user = auth ? auth.user : null;
     const history = useHistory();
-    const [freelancerState, setFreelancerState] = useState({}); // Initialize as an empty object
+    const [freelancerState, setFreelancerState] = useState([]); // Initialize as an empty array
 
     const params = useParams();
     const user_id = params.user_id;
@@ -23,20 +23,15 @@ function DesplaySkills(props) {
                 setFreelancerState(response.data);
                 console.log(response);
                 console.log(response.data);
-                
-                console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-                
             })
             .catch((error) => {
                 console.error("Error fetching skills:", error);
-                setFreelancerState({});
+                setFreelancerState([]);
             });
-    }, []); // Add user_id as a dependency
+    }, [user_id]);
 
     return (
         <>
-            {/* <HeaderColoredText text="Your Profile"/> */}
-
             <Row className="justify-content-center mt-5">
                 <Col md={24}>
                     <Card className="shadow-lg p-3 mb-5 bg-white rounded">
@@ -54,7 +49,6 @@ function DesplaySkills(props) {
                                 ))}
                             </div>
 
-                            
                             {/* <button className="btn btn-primary" onClick={}>Update Skills</button> */}
                         </Card.Body>
                     </Card>
