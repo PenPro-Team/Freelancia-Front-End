@@ -19,6 +19,10 @@ export const AxiosSkillsInstance = axios.create({
   baseURL: "https://api-generator.retool.com/CGw7tS/skills",
 });
 
+// This Api For PostSkills For Freelancer (HTML,CSS,js,python)
+export const AxiosFreelancerSkillsInstance = axios.create({
+  baseURL: "https://api-generator.retool.com/HrMfyx/data",
+});
 /**
  * Demo Use it For getting Projects
  * AxiosProjectsInstance.get("What you will add to the url" , {"For Post The opject will be here"}).then().catch()
