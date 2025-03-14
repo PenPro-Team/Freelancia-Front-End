@@ -1,5 +1,13 @@
 import axios from "axios";
-import { Card, Image, Spinner, Alert, Button, Form, Modal } from "react-bootstrap";
+import {
+  Card,
+  Image,
+  Spinner,
+  Alert,
+  Button,
+  Form,
+  Modal,
+} from "react-bootstrap";
 import { useState, useEffect } from "react";
 import RateStars from "./RateStars";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
@@ -20,6 +28,8 @@ function ClientHistory({ owner_id }) {
   const currentUser = getFromLocalStorage("auth");
 
   useEffect(() => {
+    console.log("hEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEERE");
+    console.log(owner_id);
     if (!owner_id) return;
     axios
       .get(`https://api-generator.retool.com/Esur5x/dummyUsers/${owner_id}`)
@@ -30,7 +40,9 @@ function ClientHistory({ owner_id }) {
   useEffect(() => {
     if (!owner_id) return;
     axios
-      .get(`https://api-generator.retool.com/ECRLlk/feedback?user_reviewed=${owner_id}`)
+      .get(
+        `https://api-generator.retool.com/ECRLlk/feedback?user_reviewed=${owner_id}`
+      )
       .then((res) => {
         setClientReviews(res.data);
         setLoading(false);
@@ -76,13 +88,18 @@ function ClientHistory({ owner_id }) {
 
   const updateFeedback = () => {
     axios
-      .patch(`https://api-generator.retool.com/ECRLlk/feedback/${editingReview.id}`, {
-        message: editingReview.message,
-        rate: editingReview.rate,
-      })
+      .patch(
+        `https://api-generator.retool.com/ECRLlk/feedback/${editingReview.id}`,
+        {
+          message: editingReview.message,
+          rate: editingReview.rate,
+        }
+      )
       .then((res) => {
         setClientReviews(
-          clientReviews.map((review) => (review.id === res.data.id ? res.data : review))
+          clientReviews.map((review) =>
+            review.id === res.data.id ? res.data : review
+          )
         );
         setUserFeedback(res.data);
         setShowEditModal(false);
@@ -97,9 +114,13 @@ function ClientHistory({ owner_id }) {
 
   const deleteFeedback = () => {
     axios
-      .delete(`https://api-generator.retool.com/ECRLlk/feedback/${deletingReview.id}`)
+      .delete(
+        `https://api-generator.retool.com/ECRLlk/feedback/${deletingReview.id}`
+      )
       .then(() => {
-        setClientReviews(clientReviews.filter((review) => review.id !== deletingReview.id));
+        setClientReviews(
+          clientReviews.filter((review) => review.id !== deletingReview.id)
+        );
         setUserFeedback(null);
         setShowDeleteModal(false);
       })
@@ -137,10 +158,17 @@ function ClientHistory({ owner_id }) {
               <div>{review.message}</div>
               {currentUser?.user?.id === review.user_reviewr && (
                 <div className="mt-2 d-flex">
-                  <Button variant="warning" className="me-2" onClick={() => openEditModal(review)}>
+                  <Button
+                    variant="warning"
+                    className="me-2"
+                    onClick={() => openEditModal(review)}
+                  >
                     Update
                   </Button>
-                  <Button variant="danger" onClick={() => openDeleteModal(review)}>
+                  <Button
+                    variant="danger"
+                    onClick={() => openDeleteModal(review)}
+                  >
                     Delete
                   </Button>
                 </div>
@@ -150,96 +178,112 @@ function ClientHistory({ owner_id }) {
         ))
       )}
 
-      {currentUser?.user != null && !userFeedback && currentUser?.user?.role === "freelancer" && (
-        <Card className="mt-3">
-          <Card.Body>
-            <Card.Title>Leave a Review</Card.Title>
-            <Form.Control
-              as="textarea"
-              rows="3"
-              placeholder="Write your review here"
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-            />
-            <div className="mt-2 d-flex">
-              {[1, 2, 3, 4, 5].map((num) => (
-                <span
-                  key={num}
-                  className={`me-2 cursor-pointer ${num <= rating ? "text-warning" : "text-secondary"}`}
-                  onClick={() => setRating(num)}
-                  style={{ fontSize: "1.5rem", cursor: "pointer" }}
-                >
-                  ★
-                </span>
-              ))}
-            </div>
-            <Button className="mt-2" variant="primary" onClick={makeFeedback} disabled={!feedback.trim()}>
-              Submit
-            </Button>
-          </Card.Body>
-        </Card>
-      )}
+      {currentUser?.user != null &&
+        !userFeedback &&
+        currentUser?.user?.role === "freelancer" && (
+          <Card className="mt-3">
+            <Card.Body>
+              <Card.Title>Leave a Review</Card.Title>
+              <Form.Control
+                as="textarea"
+                rows="3"
+                placeholder="Write your review here"
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+              />
+              <div className="mt-2 d-flex">
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <span
+                    key={num}
+                    className={`me-2 cursor-pointer ${
+                      num <= rating ? "text-warning" : "text-secondary"
+                    }`}
+                    onClick={() => setRating(num)}
+                    style={{ fontSize: "1.5rem", cursor: "pointer" }}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <Button
+                className="mt-2"
+                variant="primary"
+                onClick={makeFeedback}
+                disabled={!feedback.trim()}
+              >
+                Submit
+              </Button>
+            </Card.Body>
+          </Card>
+        )}
 
-<Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
-  <Modal.Header closeButton>
-    <Modal.Title>Edit Feedback</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    {editError && <Alert variant="danger">{editError}</Alert>}
-    <Form.Control
-      as="textarea"
-      rows="3"
-      value={editingReview?.message || ""}
-      onChange={(e) => setEditingReview({ ...editingReview, message: e.target.value })}
-    />
-    
-    <div className="mt-2 d-flex">
-      {[1, 2, 3, 4, 5].map((num) => (
-        <span
-          key={num}
-          className={`me-2 ${num <= editingReview?.rate ? "text-warning" : "text-secondary"}`}
-          onClick={() => setEditingReview({ ...editingReview, rate: num })}
-          style={{ fontSize: "1.5rem", cursor: "pointer" }}
-        >
-          ★
-        </span>
-      ))}
-    </div>
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={() => setShowEditModal(false)}>
-      Cancel
-    </Button>
-    <Button
-      variant="primary"
-      onClick={updateFeedback}
-      disabled={
-        !editingReview?.message.trim() || 
-        (editingReview?.message === userFeedback?.message && editingReview?.rate === userFeedback?.rate)
-      }
-    >
-      Save Changes
-    </Button>
-  </Modal.Footer>
-</Modal>
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Feedback</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {editError && <Alert variant="danger">{editError}</Alert>}
+          <Form.Control
+            as="textarea"
+            rows="3"
+            value={editingReview?.message || ""}
+            onChange={(e) =>
+              setEditingReview({ ...editingReview, message: e.target.value })
+            }
+          />
 
-<Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-  <Modal.Header closeButton>
-    <Modal.Title>Confirm Delete</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    Are you sure you want to delete this review? This action cannot be undone.
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-      Cancel
-    </Button>
-    <Button variant="danger" onClick={deleteFeedback}>
-      Confirm Delete
-    </Button>
-  </Modal.Footer>
-</Modal>
+          <div className="mt-2 d-flex">
+            {[1, 2, 3, 4, 5].map((num) => (
+              <span
+                key={num}
+                className={`me-2 ${
+                  num <= editingReview?.rate ? "text-warning" : "text-secondary"
+                }`}
+                onClick={() =>
+                  setEditingReview({ ...editingReview, rate: num })
+                }
+                style={{ fontSize: "1.5rem", cursor: "pointer" }}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={updateFeedback}
+            disabled={
+              !editingReview?.message.trim() ||
+              (editingReview?.message === userFeedback?.message &&
+                editingReview?.rate === userFeedback?.rate)
+            }
+          >
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this review? This action cannot be
+          undone.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={deleteFeedback}>
+            Confirm Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
