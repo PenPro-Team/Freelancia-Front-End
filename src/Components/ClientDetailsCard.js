@@ -23,26 +23,28 @@ function ClientDetailsCard(props) {
     // let id = Math.floor(Math.random() * 50) + 1;
     if (props.project.owner_id) {
       setUserLoading(true);
-      console.log("Client ID:" , props.project.owner_id)
-      axios
-        .get(
-          `https://api-generator.retool.com/Esur5x/dummyUsers/${props.project.owner_id}`
-        )
-        .then((res) => {
-          setClientDetails(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-          axios.get(`https://api-generator.retool.com/D8TEH0/data/${props.project.owner_id}`)
-          .then((res) => {
-            setClientDetails(res.data);
-          }).catch((err) => {
-            console.log(err);
-          })
-        })
-        .finally(() => {
-          setUserLoading(false);
-        });
+      console.log("Client ID:", props.project.owner_id);
+      setClientDetails(props.project.owner_id);
+      setUserLoading(false);
+      // axios
+      //   .get(
+      //     `https://api-generator.retool.com/Esur5x/dummyUsers/${props.project.owner_id}`
+      //   )
+      //   .then((res) => {
+      //     setClientDetails(res.data);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //     axios.get(`https://api-generator.retool.com/D8TEH0/data/${props.project.owner_id}`)
+      //     .then((res) => {
+      //       setClientDetails(res.data);
+      //     }).catch((err) => {
+      //       console.log(err);
+      //     })
+      //   })
+      //   .finally(() => {
+      //     setUserLoading(false);
+      //   });
     }
   }, [props.project.owner_id]);
   return (
@@ -79,7 +81,9 @@ function ClientDetailsCard(props) {
                       <Placeholder xs={6} size="lg" />
                     </>
                   ) : (
-                    <>{clientDetails.name}</>
+                    <>
+                      {clientDetails.first_name} {clientDetails.first_name}
+                    </>
                   )}
                 </div>
                 <div className="text-muted">
@@ -100,15 +104,18 @@ function ClientDetailsCard(props) {
             )}
           </Card.Text>
           <Card.Text>
-            <FaPhoneAlt />
-            {props.isLoading || userLoading ? (
+            {clientDetails.phone ? (
               <>
-                <Placeholder xs={6} />
+                <FaPhoneAlt />
+                {props.isLoading || userLoading ? (
+                  <Placeholder xs={6} />
+                ) : (
+                  clientDetails.phone
+                )}
               </>
-            ) : (
-              <>{clientDetails.phone}</>
-            )}
+            ) : null}
           </Card.Text>
+
           <Card.Text>
             <MdEmail />
             {props.isLoading || userLoading ? (
