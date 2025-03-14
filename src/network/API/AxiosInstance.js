@@ -4,7 +4,7 @@ import axios from "axios";
  * This Api For Projects
  */
 export const AxiosProjectsInstance = axios.create({
-  baseURL: "https://api-generator.retool.com/kFal0V/projects",
+  baseURL: "http://127.0.0.1:8000/projects/",
 });
 
 /**
