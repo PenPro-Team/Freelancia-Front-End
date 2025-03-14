@@ -71,7 +71,7 @@ function JobDetails() {
               auth.isAuthenticated &&
               auth.user.role === "freelancer" &&
               ["open", "contract canceled and reopened"].includes(
-                project.job_state
+                project.project_state
               ) && (
                 <div className="d-flex flex-row flex-wrap gap-3 justify-content-center mt-3">
                   <ProposeCard
@@ -79,7 +79,7 @@ function JobDetails() {
                     user={auth.user}
                     disabled={
                       !["open", "contract canceled and reopened"].includes(
-                        project.job_state
+                        project.project_state
                       )
                     }
                   />

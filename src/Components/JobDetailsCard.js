@@ -31,7 +31,7 @@ function JobDetailsCard(props) {
     setCancelMessage("");
     let newJobState;
 
-    if (props.project.job_state === "ongoing" && cancelType) {
+    if (props.project.project_state === "ongoing" && cancelType) {
       if (cancelType === "contract") {
         newJobState = "contract canceled and reopened";
       } else if (cancelType === "full") {
@@ -42,7 +42,7 @@ function JobDetailsCard(props) {
     }
 
     AxiosProjectsInstance.patch(`/${props.project.id}`, {
-      job_state: newJobState,
+      project_state: newJobState,
     })
       .then((res) => {
         console.log(res.data);
@@ -83,21 +83,21 @@ function JobDetailsCard(props) {
             <div className="text-start fs-5 opacity-75">
               <Badge
                 bg={
-                  props.project.job_state === "finished"
+                  props.project.project_state === "finished"
                     ? "dark"
-                    : props.project.job_state === "open"
+                    : props.project.project_state === "open"
                     ? "primary"
-                    : props.project.job_state === "ongoing"
+                    : props.project.project_state === "ongoing"
                     ? "success"
-                    : props.project.job_state === "canceled"
+                    : props.project.project_state === "canceled"
                     ? "danger"
-                    : props.project.job_state ===
+                    : props.project.project_state ===
                       "contract canceled and reopened"
                     ? "success"
                     : "secondary"
                 }
               >
-                {props.project.job_state}
+                {props.project.project_state}
               </Badge>
             </div>
             {props.showTitle && (
@@ -164,10 +164,10 @@ function JobDetailsCard(props) {
                 auth.isAuthenticated &&
                 auth.user.role === "client" &&
                 props.project.owner_id === auth.user.id &&
-                (props.project.job_state === "open" ||
-                  props.project.job_state ===
+                (props.project.project_state === "open" ||
+                  props.project.project_state ===
                     "contract canceled and reopened" ||
-                  props.project.job_state === "ongoing") && (
+                  props.project.project_state === "ongoing") && (
                   <div
                     style={{ cursor: "pointer" }}
                     onClick={() => {
@@ -184,8 +184,8 @@ function JobDetailsCard(props) {
                 auth.isAuthenticated &&
                 auth.user.role === "client" &&
                 props.project.owner_id === auth.user.id &&
-                (props.project.job_state === "open" ||
-                  props.project.job_state ===
+                (props.project.project_state === "open" ||
+                  props.project.project_state ===
                     "contract canceled and reopened") && (
                   <div
                     style={{ cursor: "pointer" }}
@@ -200,7 +200,7 @@ function JobDetailsCard(props) {
                 auth.isAuthenticated &&
                 auth.user.role === "client" &&
                 props.project.owner_id === auth.user.id &&
-                props.project.job_state === "ongoing" && (
+                props.project.project_state === "ongoing" && (
                   <div
                     style={{ cursor: "pointer" }}
                     onClick={() => {
@@ -287,7 +287,7 @@ function JobDetailsCard(props) {
             <Modal.Title>Confirm Cancellation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {props.project.job_state === "ongoing" ? (
+            {props.project.project_state === "ongoing" ? (
               <p>
                 Do you want to end the contract with the current client and
                 reopen the job, or do you want to cancel the job entirely?
@@ -304,7 +304,7 @@ function JobDetailsCard(props) {
             >
               No
             </Button>
-            {props.project.job_state === "ongoing" ? (
+            {props.project.project_state === "ongoing" ? (
               <>
                 <Button
                   variant="warning"

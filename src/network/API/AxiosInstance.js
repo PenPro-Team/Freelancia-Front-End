@@ -11,12 +11,12 @@ export const AxiosProjectsInstance = axios.create({
  * This API For Propsals
  */
 export const AxiosProposalsInstance = axios.create({
-  baseURL: "https://api-generator.retool.com/kPlGjn/proposals",
+  baseURL: "http://127.0.0.1:8000/proposals/",
 });
 
 // This Api For Skills (HTML,CSS,js,python)
 export const AxiosSkillsInstance = axios.create({
-  baseURL: "https://api-generator.retool.com/CGw7tS/skills",
+  baseURL: "http://127.0.0.1:8000/skills/",
 });
 
 // This Api For PostSkills For Freelancer (HTML,CSS,js,python)
