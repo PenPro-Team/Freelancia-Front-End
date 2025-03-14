@@ -28,8 +28,6 @@ function ClientHistory({ owner_id }) {
   const currentUser = getFromLocalStorage("auth");
 
   useEffect(() => {
-    console.log("hEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEERE");
-    console.log(owner_id);
     if (!owner_id) return;
     axios
       .get(`https://api-generator.retool.com/Esur5x/dummyUsers/${owner_id}`)

@@ -6,7 +6,7 @@ function RateStars(props) {
   const rating = props.rating;
   return (
     <>
-      {rating === 0 ? (
+      {rating <= 0 ? (
         <>
           <IoStarOutline style={{ color: "gray" }} />
           <IoStarOutline style={{ color: "gray" }} />
