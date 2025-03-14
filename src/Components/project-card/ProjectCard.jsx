@@ -54,7 +54,7 @@ export default function ProjectCard({
 
       let jobStateMatch = true;
       if (jobStates && jobStates.length > 0) {
-        jobStateMatch = jobStates.includes(project.job_state);
+        jobStateMatch = jobStates.includes(project.project_state);
       }
 
       const price = project.suggested_budget || 0;
@@ -117,20 +117,20 @@ export default function ProjectCard({
                     opacity: "75%",
                   }}
                   bg={
-                    project.job_state === "finished"
+                    project.project_state === "finished"
                       ? "dark"
-                      : project.job_state === "open"
+                      : project.project_state === "open"
                       ? "primary"
-                      : project.job_state === "ongoing"
+                      : project.project_state === "ongoing"
                       ? "success"
-                      : project.job_state === "canceled"
+                      : project.project_state === "canceled"
                       ? "danger"
-                      : project.job_state === "contract canceled and reopened"
+                      : project.project_state === "contract canceled and reopened"
                       ? "success"
                       : "secondary"
                   }
                 >
-                  {project.job_state}
+                  {project.project_state}
                 </Badge>
                 <p className="card-text truncate">
                   {project.project_description}

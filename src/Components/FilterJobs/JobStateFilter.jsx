@@ -1,17 +1,14 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Form, InputGroup, Placeholder } from "react-bootstrap";
-import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { AxiosProjectsInstance } from "../../network/API/AxiosInstance";
 
 export default function JobStateFilter({ cb }) {
   const [data, setData] = useState([]);
-  const history = useHistory();
-  const params = useParams();
   const [selectedJobStates, setSelectedJobStates] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`https://api-generator.retool.com/SHY6hX/projects/`)
+    AxiosProjectsInstance
+      .get(``)
       .then((response) => {
         setData(response.data);
       })
@@ -20,13 +17,15 @@ export default function JobStateFilter({ cb }) {
       );
   }, []);
 
-  // Here, we assume job_state is stored as a string on each project.
+  // Here, we assume project_state is stored as a string on each project.
   // We filter out any falsey values.
   const uniqueJobStates = [
-    ...new Set(data.map((project) => project.job_state).filter(Boolean)),
+    ...new Set(data.map((project) => project.project_state).filter(Boolean)),
   ];
 
   const handleChange = (e) => {
+    console.log(e.target);
+    
     const jobState = e.target.id;
     const isChecked = e.target.checked;
 
