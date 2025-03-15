@@ -1,22 +1,23 @@
 import axios from "axios";
 
+let url = "http://127.0.0.1:8000";
 /**
  * This Api For Projects
  */
 export const AxiosProjectsInstance = axios.create({
-  baseURL: "http://127.0.0.1:8000/projects/",
+  baseURL: `${url}/projects/`,
 });
 
 /**
  * This API For Propsals
  */
 export const AxiosProposalsInstance = axios.create({
-  baseURL: "http://127.0.0.1:8000/proposals/",
+  baseURL: `${url}/proposals/`,
 });
 
 // This Api For Skills (HTML,CSS,js,python)
 export const AxiosSkillsInstance = axios.create({
-  baseURL: "http://127.0.0.1:8000/skills/",
+  baseURL: `${url}/skills/`,
 });
 
 // This Api For PostSkills For Freelancer (HTML,CSS,js,python)
