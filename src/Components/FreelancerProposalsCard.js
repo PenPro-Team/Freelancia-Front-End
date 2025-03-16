@@ -10,28 +10,32 @@ function FreelancerProposalsCard(props) {
         <Card.Title>
           <div className="d-flex align-items-center">
             <Image
-              src={props.proposal.user_image}
+              src={props.proposal.user.image}
               roundedCircle
-              alt={props.proposal.user_name}
+              alt={props.proposal.user.name}
               width={50}
               height={50}
               className="me-2"
             />
             <div className="d-flex flex-column">
-              <div>{props.proposal.user_name}</div>
+              <div>{props.proposal.user.name}</div>
               <div className="text-muted">
-                <RateStars rating={props.proposal.user_rate} />
+                <RateStars rating={props.proposal.user.rate} />
               </div>
             </div>
           </div>
         </Card.Title>
         <div className="mt-2">
           <span className="fw-bold">Deadline: </span>
-          {props.proposal.deadline}
+          {props.proposal.deadline} <span className="fw-bold">Days</span>
+        </div>
+        <div>
+          <span className="fw-bold">Price: </span>
+          {props.proposal.price} <span className="fw-bold">$</span>
         </div>
         <div className="fw-bold">Propose Message:</div>
         <div>{props.proposal.propose_text}</div>
-        {props.proposal.creation_date && (
+        {props.proposal.created_at && (
           <div>
             <span
               className="text-secondary small fw-bold"
@@ -41,7 +45,14 @@ function FreelancerProposalsCard(props) {
                 right: "5px",
               }}
             >
-              {props.proposal.creation_date}
+              {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              }).format(new Date(props.proposal.created_at))}
             </span>
           </div>
         )}
