@@ -81,9 +81,7 @@ function ClientDetailsCard(props) {
                       <Placeholder xs={6} size="lg" />
                     </>
                   ) : (
-                    <>
-                      {clientDetails.first_name} {clientDetails.first_name}
-                    </>
+                    <>{clientDetails.name}</>
                   )}
                 </div>
                 <div className="text-muted">
