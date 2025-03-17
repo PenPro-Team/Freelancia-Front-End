@@ -12,6 +12,7 @@ import {
   getFromLocalStorage,
   setToLocalStorage,
 } from "../network/local/LocalStorage";
+import { AxiosLoginInstance } from "../network/API/AxiosInstance";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -67,18 +68,20 @@ const LoginForm = () => {
     };
 
     try {
-      const response = await axios.get("https://api-generator.retool.com/D8TEH0/data", {
-        params: isEmail ? { email: userInput, password } : { username: userInput, password },
+      const response =await AxiosLoginInstance.post("", {
+        "username": userInput,
+        "password": password,
       });
+      console.log(response.data);
 
-      if (response.data.length > 0) {
+      if (response.data && response.status === 200) {
         auth = {
           ...auth,
-          user: response.data[0],
+          user: response.data,
           isAuthenticated: true,
         };
         setToLocalStorage("auth", auth);
-        dispatch(loginSuccess(response.data[0]));
+        dispatch(loginSuccess(response.data));
         setError("");
         setIsLoading(true);
         history.push("/Freelancia-Front-End"); // Redirect to dashboard
@@ -89,6 +92,8 @@ const LoginForm = () => {
       setisSpin(false);
     } catch (err) {
       setError("An error occurred. Please try again.");
+      // setIsLoading(false);
+      setisSpin(false);
     }
   };
 
