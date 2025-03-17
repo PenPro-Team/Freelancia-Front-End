@@ -13,13 +13,13 @@ function ProposeMsg(props) {
     propose_text: "",
     price: "",
     deadline: "",
-    creation_date: "",
+    created_at: "",
   });
   const [savedItem, setSavedItem] = useState({
     propose_text: "",
     price: "",
     deadline: "",
-    creation_date: "",
+    created_at: "",
   });
   const [errors, setErrors] = useState({
     errText: null,
@@ -41,7 +41,7 @@ function ProposeMsg(props) {
 
   // Check if the user Already Made A porposed
   useEffect(() => {
-    AxiosProposalsInstance.get(`?user_id=${user.id}&project_id=${project_id}`)
+    AxiosProposalsInstance.get(`?user=${user.id}&project=${project_id}`)
       .then((res) => {
         if (res.data.length > 0) {
           console.log("Already Made A Proposal");
@@ -52,13 +52,13 @@ function ProposeMsg(props) {
             propose_text: res.data[0].propose_text,
             price: res.data[0].price,
             deadline: res.data[0].deadline,
-            creation_date: res.data[0].creation_date,
+            created_at: res.data[0].created_at,
           });
           setSavedItem({
             propose_text: res.data[0].propose_text,
             price: res.data[0].price,
             deadline: res.data[0].deadline,
-            creation_date: res.data[0].creation_date,
+            created_at: res.data[0].created_at,
           });
           console.log("Proposal Saved ID: ", res.data[0].id);
           setProposal_id(res.data[0].id);
@@ -78,18 +78,14 @@ function ProposeMsg(props) {
     const formattedDate = date.toLocaleDateString("en-US", options);
     setItemInfo({
       ...itemInfo,
-      creation_date: date,
+      created_at: date,
     });
     return {
       propose_text: itemInfo.propose_text,
       price: itemInfo.price,
       deadline: itemInfo.deadline,
-      project_id: project_id,
-      user_id: user.id,
-      user_name: user.username,
-      user_rate: user.user_rate,
-      user_image: "https://logo.clearbit.com/sohu.com",
-      creation_date: formattedDate,
+      project: project_id,
+      user: user.id,
     };
   };
 
@@ -106,7 +102,7 @@ function ProposeMsg(props) {
             itemInfo.propose_text,
             itemInfo.price,
             itemInfo.deadline,
-            itemInfo.creation_date
+            itemInfo.created_at
           );
         }
         setAPIError(false);
