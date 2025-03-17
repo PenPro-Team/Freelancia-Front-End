@@ -202,16 +202,23 @@ export default function EditSecurity() {
     setShow(true);
     console.log(userData.password);
     console.log(newPassword.password);
+    let newFormValues = { ...formValues };
     if (newPassword.newPassword == "") {
       setFormValues({ ...formValues, password: userData.password });
+      newFormValues = { ...formValues, password: userData.password };
+    } else {
+      newFormValues = { ...formValues, password: newPassword.newPassword };
     }
-
+    console.log(userData.password);
+    
     if (userData.password == newPassword.password) {
       if (isFormValid) {
+        console.log(newFormValues);
+        
         axios
           .put(
             `https://api-generator.retool.com/D8TEH0/data/${params.user_id}`,
-            formValues
+            newFormValues
           )
           .then((res) => {
             console.log(res.data);
