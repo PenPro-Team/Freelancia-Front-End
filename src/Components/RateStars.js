@@ -6,7 +6,7 @@ function RateStars(props) {
   const rating = props.rating;
   return (
     <>
-      {rating === 0 ? (
+      {rating <= 0 ? (
         <>
           <IoStarOutline style={{ color: "gray" }} />
           <IoStarOutline style={{ color: "gray" }} />
@@ -22,7 +22,7 @@ function RateStars(props) {
           <IoStarOutline style={{ color: "gray" }} />
           <IoStarOutline style={{ color: "gray" }} />
         </>
-      ) : rating === 1 ? (
+      ) : rating == 1 ? (
         <>
           <IoStar style={{ color: "gold" }} />
           <IoStarOutline style={{ color: "gray" }} />
@@ -38,7 +38,7 @@ function RateStars(props) {
           <IoStarOutline style={{ color: "gray" }} />
           <IoStarOutline style={{ color: "gray" }} />
         </>
-      ) : rating === 2 ? (
+      ) : rating == 2 ? (
         <>
           <IoStar style={{ color: "gold" }} />
           <IoStar style={{ color: "gold" }} />
@@ -54,7 +54,7 @@ function RateStars(props) {
           <IoStarOutline style={{ color: "gray" }} />
           <IoStarOutline style={{ color: "gray" }} />
         </>
-      ) : rating === 3 ? (
+      ) : rating == 3 ? (
         <>
           <IoStar style={{ color: "gold" }} />
           <IoStar style={{ color: "gold" }} />
@@ -70,7 +70,7 @@ function RateStars(props) {
           <IoStarHalf style={{ color: "gold" }} />
           <IoStarOutline style={{ color: "gray" }} />
         </>
-      ) : rating === 4 ? (
+      ) : rating == 4 ? (
         <>
           <IoStar style={{ color: "gold" }} />
           <IoStar style={{ color: "gold" }} />
@@ -86,7 +86,7 @@ function RateStars(props) {
           <IoStar style={{ color: "gold" }} />
           <IoStarHalf style={{ color: "gold" }} />
         </>
-      ) : rating === 5 ? (
+      ) : rating == 5 ? (
         <>
           <IoStar style={{ color: "gold" }} />
           <IoStar style={{ color: "gold" }} />

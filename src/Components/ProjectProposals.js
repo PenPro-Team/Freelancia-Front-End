@@ -13,7 +13,7 @@ function ProjectProposals(props) {
   const params = useParams();
   useEffect(() => {
     setIsLoading(true);
-    AxiosProposalsInstance.get(`?project_id=${params.project_id}`)
+    AxiosProposalsInstance.get(`/project/${params.project_id}`)
       .then((res) => {
         setProposals(res.data);
         setError(false);
