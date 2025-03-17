@@ -11,8 +11,9 @@ import {
 import { useState, useEffect } from "react";
 import RateStars from "./RateStars";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
+import { AxiosReviewInstance } from "../network/API/AxiosInstance";
 
-function ClientHistory({ owner_id }) {
+function ClientHistory({ owner_id: owner }) {
   const [clientReviews, setClientReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [clientDetails, setClientDetails] = useState({});
@@ -27,21 +28,22 @@ function ClientHistory({ owner_id }) {
 
   const currentUser = getFromLocalStorage("auth");
 
-  useEffect(() => {
-    if (!owner_id) return;
-    axios
-      .get(`https://api-generator.retool.com/Esur5x/dummyUsers/${owner_id}`)
-      .then((res) => setClientDetails(res.data))
-      .catch(console.error);
-  }, [owner_id]);
+  // useEffect(() => {
+  //   if (!owner_id) return;
+  //   axios
+  //     .get(`https://api-generator.retool.com/Esur5x/dummyUsers/${owner_id}`)
+  //     .then((res) => setClientDetails(res.data))
+  //     .catch(console.error);
+  // }, [owner_id]);
 
   useEffect(() => {
-    if (!owner_id) return;
-    axios
+    if (!owner) return;
+    AxiosReviewInstance
       .get(
-        `https://api-generator.retool.com/ECRLlk/feedback?user_reviewed=${owner_id}`
+        `received/user/${owner.id}`
       )
       .then((res) => {
+        console.log(res.data);
         setClientReviews(res.data);
         setLoading(false);
       })
@@ -49,7 +51,7 @@ function ClientHistory({ owner_id }) {
         console.error(err);
         setLoading(false);
       });
-  }, [owner_id]);
+  }, [owner]);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -65,7 +67,7 @@ function ClientHistory({ owner_id }) {
     axios
       .post("https://api-generator.retool.com/ECRLlk/feedback", {
         user_reviewr: currentUser.user.id,
-        user_reviewed: owner_id,
+        user_reviewed: owner,
         rate: rating,
         message: feedback,
         img: "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_640.png",
@@ -140,21 +142,21 @@ function ClientHistory({ owner_id }) {
               <Card.Title>
                 <div className="d-flex align-items-center">
                   <Image
-                    src={review.img}
+                    src={review.user_reviewr_details.image}
                     roundedCircle
                     width={50}
                     height={50}
                     className="me-2"
                   />
                   <div>
-                    <div>{clientDetails.name || "Anonymous"}</div>
+                    <div>{review.user_reviewr_details.first_name || "Anonymous"}</div>
                     <RateStars rating={review.rate} />
                   </div>
                 </div>
               </Card.Title>
               <div className="fw-bold">Review Message:</div>
               <div>{review.message}</div>
-              {currentUser?.user?.id === review.user_reviewr && (
+              {currentUser?.user?.id === review.user_reviewr_details.id && (
                 <div className="mt-2 d-flex">
                   <Button
                     variant="warning"

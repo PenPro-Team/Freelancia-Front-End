@@ -28,6 +28,10 @@ export const AxiosFreelancerSkillsInstance = axios.create({
 export const AxiosLoginInstance = axios.create({
   baseURL: `${url}/auth-token/`,
 });
+
+export const AxiosReviewInstance = axios.create({
+  baseURL: `${url}/reviews/`,
+});
 /**
  * Demo Use it For getting Projects
  * AxiosProjectsInstance.get("What you will add to the url" , {"For Post The opject will be here"}).then().catch()
