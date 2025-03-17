@@ -23,6 +23,10 @@ export const AxiosSkillsInstance = axios.create({
 // This Api For PostSkills For Freelancer (HTML,CSS,js,python)
 export const AxiosFreelancerSkillsInstance = axios.create({
   baseURL: "https://api-generator.retool.com/HrMfyx/data",
+}); 
+
+export const AxiosLoginInstance = axios.create({
+  baseURL: `${url}/auth-token/`,
 });
 /**
  * Demo Use it For getting Projects
