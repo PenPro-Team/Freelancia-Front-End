@@ -163,7 +163,7 @@ function JobDetailsCard(props) {
               {auth &&
                 auth.isAuthenticated &&
                 auth.user.role === "client" &&
-                props.project.owner_id === auth.user.id &&
+                // props.project.owner_id === auth.user.id &&
                 (props.project.project_state === "open" ||
                   props.project.project_state ===
                     "contract canceled and reopened" ||
