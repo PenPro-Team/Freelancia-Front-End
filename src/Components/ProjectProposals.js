@@ -9,7 +9,6 @@ function ProjectProposals(props) {
   const [proposals, setProposals] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
   const params = useParams();
   useEffect(() => {
     setIsLoading(true);
@@ -30,7 +29,7 @@ function ProjectProposals(props) {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [params.project_id]);
+  }, [params.project_id, props.proposals_refresh]);
   return (
     <div>
       {isLoading ? (
