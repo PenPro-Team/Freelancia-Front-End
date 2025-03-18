@@ -103,7 +103,6 @@ const ClientJobForm = () => {
   };
 
   const createPayload = () => ({
-    owner_id: user.user.id,
     project_name: formData.project_name.trim(),
     project_description: formData.project_description.trim(),
     suggested_budget: Number(formData.suggested_budget),
@@ -123,7 +122,11 @@ const ClientJobForm = () => {
     setMessage("");
 
     try {
-      await AxiosProjectsInstance.post("create/", createPayload());
+      await AxiosProjectsInstance.post("create/", createPayload(), {
+        headers: {
+          Authorization: `Bearer ${user.user.access}`,
+        },
+      });
       setMessage("Job Created successfully");
 
       setTimeout(() => {
@@ -150,7 +153,11 @@ const ClientJobForm = () => {
     setMessage("");
 
     try {
-      await AxiosProjectsInstance.patch(`/${jobId}`, createPayload());
+      await AxiosProjectsInstance.patch(`/${jobId}`, createPayload(), {
+        headers: {
+          Authorization: `Bearer ${user.user.access}`,
+        },
+      });
       setMessage("Job Updated successfully");
       setInitialData({ ...formData });
 
@@ -177,10 +184,18 @@ const ClientJobForm = () => {
             : "canceled"
           : "canceled";
 
-      await AxiosProjectsInstance.patch(`/${jobId}`, {
-        project_state: newJobState,
-        owner_id: user.user.id,
-      });
+      await AxiosProjectsInstance.patch(
+        `/${jobId}`,
+        {
+          project_state: newJobState,
+          owner_id: user.user.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.user.access}`,
+          },
+        }
+      );
 
       setMessage(
         newJobState === "canceled"
