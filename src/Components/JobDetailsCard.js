@@ -163,7 +163,7 @@ function JobDetailsCard(props) {
               {auth &&
                 auth.isAuthenticated &&
                 auth.user.role === "client" &&
-                // props.project.owner_id === auth.user.id &&
+                props.project.owner_id.id === auth.user.user_id &&
                 (props.project.project_state === "open" ||
                   props.project.project_state ===
                     "contract canceled and reopened" ||
@@ -183,7 +183,7 @@ function JobDetailsCard(props) {
               {auth &&
                 auth.isAuthenticated &&
                 auth.user.role === "client" &&
-                // props.project.owner_id === auth.user.id &&
+                props.project.owner_id.id === auth.user.user_id &&
                 (props.project.project_state === "open" ||
                   props.project.project_state ===
                     "contract canceled and reopened") && (
@@ -214,11 +214,16 @@ function JobDetailsCard(props) {
           </div>
         );
       case "second":
-        return <ProjectProposals />;
+        return <ProjectProposals proposals_refresh={props.proposals_refresh} />;
       // case "third":
       //   return <All_Proposals />;
       case "fourth":
-        return <ClientHistory owner_id={props.project.owner_id} project_id={props.project.id} />;
+        return (
+          <ClientHistory
+            owner_id={props.project.owner_id}
+            project_id={props.project.id}
+          />
+        );
       default:
         return "Disabled content or default content here.";
     }

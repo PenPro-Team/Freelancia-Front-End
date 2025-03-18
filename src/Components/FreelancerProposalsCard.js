@@ -65,7 +65,7 @@ function FreelancerProposalsCard(props) {
               className="btn btn-primary"
               onClick={() => {
                 history.push(
-                  `/Freelancia-Front-End/job_details/${props.proposal.project_id}`
+                  `/Freelancia-Front-End/job_details/${props.proposal.project.id}`
                 );
               }}
             >
