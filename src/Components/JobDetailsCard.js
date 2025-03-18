@@ -47,9 +47,17 @@ function JobDetailsCard(props) {
       newJobState = "canceled";
     }
 
-    AxiosProjectsInstance.patch(`/${project.id}`, {
-      project_state: newJobState,
-    })
+    AxiosProjectsInstance.patch(
+      `/${project.id}`,
+      {
+        project_state: newJobState,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${auth.user.access}`,
+        },
+      }
+    )
       .then((res) => {
         // console.log(res.data);
         // console.log("refresh");
