@@ -32,6 +32,10 @@ export const AxiosLoginInstance = axios.create({
 export const AxiosReviewInstance = axios.create({
   baseURL: `${url}/reviews/`,
 });
+
+export const AxiosLogOutInstance = axios.create({
+  baseURL: `${url}/logout`,
+});
 /**
  * Demo Use it For getting Projects
  * AxiosProjectsInstance.get("What you will add to the url" , {"For Post The opject will be here"}).then().catch()

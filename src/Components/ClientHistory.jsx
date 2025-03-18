@@ -94,7 +94,7 @@ function ClientHistory({ owner_id: owner ,project_id }) {
       },
       {
         headers: {
-          Authorization: `Bearer ${currentUser.user.access}`, // Or without Bearer if your backend doesn't require it
+          Authorization: `Bearer ${currentUser.user.access}`, 
         },
       }
     )
@@ -164,6 +164,27 @@ function ClientHistory({ owner_id: owner ,project_id }) {
               </Card.Title>
               <div className="fw-bold">Review Message:</div>
               <div>{review.message}</div>
+              {review.created_at && (
+          <div>
+            <span
+              className="text-secondary small fw-bold"
+              style={{
+                position: "absolute",
+                bottom: "5px",
+                right: "5px",
+              }}
+            >
+              {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              }).format(new Date(review.created_at))}
+            </span>
+          </div>
+        )}
               {currentUser?.user?.user_id === review.user_reviewr_details.id && (
                 <div className="mt-2 d-flex">
                   <Button

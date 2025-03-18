@@ -98,9 +98,9 @@ function NavBar() {
                     className="rounded-circle"
                     width={"48px"}
                     height={"48px"}
-                    src={personalImg}
+                    src={auth.user.image ? auth.user.image : personalImg}
                   />
-                  <span className="fs-5">{user.firstName}</span>
+                  <span className="fs-5">{auth.user.name}</span>
                 </div>
               </Nav.Link>
               <Nav.Link
