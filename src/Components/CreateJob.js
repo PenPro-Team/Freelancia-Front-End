@@ -15,134 +15,82 @@ import {
   AxiosSkillsInstance,
 } from "../network/API/AxiosInstance";
 
-const getUser = () => {
-  return getFromLocalStorage("auth");
+// Constants
+const INITIAL_FORM_STATE = {
+  project_name: "",
+  suggested_budget: "",
+  expected_deadline: "",
+  project_description: "",
+  requiredSkills: [],
+};
+
+const VALIDATION_RULES = {
+  project_name: (value) =>
+    !value || value.trim().length < 3
+      ? "Project Name must be at least 3 characters"
+      : "",
+  suggested_budget: (value) =>
+    !value || isNaN(value) || Number(value) <= 0
+      ? "Price must be a valid number greater than 0"
+      : "",
+  expected_deadline: (value) => {
+    if (!value) return "Deadline is required";
+    if (isNaN(value) || Number(value) < 1 || Number(value) > 100)
+      return "Deadline must be a number between 1 and 100";
+    return "";
+  },
+  project_description: (value) =>
+    !value || value.trim().length < 10
+      ? "Description must be at least 10 characters"
+      : "",
 };
 
 const ClientJobForm = () => {
+  // Hooks and State
   const history = useHistory();
   const location = useLocation();
-  const user = getUser();
+  const user = getFromLocalStorage("auth");
 
-  // Determine if we are in update mode based on the presence of job data
-  const updateMode = location.state && location.state.jobData ? true : false;
+  const updateMode = location.state?.jobData ? true : false;
   const jobData = updateMode ? location.state.jobData : null;
 
-  const [formData, setFormData] = useState({
-    project_name: "",
-    suggested_budget: "",
-    expected_deadline: "",
-    project_description: "",
-    requiredSkills: [],
-  });
-  // To store the original data when entering update mode
+  const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [initialData, setInitialData] = useState(null);
-
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [skillsOptions, setSkillsOptions] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState("");
-  // State for displaying the cancel confirmation modal
   const [showCancelModal, setShowCancelModal] = useState(false);
 
-  const validateField = (name, value) => {
-    let error = "";
-    switch (name) {
-      case "project_name":
-        if (!value || value.trim().length < 3) {
-          error = "Project Name must be at least 3 characters";
-        }
-        break;
-      case "suggested_budget":
-        if (!value || isNaN(value) || Number(value) <= 0) {
-          error = "Price must be a valid number greater than 0";
-        }
-        break;
-      case "expected_deadline":
-        if (!value) {
-          error = "Deadline is required";
-        } else if (isNaN(value) || Number(value) < 1 || Number(value) > 100) {
-          error = "Deadline must be a number between 1 and 100";
-        }
-        break;
-      case "project_description":
-        if (!value || value.trim().length < 10) {
-          error = "Description must be at least 10 characters";
-        }
-        break;
-      default:
-        break;
+  // Validation Functions
+  const validateField = (name, value) => VALIDATION_RULES[name]?.(value) || "";
+
+  const validate = () => {
+    const tempErrors = Object.keys(VALIDATION_RULES).reduce(
+      (acc, field) => ({
+        ...acc,
+        [field]: validateField(field, formData[field]),
+      }),
+      {}
+    );
+
+    if (!formData.requiredSkills?.length) {
+      tempErrors.requiredSkills = "Required Skills are required";
     }
-    return error;
+
+    setErrors(tempErrors);
+    return Object.values(tempErrors).every((err) => !err);
   };
 
-  useEffect(() => {
-    AxiosSkillsInstance.get("")
-      .then((response) => {
-        console.log("Skills Response:", response.data);
-        setSkillsOptions(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching skills:", error);
-      });
-  }, []);
-
-  // Populate the form with existing data in update mode
-  useEffect(() => {
-    if (updateMode && jobData) {
-      console.log("Job Data:", jobData); // للتحقق من البيانات الواردة
-
-      setFormData({
-        project_name: jobData.project_name || "",
-        suggested_budget: jobData.suggested_budget || "",
-        expected_deadline: jobData.expected_deadline || "",
-        project_description: jobData.project_description || "",
-        requiredSkills: Array.isArray(jobData.required_skills)
-          ? jobData.required_skills.map((skill) => skill.skill || skill)
-          : typeof jobData.required_skills === "string"
-          ? jobData.required_skills.split(", ").filter((skill) => skill)
-          : [],
-      });
-
-      setInitialData({
-        project_name: jobData.project_name || "",
-        suggested_budget: jobData.suggested_budget || "",
-        expected_deadline: jobData.expected_deadline || "",
-        project_description: jobData.project_description || "",
-        requiredSkills: Array.isArray(jobData.required_skills)
-          ? jobData.required_skills.map((skill) => skill.skill || skill)
-          : typeof jobData.required_skills === "string"
-          ? jobData.required_skills.split(", ").filter((skill) => skill)
-          : [],
-      });
-    }
-  }, [updateMode, jobData]);
-
-  // Reset the form for create mode
-  useEffect(() => {
-    if (!location.state || !location.state.jobData) {
-      setFormData({
-        project_name: "",
-        suggested_budget: "",
-        expected_deadline: "",
-        project_description: "",
-        requiredSkills: [],
-      });
-      setInitialData(null);
-    }
-  }, [location]);
-
+  // Data Handling Functions
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     const fieldError = validateField(name, value);
     setErrors((prev) => ({ ...prev, [name]: fieldError }));
   };
-  //-------------------------------------------------------------------
+
   const handleAddSkill = () => {
     if (selectedSkill && !formData.requiredSkills.includes(selectedSkill)) {
       setFormData((prev) => ({
@@ -153,110 +101,56 @@ const ClientJobForm = () => {
       setErrors((prev) => ({ ...prev, requiredSkills: "" }));
     }
   };
-  //-------------------------------------------------------------------
-  const validate = () => {
-    let tempErrors = {};
-    tempErrors.project_name = validateField(
-      "project_name",
-      formData.project_name
-    );
-    tempErrors.suggested_budget = validateField(
-      "suggested_budget",
-      formData.suggested_budget
-    );
-    tempErrors.expected_deadline = validateField(
-      "expected_deadline",
-      formData.expected_deadline
-    );
-    tempErrors.project_description = validateField(
-      "project_description",
-      formData.project_description
-    );
-    if (!formData.requiredSkills || formData.requiredSkills.length === 0) {
-      tempErrors.requiredSkills = "Required Skills are required";
-    }
-    setErrors(tempErrors);
-    return Object.values(tempErrors).every((err) => !err);
-  };
 
-  // Check if data has changed in update mode
-  const isDataChanged = () => {
-    if (!initialData) return true;
-    return (
-      formData.project_name !== initialData.project_name ||
-      formData.suggested_budget !== initialData.suggested_budget ||
-      formData.expected_deadline !== initialData.expected_deadline ||
-      formData.project_description !== initialData.project_description ||
-      formData.requiredSkills.join(", ") !==
-        initialData.requiredSkills.join(", ")
-    );
-  };
+  const createPayload = () => ({
+    owner_id: user.user.id,
+    project_name: formData.project_name.trim(),
+    project_description: formData.project_description.trim(),
+    suggested_budget: Number(formData.suggested_budget),
+    expected_deadline: Number(formData.expected_deadline),
+    skills_ids: skillsOptions
+      .filter((skill) => formData.requiredSkills.includes(skill.skill))
+      .map((skill) => skill.id),
+    project_state: "open",
+  });
 
-  // Function to create the job
+  // API Handling Functions
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+
     setSubmitting(true);
     setMessage("");
+
     try {
-      const payload = {
-        owner_id: user.user.id,
-        project_name: formData.project_name,
-        project_description: formData.project_description,
-        suggested_budget: Number(formData.suggested_budget),
-        expected_deadline: Number(formData.expected_deadline),
-        skills_ids: skillsOptions
-          .filter((skill) => formData.requiredSkills.includes(skill.skill))
-          .map((skill) => skill.id),
-        project_state: "open",
-      };
-
-      await AxiosProjectsInstance.post("create/", payload);
-
+      await AxiosProjectsInstance.post("create/", createPayload());
       setMessage("Job Created successfully");
 
       setTimeout(() => {
         history.push("/Freelancia-Front-End/clientjoblist");
       }, 1000);
 
-      setFormData({
-        project_name: "",
-        suggested_budget: "",
-        expected_deadline: "",
-        project_description: "",
-        requiredSkills: [],
-      });
+      setFormData(INITIAL_FORM_STATE);
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
       setMessage("Failed to post job.");
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
-  // Function to update the job
   const handleUpdate = async (jobId) => {
     if (!isDataChanged()) {
       setMessage("No changes made.");
       return;
     }
     if (!validate()) return;
+
     setSubmitting(true);
     setMessage("");
+
     try {
-      const payload = {
-        owner_id: user.user.id,
-        project_name: formData.project_name,
-        project_description: formData.project_description,
-        suggested_budget: Number(formData.suggested_budget),
-        expected_deadline: Number(formData.expected_deadline),
-        skills_ids: skillsOptions
-          .filter((skill) => formData.requiredSkills.includes(skill.skill))
-          .map((skill) => skill.id),
-        project_state: "open",
-      };
-
-      await AxiosProjectsInstance.patch(`/${jobId}`, payload);
-
+      await AxiosProjectsInstance.patch(`/${jobId}`, createPayload());
       setMessage("Job Updated successfully");
       setInitialData({ ...formData });
 
@@ -266,32 +160,27 @@ const ClientJobForm = () => {
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
       setMessage("Failed to update job.");
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
-  // Function to cancel/delete the job
   const handleCancelJob = async (jobId, cancelType) => {
     setSubmitting(true);
     setMessage("");
+
     try {
-      let newJobState;
-      if (jobData.project_state === "ongoing" && cancelType) {
-        if (cancelType === "contract") {
-          newJobState = "contract canceled and reopened";
-        } else if (cancelType === "full") {
-          newJobState = "canceled";
-        }
-      } else {
-        newJobState = "canceled";
-      }
+      const newJobState =
+        jobData.project_state === "ongoing" && cancelType
+          ? cancelType === "contract"
+            ? "contract canceled and reopened"
+            : "canceled"
+          : "canceled";
 
-      const payload = {
+      await AxiosProjectsInstance.patch(`/${jobId}`, {
         project_state: newJobState,
-        owner_id: user.user.id, // إضافة owner_id للتحقق في الباك إند
-      };
-
-      await AxiosProjectsInstance.patch(`/${jobId}`, payload);
+        owner_id: user.user.id,
+      });
 
       setMessage(
         newJobState === "canceled"
@@ -306,16 +195,139 @@ const ClientJobForm = () => {
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
       setMessage("Failed to cancel job.");
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
-  if (!user || !user.user) {
+  // Effects
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await AxiosSkillsInstance.get("");
+        setSkillsOptions(response.data);
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+      }
+    };
+
+    fetchSkills();
+  }, []);
+
+  useEffect(() => {
+    if (updateMode && jobData) {
+      const processedSkills = Array.isArray(jobData.required_skills)
+        ? jobData.required_skills.map((skill) => skill.skill || skill)
+        : typeof jobData.required_skills === "string"
+        ? jobData.required_skills.split(", ").filter((skill) => skill)
+        : [];
+
+      const newFormData = {
+        project_name: jobData.project_name || "",
+        suggested_budget: jobData.suggested_budget || "",
+        expected_deadline: jobData.expected_deadline || "",
+        project_description: jobData.project_description || "",
+        requiredSkills: processedSkills,
+      };
+
+      setFormData(newFormData);
+      setInitialData(newFormData);
+    }
+  }, [updateMode, jobData]);
+
+  // Utility Functions
+  const isDataChanged = () => {
+    if (!initialData) return true;
+    return Object.keys(INITIAL_FORM_STATE).some((key) =>
+      key === "requiredSkills"
+        ? formData[key].join(",") !== initialData[key].join(",")
+        : formData[key] !== initialData[key]
+    );
+  };
+
+  // Auth Check
+  if (!user?.user) return <Redirect to="/Freelancia-Front-End/403" />;
+  if (user.user.role !== "client")
     return <Redirect to="/Freelancia-Front-End/403" />;
-  }
-  if (!user || user.user.role !== "client") {
-    return <Redirect to="/Freelancia-Front-End/403" />;
-  }
+
+  // Render Components
+  const renderSkillsSection = () => (
+    <Form.Group controlId="requiredSkills" className="mb-3">
+      <Form.Label>Required Skills</Form.Label>
+      <InputGroup>
+        <Form.Control
+          as="select"
+          name="selectedSkill"
+          value={selectedSkill}
+          onChange={(e) => setSelectedSkill(e.target.value)}
+          isInvalid={!!errors.requiredSkills}
+        >
+          <option value="">Select a skill</option>
+          {skillsOptions.map((skill) => (
+            <option key={skill.id} value={skill.skill}>
+              {skill.skill}
+            </option>
+          ))}
+        </Form.Control>
+        <Button variant="secondary" onClick={handleAddSkill}>
+          Add
+        </Button>
+      </InputGroup>
+      <Form.Control.Feedback type="invalid">
+        {errors.requiredSkills}
+      </Form.Control.Feedback>
+      <Form.Control
+        type="text"
+        readOnly
+        value={formData.requiredSkills.join(", ")}
+        className="mt-2"
+      />
+    </Form.Group>
+  );
+
+  const renderCancelModal = () => (
+    <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirm Cancelation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {jobData?.job_state === "ongoing"
+          ? "Do you want to end the contract with the current client and reopen the job, or do you want to cancel the job entirely?"
+          : "Are you sure you want to cancel this job?"}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
+          No
+        </Button>
+        {jobData?.job_state === "ongoing" ? (
+          <>
+            <Button
+              variant="warning"
+              onClick={() => handleCancelJob(jobData.id, "contract")}
+              disabled={submitting}
+            >
+              {submitting ? "Processing..." : "End Contract & Reopen Job"}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => handleCancelJob(jobData.id, "full")}
+              disabled={submitting}
+            >
+              {submitting ? "Processing..." : "Cancel Job"}
+            </Button>
+          </>
+        ) : (
+          <Button
+            variant="danger"
+            onClick={() => handleCancelJob(jobData.id)}
+            disabled={submitting}
+          >
+            {submitting ? "Processing..." : "Yes, Cancel Job"}
+          </Button>
+        )}
+      </Modal.Footer>
+    </Modal>
+  );
 
   return (
     <Container className="mt-5">
@@ -325,6 +337,7 @@ const ClientJobForm = () => {
           {message}
         </Alert>
       )}
+
       <Form
         noValidate
         onSubmit={
@@ -351,9 +364,7 @@ const ClientJobForm = () => {
           value={formData.suggested_budget}
           onChange={handleChange}
           onKeyDown={(e) => {
-            if (["-", "e", "E"].includes(e.key)) {
-              e.preventDefault();
-            }
+            if (["-", "e", "E"].includes(e.key)) e.preventDefault();
           }}
           error={errors.suggested_budget}
         />
@@ -375,37 +386,9 @@ const ClientJobForm = () => {
           as="textarea"
           rows={3}
         />
-        <Form.Group controlId="requiredSkills" className="mb-3">
-          <Form.Label>Required Skills</Form.Label>
-          <InputGroup>
-            <Form.Control
-              as="select"
-              name="selectedSkill"
-              value={selectedSkill}
-              onChange={(e) => setSelectedSkill(e.target.value)}
-              isInvalid={!!errors.requiredSkills}
-            >
-              <option value="">Select a skill</option>
-              {skillsOptions.map((skill) => (
-                <option key={skill.id} value={skill.skill}>
-                  {skill.skill}
-                </option>
-              ))}
-            </Form.Control>
-            <Button variant="secondary" onClick={handleAddSkill}>
-              Add
-            </Button>
-          </InputGroup>
-          <Form.Control.Feedback type="invalid">
-            {errors.requiredSkills}
-          </Form.Control.Feedback>
-          <Form.Control
-            type="text"
-            readOnly
-            value={formData.requiredSkills.join(", ")}
-            className="mt-2"
-          />
-        </Form.Group>
+
+        {renderSkillsSection()}
+
         {updateMode ? (
           <>
             <Button
@@ -431,58 +414,7 @@ const ClientJobForm = () => {
         )}
       </Form>
 
-      {/* Cancel confirmation modal */}
-      {updateMode && jobData && (
-        <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Confirm Cancelation</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {jobData.job_state === "ongoing" ? (
-              <p>
-                Do you want to end the contract with the current client and
-                reopen the job, or do you want to cancel the job entirely?
-              </p>
-            ) : (
-              <p>Are you sure you want to cancel this job?</p>
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={() => setShowCancelModal(false)}
-            >
-              No
-            </Button>
-            {jobData.job_state === "ongoing" ? (
-              <>
-                <Button
-                  variant="warning"
-                  onClick={() => handleCancelJob(jobData.id, "contract")}
-                  disabled={submitting}
-                >
-                  {submitting ? "Processing..." : "End Contract & Reopen Job"}
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => handleCancelJob(jobData.id, "full")}
-                  disabled={submitting}
-                >
-                  {submitting ? "Processing..." : "Cancel Job"}
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant="danger"
-                onClick={() => handleCancelJob(jobData.id)}
-                disabled={submitting}
-              >
-                {submitting ? "Processing..." : "Yes, Cancel Job"}
-              </Button>
-            )}
-          </Modal.Footer>
-        </Modal>
-      )}
+      {updateMode && jobData && renderCancelModal()}
     </Container>
   );
 };
