@@ -1,3 +1,5 @@
+import { AxiosLogOutInstance } from "../API/AxiosInstance";
+
 const loginInitialState = {
   user: null,
   isAuthenticated: false,
@@ -40,7 +42,27 @@ export const removeFromLocalStorage = (key) => {
  * Removes an the logged in user data from localStorage.
  *
  */
+ const curruntUser = getFromLocalStorage("auth");
 export const logout = () => {
-  localStorage.removeItem("auth");
-  localStorage.setItem("auth", JSON.stringify(loginInitialState));
+  try {
+    AxiosLogOutInstance.post(
+      "/",
+      {
+        refresh_token: curruntUser.user.refresh,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${curruntUser.user.access}`,
+        },
+      }
+     
+    )
+    .then(() => console.log("Logout successful"))
+    .catch(err => console.error("Logout API error:", err));
+  } catch (error) {
+    console.error("Logout error:", error);
+  } finally {
+    localStorage.removeItem("auth");
+    localStorage.setItem("auth", JSON.stringify(loginInitialState));
+  }
 };
