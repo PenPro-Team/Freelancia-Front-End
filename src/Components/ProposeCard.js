@@ -42,6 +42,7 @@ function ProposeCard(props) {
                   project_id={props.project_id}
                   disabled={props.disabled}
                   cb={handlecb}
+                  CB_proposals_refresh={props.CB_proposals_refresh}
                 />
               </div>
             </Modal.Body>
