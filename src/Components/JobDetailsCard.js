@@ -218,7 +218,7 @@ function JobDetailsCard(props) {
       // case "third":
       //   return <All_Proposals />;
       case "fourth":
-        return <ClientHistory owner_id={props.project.owner_id} />;
+        return <ClientHistory owner_id={props.project.owner_id} project_id={props.project.id} />;
       default:
         return "Disabled content or default content here.";
     }

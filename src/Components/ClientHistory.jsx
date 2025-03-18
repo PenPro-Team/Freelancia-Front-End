@@ -13,7 +13,7 @@ import RateStars from "./RateStars";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { AxiosReviewInstance } from "../network/API/AxiosInstance";
 
-function ClientHistory({ owner_id: owner }) {
+function ClientHistory({ owner_id: owner ,project_id }) {
   const [clientReviews, setClientReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [clientDetails, setClientDetails] = useState({});
@@ -49,22 +49,25 @@ function ClientHistory({ owner_id: owner }) {
   useEffect(() => {
     if (!currentUser) return;
     const existingFeedback = clientReviews.find(
-      (review) => review.user_reviewr === currentUser?.user?.id
+      (review) => review.user_reviewr_details.id == currentUser?.user?.user_id
     );
     setUserFeedback(existingFeedback);
   }, [currentUser, clientReviews]);
 
   const makeFeedback = () => {
-    if (!feedback.trim() || userFeedback || !currentUser?.user?.id) return;
 
-    axios
-      .post("https://api-generator.retool.com/ECRLlk/feedback", {
-        user_reviewr: currentUser.user.id,
-        user_reviewed: owner,
-        rate: rating,
-        message: feedback,
-        img: "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_640.png",
-      })
+
+    if (!feedback.trim() || userFeedback || !currentUser?.user?.user_id) return;
+     
+
+    AxiosReviewInstance
+      .post(`create`,  {
+        "user_reviewr": currentUser.user.user_id,
+        "user_reviewed": owner.id,
+        "rate": rating,
+        "message": feedback,
+        "project":project_id
+      },)
       .then((res) => {
         setClientReviews([res.data, ...clientReviews]);
         setUserFeedback(res.data);
@@ -80,14 +83,21 @@ function ClientHistory({ owner_id: owner }) {
   };
 
   const updateFeedback = () => {
-    axios
-      .patch(
-        `https://api-generator.retool.com/ECRLlk/feedback/${editingReview.id}`,
-        {
-          message: editingReview.message,
-          rate: editingReview.rate,
-        }
-      )
+    console.log("editingReview");
+    console.log(editingReview);
+    console.log( currentUser.user.access);
+    AxiosReviewInstance.patch(
+      `update/${editingReview.id}`,
+      {
+        message: editingReview.message,
+        rate: editingReview.rate,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${currentUser.user.access}`, // Or without Bearer if your backend doesn't require it
+        },
+      }
+    )
       .then((res) => {
         setClientReviews(
           clientReviews.map((review) =>
@@ -106,9 +116,14 @@ function ClientHistory({ owner_id: owner }) {
   };
 
   const deleteFeedback = () => {
-    axios
+    AxiosReviewInstance
       .delete(
-        `https://api-generator.retool.com/ECRLlk/feedback/${deletingReview.id}`
+        `delete/${deletingReview.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.user.access}`, // Or without Bearer if your backend doesn't require it
+          },
+        }
       )
       .then(() => {
         setClientReviews(
@@ -149,7 +164,7 @@ function ClientHistory({ owner_id: owner }) {
               </Card.Title>
               <div className="fw-bold">Review Message:</div>
               <div>{review.message}</div>
-              {currentUser?.user?.id === review.user_reviewr_details.id && (
+              {currentUser?.user?.user_id === review.user_reviewr_details.id && (
                 <div className="mt-2 d-flex">
                   <Button
                     variant="warning"
@@ -171,9 +186,9 @@ function ClientHistory({ owner_id: owner }) {
         ))
       )}
 
-      {currentUser?.user != null &&
+      {currentUser.user != null &&
         !userFeedback &&
-        currentUser?.user?.role === "freelancer" && (
+        currentUser.user.role === "freelancer" && (
           <Card className="mt-3">
             <Card.Body>
               <Card.Title>Leave a Review</Card.Title>
