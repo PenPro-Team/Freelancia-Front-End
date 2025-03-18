@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import Nav from "react-bootstrap/Nav";
-import { useState } from "react";
+import { use, useState } from "react";
 import ProjectProposals from "./ProjectProposals";
 import { Badge, Placeholder, Modal, Button } from "react-bootstrap";
 import ClientHistory from "./ClientHistory";
@@ -10,6 +10,7 @@ import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { AiFillSetting } from "react-icons/ai";
 import { TiCancel } from "react-icons/ti";
 import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
 // ----------
 // Added cancel functionality import
 import { AxiosProjectsInstance } from "../network/API/AxiosInstance";
@@ -19,12 +20,17 @@ function JobDetailsCard(props) {
   const [activeTab, setActiveTab] = useState("first");
   const history = useHistory();
   const auth = getFromLocalStorage("auth");
+  const [project, setProject] = useState(null);
 
   // ----------
   // Added cancel functionality state and functions
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelSubmitting, setCancelSubmitting] = useState(false);
   const [cancelMessage, setCancelMessage] = useState("");
+
+  useEffect(() => {
+    setProject(props.project);
+  }, [props.project]);
 
   const handleCancelJob = (cancelType) => {
     setCancelSubmitting(true);
@@ -41,12 +47,12 @@ function JobDetailsCard(props) {
       newJobState = "canceled";
     }
 
-    AxiosProjectsInstance.patch(`/${props.project.id}`, {
+    AxiosProjectsInstance.patch(`/${project.id}`, {
       project_state: newJobState,
     })
       .then((res) => {
-        console.log(res.data);
-        console.log("refresh");
+        // console.log(res.data);
+        // console.log("refresh");
         props.actionCB();
         setCancelMessage(
           newJobState === "canceled"
@@ -163,7 +169,9 @@ function JobDetailsCard(props) {
               {auth &&
                 auth.isAuthenticated &&
                 auth.user.role === "client" &&
-                props.project.owner_id.id === auth.user.user_id &&
+                project &&
+                project.owner_id &&
+                project.owner_id.id === auth.user.user_id &&
                 (props.project.project_state === "open" ||
                   props.project.project_state ===
                     "contract canceled and reopened" ||
@@ -183,7 +191,9 @@ function JobDetailsCard(props) {
               {auth &&
                 auth.isAuthenticated &&
                 auth.user.role === "client" &&
-                props.project.owner_id.id === auth.user.user_id &&
+                project &&
+                project.owner_id &&
+                project.owner_id.id === auth.user.user_id &&
                 (props.project.project_state === "open" ||
                   props.project.project_state ===
                     "contract canceled and reopened") && (
