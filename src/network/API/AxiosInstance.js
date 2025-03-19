@@ -51,8 +51,8 @@ export const AxiosLogOutInstance = axios.create({
 export const AxiosRegisterInstance = axios.create({
   baseURL: `${url}/users/`,
 });
-// Api For USers For Freelancer Profile and Client Profile  
-export const AxiosUsersInstance = axios.create({
+
+export const AxiosUserInstance = axios.create({
   baseURL: `${url}/users/`,
 });
 /**

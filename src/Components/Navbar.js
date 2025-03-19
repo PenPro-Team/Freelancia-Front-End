@@ -91,7 +91,7 @@ function NavBar() {
             <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
               <Nav.Link
                 as={Link}
-                to={`/Freelancia-Front-End/Dashboard/${user.id}`}
+                to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}
               >
                 <div className="d-flex flex-row gap-2 justify-content-center align-items-center">
                   <img
