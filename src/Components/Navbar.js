@@ -52,7 +52,7 @@ function NavBar() {
             isAuth ? (
               <Nav.Link
                 as={Link}
-                to={`/Freelancia-Front-End/Dashboard/${user.id}`}
+                to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}
               >
                 Your Profile
               </Nav.Link>
