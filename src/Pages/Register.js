@@ -16,6 +16,7 @@ import Spinner from "react-bootstrap/Spinner";
 import InputField from "../Components/InputField";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import HeaderColoredText from "../Components/HeaderColoredText"; // استيراد المكون
+import { AxiosRegisterInstance } from "../network/API/AxiosInstance";
 
 const RegisterForm = () => {
   const history = useHistory();
@@ -116,7 +117,10 @@ const RegisterForm = () => {
           }
           break;
         case "role":
-          if (newValue !== "client" && newValue !== "freelancer") {
+          if (
+            newValue.toLowerCase() !== "client" &&
+            newValue.toLowerCase() !== "freelancer"
+          ) {
             errorMessage = "Please select a valid role";
           }
           break;
@@ -145,9 +149,7 @@ const RegisterForm = () => {
 
   const checkAvailability = async (field, value) => {
     try {
-      const response = await axios.get(
-        `https://api-generator.retool.com/D8TEH0/data?${field}=${value}`
-      );
+      const response = await AxiosRegisterInstance.get(`?${field}=${value}`);
       const data = response.data;
       if (field === "username") {
         if (userNameReg.test(value)) {
@@ -175,23 +177,48 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (usernameExists || emailExists) {
-      setSnackbarMessage("Username or Email already exists!");
-      setShowSnackbar(true);
-      return;
-    }
     try {
       setisLoading(true);
-      await axios.post(
-        "https://api-generator.retool.com/D8TEH0/data",
-        { ...formValues, confirmPassword: undefined, description: "" },
-        { headers: { "Content-Type": "application/json" } }
-      );
+
+      const formData = {
+        username: formValues.username.trim(),
+        first_name: formValues.firstName.trim(),
+        last_name: formValues.lastName.trim(),
+        email: formValues.email.trim(),
+        password: formValues.password,
+        role: formValues.role,
+        birth_date: formValues.birthdate,
+        postal_code: formValues.postalCode,
+        address: formValues.address,
+      };
+
+      console.log("Role being sent:", formData.role);
+      console.log("Complete form data:", formData);
+
+      const response = await AxiosRegisterInstance.post("", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      // نطبع الresponse كامل لنرى كيف يتم تخزين الـ role
+      console.log("Full server response:", response);
+      console.log("Response data role:", response.data.role);
+
       setSnackbarMessage("Registration successful!");
       setShowSnackbar(true);
-      setTimeout(() => history.push("/login"), 2000); // هنا هتحط صفحة اللوجين بتاعتك
+      setTimeout(() => history.push("/Freelancia-Front-End/login"), 2000);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      // نطبع تفاصيل أكثر عن الخطأ
+      console.error("Registration error details:", {
+        data: error.response?.data,
+        status: error.response?.status,
+        message: error.message,
+      });
+      setSnackbarMessage(
+        error.response?.data?.message || "Registration failed!"
+      );
+      setShowSnackbar(true);
     } finally {
       setisLoading(false);
     }
@@ -297,10 +324,11 @@ const RegisterForm = () => {
             onChange={handleChange}
             isInvalid={Boolean(errors.role)}
             feedback={errors.role}
+            required
           >
             <option value="">Select Role</option>
-            <option value="client">Client</option>
-            <option value="freelancer">Freelancer</option>
+            <option value="client">client</option>
+            <option value="freelancer">freelancer</option>
           </InputField>
           {/* <InputField
             label="Description"
