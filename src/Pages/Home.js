@@ -16,6 +16,8 @@ function Home() {
   const user = useSelector((state) => state.auth.user);
   const [freelancers, setFreelancers] = useState([]);
   const [clients, setClients] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [searchResults, setSearchResults] = useState([]); // State for search results
 
   console.log("Logged in User:", user);
 
@@ -47,6 +49,21 @@ function Home() {
     fetchClients();
   }, []);
 
+  // Handle search for freelancers by username
+  const handleSearch = (e) => {
+    e.preventDefault(); // Prevent form submission
+    if (searchQuery.trim() === "") {
+      setSearchResults([]); // Clear search results if the query is empty
+      return;
+    }
+
+    // Filter freelancers by username
+    const results = freelancers.filter((freelancer) =>
+      freelancer.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setSearchResults(results); // Update search results
+  };
+
   return (
     <Container className="text-center text-lg-start">
       <Row>
@@ -63,14 +80,20 @@ function Home() {
 
           <Row className="mx-auto mb-4">
             <Col xs="auto">
-              <Form.Control
-                type="text"
-                placeholder="Search"
-                className=" mr-sm-2 w-100"
-              />
+              <Form onSubmit={handleSearch}>
+                <Form.Control
+                  type="text"
+                  placeholder="Search by username"
+                  className="mr-sm-2 w-100"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </Form>
             </Col>
             <Col xs="auto" className="d-none d-lg-inline">
-              <Button type="submit">Search</Button>
+              <Button type="submit" onClick={handleSearch}>
+                Search
+              </Button>
             </Col>
           </Row>
         </Col>
@@ -78,6 +101,36 @@ function Home() {
           <img width={"350%"} src={proImage} alt="Freelance Platform" />
         </Col>
       </Row>
+
+      {/* Display Search Results */}
+      {searchResults.length > 0 && (
+        <Row className="mt-4">
+          <h3>Search Results</h3>
+          {searchResults.map((freelancer, idx) => (
+            <Col key={idx} xs={12} md={6} lg={4} className="mb-4">
+              <Card className="shadow-lg">
+                <Card.Img
+                  variant="top"
+                  src={freelancer.image || proImages} // Use freelancer's image or a default image
+                  alt={freelancer.name}
+                />
+                <Card.Body>
+                  <Card.Title>
+                    {freelancer.name}
+                    <br />
+                    <RateStars rating={freelancer.rate} />
+                  </Card.Title>
+                  <Card.Text>
+                    <strong>Description:</strong>{" "}
+                    {freelancer.description || "No description available."}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
+
       <div className="d-flex flex-wrap row row-cols-1 row-cols-md-3 g-3 ms-1 mt-2 mb-4 justify-content-center align-items-center">
         <Cards
           title={"WordPress Themes"}
@@ -96,14 +149,13 @@ function Home() {
       <Row>
         <Col xs={10} md={6} className="d-flex align-content-center flex-wrap">
           <div className="divhit g-1">
-            {clients.slice(0, 4).map((client, id) => (
+            {clients.slice(0, 4).map((client, idx) => (
               <img
-                key={id}
+                key={idx}
                 width={"50%"}
-                height={"50%"}
                 className="rounded"
                 src={client.image}
-                alt={`Client ${id + 1}`}
+                alt={`Client ${idx + 1}`}
               />
             ))}
           </div>
@@ -135,16 +187,17 @@ function Home() {
                   <Card.Img
                     variant="top"
                     src={freelancer.image || proImages} // Use freelancer's image or a default image
-                    alt={freelancer.name}
+                    alt={freelancer.username}
                   />
                   <Card.Body>
                     <Card.Title>
-                      {freelancer.name}
+                      {freelancer.username}
                       <br />
                       <RateStars rating={freelancer.rate} />
                     </Card.Title>
                     <Card.Text>
-                      <strong>Description:</strong> {freelancer.description || "No description available."}
+                      <strong>Description:</strong>{" "}
+                      {freelancer.description || "No description available."}
                     </Card.Text>
                   </Card.Body>
                 </Card>
