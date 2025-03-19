@@ -10,6 +10,8 @@ export const AxiosFreelancersInstance = axios.create({
 export const AxiosClientsInstance = axios.create({
   baseURL: `${url}/clients/`, // Base URL for freelancers
 });
+
+
 /**
  * This Api For Projects
  */
@@ -47,6 +49,10 @@ export const AxiosLogOutInstance = axios.create({
 });
 
 export const AxiosRegisterInstance = axios.create({
+  baseURL: `${url}/users/`,
+});
+// Api For USers For Freelancer Profile and Client Profile  
+export const AxiosUsersInstance = axios.create({
   baseURL: `${url}/users/`,
 });
 /**
