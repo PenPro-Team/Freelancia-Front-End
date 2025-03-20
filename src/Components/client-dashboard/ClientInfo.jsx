@@ -8,14 +8,15 @@ import {
 import { getFromLocalStorage } from "../../network/local/LocalStorage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card, Container, Row, Col, Placeholder } from "react-bootstrap";
-import personalImg from "../../assets/hero-bg.jpg";
+import personalImg from "../../assets/default-user.png";
 import RateStars from "../RateStars";
 import { MdEmail, MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { BsHexagon } from "react-icons/bs";
 import { FaAddressCard, FaRegUserCircle } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
+import { AxiosUserInstance } from "../../network/API/AxiosInstance";
 
-export default function ClientInfo() {
+export default function ClientInfo(props) {
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
   const user = auth ? auth.user.id : null;
@@ -27,8 +28,8 @@ export default function ClientInfo() {
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get(`https://api-generator.retool.com/D8TEH0/data/${params.user_id}`)
+    AxiosUserInstance
+      .get(`${params.user_id}`)
       .then((res) => {
         setUserData(res.data);
         console.log(res.data);
@@ -49,7 +50,7 @@ export default function ClientInfo() {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [history, params]);
+  }, [history, params,props.refreshFlag]);
   return (
     <>
       <Row className="justify-content-center mt-5">
@@ -72,10 +73,11 @@ export default function ClientInfo() {
                       className="rounded-circle mb-2 mx-3"
                       width={"128px"}
                       height={"128px"}
-                      src={personalImg}
+                      src={userData.image ? userData.image : personalImg}
+                      alt="user"
                     />
                     <Card.Title className="text-center h3">
-                      {userData.firstName + " " + userData.lastName}
+                      {userData.name}
                     </Card.Title>
                     <div>
                       <RateStars rating={3} />
@@ -97,24 +99,23 @@ export default function ClientInfo() {
                     <strong className="me-2">
                       <SlCalender color="blue" size="2rem" />:{" "}
                     </strong>
-                    {userData.birthdate}.
+                    {userData.birth_date}.
                   </p>
                   <p>
                     <strong className="me-2">
                       <FaAddressCard color="blue" size="2rem" />:
                     </strong>
-                    {userData.address + ", " + userData.postalCode}.
+                    {userData.address + ", " + userData.postal_code}.
                   </p>
-                  <p className="w-50">
-                    <strong className="me-2">
-                      <MdOutlineDriveFileRenameOutline
-                        color="blue"
-                        size="2rem"
-                      />{" "}
-                      Description:
-                    </strong>
-                    {userData.description}
-                  </p>
+                  {userData.description && (
+                    <p>
+                      <strong className="me-2">
+                        <MdOutlineDriveFileRenameOutline color="blue" size="2rem" />{" "}
+                        Description:
+                      </strong>
+                      {userData.description}.
+                    </p>
+                  )}
                   <p>
                     <strong className="me-2">
                       <BsHexagon color="blue" size="2rem" /> Role:
@@ -124,9 +125,6 @@ export default function ClientInfo() {
                 </div>
               )}
             </Card.Body>
-            <Link to={`/Freelancia-Front-End/Dashboard/edit/${userData.id}`}>
-              Edit Information
-            </Link>
           </Card>
         </Col>
       </Row>

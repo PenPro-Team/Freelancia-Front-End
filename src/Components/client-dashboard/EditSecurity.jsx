@@ -20,6 +20,7 @@ import {
   InputGroup,
   Modal,
 } from "react-bootstrap";
+import { AxiosUserInstance } from "../../network/API/AxiosInstance";
 export default function EditSecurity() {
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
@@ -136,8 +137,8 @@ export default function EditSecurity() {
       (field == "email" && userData.email != value)
     ) {
       try {
-        const response = await axios.get(
-          `https://api-generator.retool.com/D8TEH0/data?${field}=${value}`
+        const response = await AxiosUserInstance.get(
+          `?${field}=${value}`
         );
         const data = response.data;
         if (field === "username") {
@@ -171,8 +172,8 @@ export default function EditSecurity() {
   };
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get(`https://api-generator.retool.com/D8TEH0/data/${params.user_id}`)
+    AxiosUserInstance
+      .get(`${params.user_id}`)
       .then((res) => {
         setUserData(res.data);
         setFormValues(res.data);
@@ -215,9 +216,9 @@ export default function EditSecurity() {
       if (isFormValid) {
         console.log(newFormValues);
         
-        axios
-          .put(
-            `https://api-generator.retool.com/D8TEH0/data/${params.user_id}`,
+        AxiosUserInstance
+          .patch(
+            `${params.user_id}`,
             newFormValues
           )
           .then((res) => {
