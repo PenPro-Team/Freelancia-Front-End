@@ -23,71 +23,45 @@ function NavBar() {
   };
 
   return (
-    <Navbar bg="dark" data-bs-theme="dark">
-      <Container className="d-flex justify-content-between">
+    <Navbar bg="dark" expand="lg" className="navbar-dark">
+      <Container>
         <Navbar.Brand as={Link} to="/Freelancia-Front-End/">
           <span className="text-primary">Free</span>Lanceia
         </Navbar.Brand>
-        <Nav className="me-auto">
-          <Nav.Link as={Link} to="/Freelancia-Front-End/">
-            Home
-          </Nav.Link>
-          <Nav.Link as={Link} to="/Freelancia-Front-End/Job_List">
-            Projects
-          </Nav.Link>
-
-          {isAuth ? (
-            user.role === "freelancer" ? (
+        <Navbar.Toggle aria-controls="navbar-nav" />
+        <Navbar.Collapse id="navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link as={Link} to="/Freelancia-Front-End/">
+              Home
+            </Nav.Link>
+            <Nav.Link as={Link} to="/Freelancia-Front-End/Job_List">
+              Projects
+            </Nav.Link>
+            {isAuth && user.role === "freelancer" && (
               <Nav.Link as={Link} to="/Freelancia-Front-End/proposals">
                 My Proposals
               </Nav.Link>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-
-          {auth ? (
-            isAuth ? (
+            )}
+            {isAuth && (
               <Nav.Link
                 as={Link}
                 to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}
               >
                 Your Profile
               </Nav.Link>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-
+            )}
+            {isAuth && user.role === "client" && (
+              <>
+                <Nav.Link as={Link} to="/Freelancia-Front-End/postjob">
+                  Post a Job
+                </Nav.Link>
+                <Nav.Link as={Link} to="/Freelancia-Front-End/clientjoblist">
+                  Client Job List
+                </Nav.Link>
+              </>
+            )}
+          </Nav>
           {isAuth ? (
-            user.role === "client" ? (
-              <Nav.Link as={Link} to="/Freelancia-Front-End/postjob">
-                Post a Job
-              </Nav.Link>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-          {isAuth ? (
-            user.role === "client" ? (
-              <Nav.Link as={Link} to="/Freelancia-Front-End/clientjoblist">
-                Client Job List
-              </Nav.Link>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-        </Nav>
-        {isAuth ? (
-          <div>
             <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
               <Nav.Link
                 as={Link}
@@ -113,17 +87,17 @@ function NavBar() {
                 <span className="text-danger ms-2">Logout</span>
               </Nav.Link>
             </div>
-          </div>
-        ) : (
-          <div className="text-light d-flex flex-row flex-wrap gap-2">
-            <Nav.Link as={Link} to="/Freelancia-Front-End/login">
-              Login
-            </Nav.Link>
-            <Nav.Link as={Link} to="/Freelancia-Front-End/register">
-              Register
-            </Nav.Link>
-          </div>
-        )}
+          ) : (
+            <div className="text-light d-flex flex-row flex-wrap gap-2">
+              <Nav.Link as={Link} to="/Freelancia-Front-End/login">
+                Login
+              </Nav.Link>
+              <Nav.Link as={Link} to="/Freelancia-Front-End/register">
+                Register
+              </Nav.Link>
+            </div>
+          )}
+        </Navbar.Collapse>
       </Container>
     </Navbar>
   );

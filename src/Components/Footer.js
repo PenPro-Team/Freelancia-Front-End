@@ -4,51 +4,69 @@ import Col from "react-bootstrap/Col";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const Footer = () => {
-  // Contact
   return (
-    <>
-      <div className="container-fluid blackBack mt-5 p-5">
-        <div className="d-flex text-light flex-wrap flex-column flex-lg-row justify-content-between">
-          <div className="col-12 col-md-6 mb-3 mb-1 ">
-            <h2>Lat's Take</h2>
+    <footer className="container-fluid blackBack mt-5 p-5">
+      <Container className="text-light">
+        <Row className="flex-column flex-lg-row">
+          {/* Contact Section */}
+          <Col xs={12} md={6} className="mb-4">
+            <h2>Let's Take</h2>
             <p>
-              Evrey Project Starts with a chat. Joven leads our client converstation <br/> and will be happy to discuss your Project. He will also Pull in the Right <br/> people from the team when needed
+              Every project starts with a chat. Joven leads our client
+              conversations and will be happy to discuss your project. He will
+              also pull in the right people from the team when needed.
             </p>
-            <button className="btn btn-primary w-50">Tell Us about your Project</button>
-          </div>
-          <div className="col-2 ms-1">
-          <p>Our Responsers</p>
-            <Link className="text-decoration-none text-primary" to="">Links</Link>
-            <br />
-            <Link className="text-decoration-none text-primary" to="">Home</Link>
-            <br />
-            <Link className="text-decoration-none text-primary" to="">Portfolio</Link>
-          </div>
-          <div className="col-3">
-            <br/>
+            <button className="btn btn-primary w-100 w-md-50">
+              Tell Us About Your Project
+            </button>
+          </Col>
+
+          {/* Links Section */}
+          <Col xs={6} md={3} className="mb-4">
+            <h5>Our Resources</h5>
+            <Link
+              className="text-decoration-none text-primary d-block"
+              to="/links"
+            >
+              Links
+            </Link>
+            <Link
+              className="text-decoration-none text-primary d-block"
+              to="/home"
+            >
+              Home
+            </Link>
+            <Link
+              className="text-decoration-none text-primary d-block"
+              to="/portfolio"
+            >
+              Portfolio
+            </Link>
+          </Col>
+
+          {/* Search and Copyright Section */}
+          <Col xs={12} md={3} className="mt-4 mt-md-0">
             <div className="d-flex flex-column">
+              {/* Search Input */}
               <div className="d-flex">
-                <input type="text" placeholder="Take a look in PlateForm" className="form-control w-100"/><button className="btn btn-primary ms-2">Search</button>
+                <input
+                  type="text"
+                  placeholder="Take a look on the platform"
+                  className="form-control"
+                />
+                <button className="btn btn-primary ms-2">Search</button>
               </div>
-              
-              <div className="mt-5">© 2025, FreeLancia.com for PenPro Team</div>
+
+              {/* Copyright */}
+              <div className="mt-5 text-center">
+                © 2025, FreeLancia.com for PenPro Team
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </>
+          </Col>
+        </Row>
+      </Container>
+    </footer>
   );
 };
 
 export default Footer;
-
-{
-  /* <Row className='blackBack text-light'>
-                    <div className='d-flex justify-content-center'>
-                       <Col>1 of 3</Col>
-                        <Col>2 of 3</Col>
-                        <Col>3 of 3</Col> 
-                    </div>
-                    
-</Row> */
-}
