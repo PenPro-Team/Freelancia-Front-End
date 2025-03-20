@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import UpdateCertificate from "./UpdateCertificate";
 import UpdateProjects from "./UpdateProjects";
+import { AxiosRegisterInstance } from "../network/API/AxiosInstance";
 
 function Dashboard() {
   const auth = getFromLocalStorage("auth");
@@ -28,8 +29,8 @@ function Dashboard() {
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get(`https://api-generator.retool.com/D8TEH0/data/${params.user_id}`)
+    AxiosRegisterInstance
+      .get(`${params.user_id}`)
       .then((res) => {
         setUserData(res.data);
         // console.log(params.user_id);
@@ -61,7 +62,7 @@ function Dashboard() {
               <Nav.Item>
                 <Nav.Link eventKey="first">User Info</Nav.Link>
               </Nav.Item>
-              {auth && user && user.id == user_id && user.id == userData.id && (
+              {auth && user && user.user_id == user_id && user.user_id == userData.id && (
                 <>
                   <Nav.Item>
                     <Nav.Link eventKey="second">Update Profile</Nav.Link>
