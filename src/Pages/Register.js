@@ -16,7 +16,7 @@ import Spinner from "react-bootstrap/Spinner";
 import InputField from "../Components/InputField";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import HeaderColoredText from "../Components/HeaderColoredText"; // استيراد المكون
-import { AxiosRegisterInstance } from "../network/API/AxiosInstance";
+import { AxiosUserInstance } from "../network/API/AxiosInstance";
 
 const RegisterForm = () => {
   const history = useHistory();
@@ -149,7 +149,7 @@ const RegisterForm = () => {
 
   const checkAvailability = async (field, value) => {
     try {
-      const response = await AxiosRegisterInstance.get(`?${field}=${value}`);
+      const response = await AxiosUserInstance.get(`?${field}=${value}`);
       const data = response.data;
       if (field === "username") {
         if (userNameReg.test(value)) {
@@ -195,7 +195,7 @@ const RegisterForm = () => {
       console.log("Role being sent:", formData.role);
       console.log("Complete form data:", formData);
 
-      const response = await AxiosRegisterInstance.post("", formData, {
+      const response = await AxiosUserInstance.post("", formData, {
         headers: {
           "Content-Type": "application/json",
         },
