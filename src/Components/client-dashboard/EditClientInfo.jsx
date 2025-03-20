@@ -5,12 +5,14 @@ import { getFromLocalStorage } from '../../network/local/LocalStorage';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card, Container, Row, Col, Placeholder, Form, Button, Alert } from "react-bootstrap";
 import personalImg from "../../assets/hero-bg.jpg";
+import { AxiosUserInstance } from '../../network/API/AxiosInstance';
+import defaultImage from "../../assets/default-user.png"
+import { setToLocalStorage } from '../../network/local/LocalStorage';
 
-
-export default function EditClientInfo() {
+export default function EditClientInfo(props) {
     const [userData, setUserData] = useState({})
     const auth = getFromLocalStorage("auth");
-    const user = auth ? auth.user.id : null;
+    const user = auth ? auth.user: null;
     const [isLoading, setIsLoading] = useState(false);
     const [isEmpty, setIsEmpty] = useState(true);
     const params = useParams();
@@ -20,15 +22,15 @@ export default function EditClientInfo() {
     const [errors, setErrors] = useState({});
     const [show, setShow] = useState(true);
     const [formValues, setFormValues] = useState({
-        firstName: "",
-        lastName: "",
-        birthdate: "",
-        postalCode: "",
+        first_name: "",
+        last_name: "",
+        birth_date: "",
+        postal_code: "",
         address: "",
         description: "",
-        profilePicture: ""
+        // image: ""
     });
-    console.log(formValues.firstName);
+    console.log(formValues.first_name);
     const [isFormValid, setIsFormValid] = useState(false);
 
     const userRegex = /^[a-zA-Z]+$/
@@ -40,9 +42,6 @@ export default function EditClientInfo() {
         setFormValues({ ...formValues, [name]: newValue });
         let errorMessage = "";
         console.log(name);
-
-        // console.log(e.target.name);
-
         if (newValue.trim() === "") {
             errorMessage = "This field is required";
         } else {
@@ -97,7 +96,7 @@ export default function EditClientInfo() {
     };
     useEffect(() => {
         setIsLoading(true);
-        axios.get(`https://api-generator.retool.com/D8TEH0/data/${params.user_id}`)
+        AxiosUserInstance.get(`${params.user_id}`)
             .then((res) => {
                 setUserData(res.data);
                 setFormValues(res.data)
@@ -125,14 +124,17 @@ export default function EditClientInfo() {
         setShowSuccess(false);
         setShowError(false);
         setShow(true);
+        console.log(formValues.image);
+        
         if (isFormValid) {
-            axios.put(`https://api-generator.retool.com/D8TEH0/data/${params.user_id}`, formValues)
+            AxiosUserInstance.patch(`${params.user_id}`, formValues, {headers: { Authorization: `Bearer ${user.access}` }})
                 .then((res) => {
                     console.log(res.data)
                     setShowSuccess(true)
                     setShowError(false)
                     setUserData(formValues);
                     setShow(true)
+                    props.cb();
 
                 }).catch((error) => {
                     console.log(error);
@@ -140,6 +142,37 @@ export default function EditClientInfo() {
                     setShowError(true)
                 })
         }
+    }
+    const handleDeleteImage = (e) => {
+        e.preventDefault();
+        AxiosUserInstance.patch(`${params.user_id}`, {image: null}, {headers: { Authorization: `Bearer ${user.access}` }})
+            .then((res) => {
+                setUserData({...userData, image: null})
+                console.log(res.data.image)
+                // console.log("form value" + formValues.image);
+            }).catch((error) => {
+                console.log(error);
+            })
+    }
+    const handleUploadImage = (e) => {
+        e.preventDefault();
+        console.log(e.target.files[0]);
+        
+        const upload_file = e.target.files[0];
+        console.log(upload_file);
+        
+        const formData = new FormData();
+        formData.append('image', upload_file);
+        AxiosUserInstance.patch(`${params.user_id}`, formData, {headers: { Authorization: `Bearer ${user.access}`, 'Content-Type': 'multipart/form-data' }})
+            .then((res) => {
+                console.log("image upload function"+res.data.image)
+                setUserData({...userData, image: res.data.image})
+                setToLocalStorage("auth", { ...auth, user: { ...auth.user, image: res.data.image } });
+                // console.log("form value" + formValues.image);
+            }).catch((error) => {
+                console.log(error);
+            }
+            )
     }
 
     return (
@@ -174,33 +207,56 @@ export default function EditClientInfo() {
                                         :
                                         ""
                                     }
-                                    <Form onSubmit={handleSubmit}>
+                                    <Form onSubmit={handleSubmit} encType='multipart/form-data'>
                                         <Row className="mb-3 ">
                                             <Form.Group controlId="formFile" className="mb-3" name="profilePicture">
-                                                <div className='d-flex flex-wrap mb-4'>
-                                                    <img
-                                                        className="rounded-circle mb-2 mx-3"
-                                                        width={"128px"}
-                                                        height={"128px"}
-                                                        src={personalImg}
-                                                    />
-                                                    <div className='w-100 mx-3'>
-                                                        <Button variant="outline-danger" >Delete image</Button>
+                                                {userData.image ?
+                                                <>
+                                                    <div className='d-flex flex-wrap mb-4 justify-content-center'>
+                                                        <img
+                                                            className="rounded-circle mb-2 mx-3"
+                                                            width={"128px"}
+                                                            height={"128px"}
+                                                            src={userData.image}
+                                                        />
+                                                        <div className='w-100 mx-3 d-flex justify-content-center'>
+                                                            <Button variant="outline-danger mx-2" onClick={(e)=>handleDeleteImage(e)}>Delete image</Button>
+                                                            <Button variant="outline-info" onClick={()=>setUserData({...userData, image : null})}>Edit image</Button>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </>
+                                                : 
+                                                <div className='d-flex flex-wrap mb-4 justify-content-center'>
+                                                        <img
+                                                            className="rounded-circle mb-2 mx-3"
+                                                            width={"128px"}
+                                                            height={"128px"}
+                                                            src={defaultImage}
+                                                        />
+                                                        <div className='w-100 mx-3 d-flex justify-content-center'>
+                                                            <Button variant="outline-success" >Upload image</Button>
+                                                        </div>
+                                                    </div>
+                                                }
                                                 <Form.Label>Default file input example</Form.Label>
-                                                <Form.Control type="file" />
+                                                <input 
+                                                type="file"
+                                                name='image'
+                                                id='image'
+                                                // value={formValues.image}
+                                                onChange={(e)=>handleUploadImage(e)}
+                                                 />
                                             </Form.Group>
                                             <Form.Group as={Col} controlId="formGridEmail">
 
                                                 <Form.Label>First Name</Form.Label>
                                                 <Form.Control
-                                                    name='firstName'
+                                                    name='first_name'
                                                     type="text"
                                                     placeholder="First Name"
-                                                    value={formValues.firstName}
+                                                    value={formValues.first_name}
                                                     onChange={handleChange}
-                                                    isInvalid={Boolean(errors.firstName)}
+                                                    isInvalid={Boolean(errors.first_name)}
                                                     feedback={errors.firstName}
                                                 />
                                                 <Form.Control.Feedback type="invalid">
@@ -211,12 +267,12 @@ export default function EditClientInfo() {
                                             <Form.Group as={Col} controlId="formGridPassword">
                                                 <Form.Label>Last Name</Form.Label>
                                                 <Form.Control
-                                                    name='lastName'
+                                                    name='last_name'
                                                     type="text"
                                                     placeholder="Last Name"
-                                                    value={formValues.lastName}
+                                                    value={formValues.last_name}
                                                     onChange={handleChange}
-                                                    isInvalid={Boolean(errors.lastName)}
+                                                    isInvalid={Boolean(errors.last_name)}
                                                     feedback={errors.lastName}
                                                 />
                                                 <Form.Control.Feedback type="invalid">
@@ -243,12 +299,12 @@ export default function EditClientInfo() {
                                         <Form.Group className="mb-3" controlId="formGridAddress2">
                                             <Form.Label>Postal Code</Form.Label>
                                             <Form.Control
-                                                name='postalCode'
+                                                name='postal_code'
                                                 placeholder="62511 i.e"
-                                                value={formValues.postalCode}
+                                                value={formValues.postal_code}
                                                 onChange={handleChange}
-                                                isInvalid={Boolean(errors.postalCode)}
-                                                feedback={errors.postalCode}
+                                                isInvalid={Boolean(errors.postal_code)}
+                                                feedback={errors.postal_code}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.postalCode}
@@ -259,9 +315,9 @@ export default function EditClientInfo() {
                                             <Form.Group as={Col} controlId="formGridCity">
                                                 <Form.Label>Birth Date</Form.Label>
                                                 <Form.Control
-                                                    name='birthdate'
+                                                    name='birth_date'
                                                     type="date"
-                                                    value={formValues.birthdate}
+                                                    value={formValues.birth_date}
                                                     onChange={handleChange}
                                                     isInvalid={Boolean(errors.birthdate)}
                                                     feedback={errors.birthdate}
@@ -286,11 +342,10 @@ export default function EditClientInfo() {
                                                 {errors.description}
                                             </Form.Control.Feedback>
                                         </Form.Group>
-                                        <Button variant="primary" type="submit" disabled={!isFormValid || (userData.firstName == formValues.firstName && userData.lastName == formValues.lastName && userData.address == formValues.address && userData.postalCode == formValues.postalCode && userData.birthdate == formValues.birthdate && userData.description == formValues.description && !formValues.profilePicture)} >
+                                        <Button variant="primary" type="submit" disabled={!isFormValid || (userData.firstName == formValues.first_name && userData.lastName == formValues.last_name && userData.address == formValues.address && userData.postalCode == formValues.postal_code && userData.birthdate == formValues.birth_date && userData.description == formValues.description && !formValues.image)} >
                                             Submit
                                         </Button>
                                     </Form>
-                                    <Link to={`/Freelancia-Front-End/Dashboard/security/${userData.id}`}>Security & Password</Link>
                                 </>
                             }
                         </Card.Body>

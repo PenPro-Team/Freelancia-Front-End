@@ -3,7 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { Container } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import personalImg from "../assets/hero-bg.jpg";
+import personalImg from "../assets/default-user.png";
 import { getFromLocalStorage, logout } from "../network/local/LocalStorage";
 import { logout as userLogout } from "../Redux/Actions/authAction";
 
