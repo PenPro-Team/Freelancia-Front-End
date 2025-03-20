@@ -113,6 +113,7 @@ function Home() {
                   variant="top"
                   src={freelancer.image || proImages} // Use freelancer's image or a default image
                   alt={freelancer.name}
+                  style={{ height: "200px", objectFit: "cover" }} // Fixed height and cropping
                 />
                 <Card.Body>
                   <Card.Title>
@@ -156,6 +157,7 @@ function Home() {
                 className="rounded"
                 src={client.image}
                 alt={`Client ${idx + 1}`}
+                style={{ height: "200px", objectFit: "cover" }} // Fixed height for client images
               />
             ))}
           </div>
@@ -169,25 +171,17 @@ function Home() {
       </Row>
 
       <div className="row mt-5">
-        <div className="col-md-4 rounded divhit text-center d-flex align-content-center flex-wrap">
-          <h3 className="mx-auto">Featured themes</h3>
-          <p>
-            Every week, our staff personally hand-pick some of the best new
-            website themes from our collection.
-          </p>
-          <Btn title={"View all featured themes"} />
-        </div>
-
         {/* Top Rated Freelancers */}
-        <div className="col-md-8">
-          <Row xs={1} md={2} className="g-4">
-            {freelancers.slice(0, 4).map((freelancer, idx) => (
-              <Col key={idx} className="h-100">
+        <div className="col-md-12">
+          <Row xs={1} md={3} className="g-4">
+            {freelancers.slice(0, 6).map((freelancer, idx) => (
+              <Col key={idx}>
                 <Card className="shadow-lg">
                   <Card.Img
                     variant="top"
                     src={freelancer.image || proImages} // Use freelancer's image or a default image
                     alt={freelancer.username}
+                    style={{ height: "260px", objectFit: "cover" }} // Fixed height for freelancer images
                   />
                   <Card.Body>
                     <Card.Title>
