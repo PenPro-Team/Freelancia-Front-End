@@ -48,10 +48,6 @@ export const AxiosLogOutInstance = axios.create({
   baseURL: `${url}/logout`,
 });
 
-export const AxiosRegisterInstance = axios.create({
-  baseURL: `${url}/users/`,
-});
-
 export const AxiosUserInstance = axios.create({
   baseURL: `${url}/users/`,
 });

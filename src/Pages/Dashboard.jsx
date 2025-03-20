@@ -26,6 +26,7 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
   const history = useHistory();
+  const [refreshFlag, setRefreshFlag] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -54,7 +55,9 @@ function Dashboard() {
 
       });
   }, [history, params]);
-
+  const refresh = () => {
+    setRefreshFlag(!refreshFlag);
+  }
   return (
     <div className="container-fluid px-5">
       <HeaderColoredText text="Dashboard" />
@@ -63,7 +66,7 @@ function Dashboard() {
           <Col sm={3}>
             <Nav variant="pills" className="flex-column m-5">
               <Nav.Item>
-                <Nav.Link eventKey="first">User Info</Nav.Link>
+                <Nav.Link eventKey="first" >User Info</Nav.Link>
               </Nav.Item>
               {auth &&
                 user &&
@@ -101,10 +104,10 @@ function Dashboard() {
           <Col sm={9}>
             <Tab.Content>
               <Tab.Pane eventKey="first">
-                <ClientInfo />{" "}
+                <ClientInfo  refreshFlag={refreshFlag}/>{" "}
               </Tab.Pane>
               <Tab.Pane eventKey="second">
-                <EditClientInfo />
+                <EditClientInfo cb={refresh}/>
               </Tab.Pane>
               <Tab.Pane eventKey="third">
                 <EditSecurity />
