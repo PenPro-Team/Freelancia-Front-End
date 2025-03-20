@@ -2,63 +2,78 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { useState } from "react";
+import { Button, Form } from "react-bootstrap";
 
 const Footer = () => {
+  const [freelancers, setFreelancers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [searchResults, setSearchResults] = useState([]); // State for search results
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim() === "") {
+      setSearchResults([]);
+      return;
+    }
+
+    // Filter freelancers by username
+    const results = freelancers.filter((freelancer) =>
+      freelancer.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setSearchResults(results);
+  };
+
   return (
-    <footer className="container-fluid blackBack mt-5 p-5">
+    <footer className="container-fluid blackBack mt-5 py-5">
       <Container className="text-light">
-        <Row className="flex-column flex-lg-row">
+        <Row className="gy-4">
           {/* Contact Section */}
-          <Col xs={12} md={6} className="mb-4">
+          <Col xs={12} lg={6} className="text-center text-lg-start">
             <h2>Let's Take</h2>
             <p>
               Every project starts with a chat. Joven leads our client
               conversations and will be happy to discuss your project. He will
               also pull in the right people from the team when needed.
             </p>
-            <button className="btn btn-primary w-100 w-md-50">
+            <button className="btn btn-primary w-100 w-lg-50">
               Tell Us About Your Project
             </button>
           </Col>
 
           {/* Links Section */}
-          <Col xs={6} md={3} className="mb-4">
+          <Col xs={6} lg={3} className="text-center text-lg-start">
             <h5>Our Resources</h5>
-            <Link
-              className="text-decoration-none text-primary d-block"
-              to="/links"
-            >
+            <Link className="text-decoration-none text-primary d-block" to="/links">
               Links
             </Link>
-            <Link
-              className="text-decoration-none text-primary d-block"
-              to="/home"
-            >
+            <Link className="text-decoration-none text-primary d-block" to="/home">
               Home
             </Link>
-            <Link
-              className="text-decoration-none text-primary d-block"
-              to="/portfolio"
-            >
+            <Link className="text-decoration-none text-primary d-block" to="/portfolio">
               Portfolio
             </Link>
           </Col>
 
-          {/* Search and Copyright Section */}
-          <Col xs={12} md={3} className="mt-4 mt-md-0">
+          {/* Search Section */}
+          <Col xs={12} lg={3}>
             <div className="d-flex flex-column">
               {/* Search Input */}
-              <div className="d-flex">
-                <input
+              <Form onSubmit={handleSearch} className="d-flex mb-3">
+                <Form.Control
                   type="text"
-                  placeholder="Take a look on the platform"
-                  className="form-control"
+                  placeholder="Search by username"
+                  className="me-2"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <button className="btn btn-primary ms-2">Search</button>
-              </div>
+                <Button type="submit" className="btn-primary">
+                  Search
+                </Button>
+              </Form>
 
               {/* Copyright */}
-              <div className="mt-5 text-center">
+              <div className="mt-4 text-center text-lg-start">
                 © 2025, FreeLancia.com for PenPro Team
               </div>
             </div>
