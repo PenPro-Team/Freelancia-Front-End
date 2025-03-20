@@ -33,6 +33,7 @@ function Dashboard() {
     console.log("Params :", params.user_id);
     AxiosUserInstance.get(`${params.user_id}`)
       .then((res) => {
+
         setUserData(res.data);
         // console.log(params.user_id);
 
@@ -50,6 +51,8 @@ function Dashboard() {
       })
       .finally(() => {
         setIsLoading(false);
+        // console.log("hthththth");
+
       });
   }, [history, params]);
   const refresh = () => {
