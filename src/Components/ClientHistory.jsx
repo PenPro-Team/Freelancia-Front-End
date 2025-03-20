@@ -11,8 +11,9 @@ import {
 import { useState, useEffect } from "react";
 import RateStars from "./RateStars";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
+import { AxiosReviewInstance } from "../network/API/AxiosInstance";
 
-function ClientHistory({ owner_id }) {
+function ClientHistory({ owner_id: owner ,project_id }) {
   const [clientReviews, setClientReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [clientDetails, setClientDetails] = useState({});
@@ -27,21 +28,15 @@ function ClientHistory({ owner_id }) {
 
   const currentUser = getFromLocalStorage("auth");
 
-  useEffect(() => {
-    if (!owner_id) return;
-    axios
-      .get(`https://api-generator.retool.com/Esur5x/dummyUsers/${owner_id}`)
-      .then((res) => setClientDetails(res.data))
-      .catch(console.error);
-  }, [owner_id]);
 
   useEffect(() => {
-    if (!owner_id) return;
-    axios
+    if (!owner) return;
+    AxiosReviewInstance
       .get(
-        `https://api-generator.retool.com/ECRLlk/feedback?user_reviewed=${owner_id}`
+        `received/user/${owner.id}`
       )
       .then((res) => {
+        console.log(res.data);
         setClientReviews(res.data);
         setLoading(false);
       })
@@ -49,27 +44,30 @@ function ClientHistory({ owner_id }) {
         console.error(err);
         setLoading(false);
       });
-  }, [owner_id]);
+  }, [owner]);
 
   useEffect(() => {
     if (!currentUser) return;
     const existingFeedback = clientReviews.find(
-      (review) => review.user_reviewr === currentUser?.user?.id
+      (review) => review.user_reviewr_details.id == currentUser?.user?.user_id
     );
     setUserFeedback(existingFeedback);
   }, [currentUser, clientReviews]);
 
   const makeFeedback = () => {
-    if (!feedback.trim() || userFeedback || !currentUser?.user?.id) return;
 
-    axios
-      .post("https://api-generator.retool.com/ECRLlk/feedback", {
-        user_reviewr: currentUser.user.id,
-        user_reviewed: owner_id,
-        rate: rating,
-        message: feedback,
-        img: "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_640.png",
-      })
+
+    if (!feedback.trim() || userFeedback || !currentUser?.user?.user_id) return;
+     
+
+    AxiosReviewInstance
+      .post(`create`,  {
+        "user_reviewr": currentUser.user.user_id,
+        "user_reviewed": owner.id,
+        "rate": rating,
+        "message": feedback,
+        "project":project_id
+      },)
       .then((res) => {
         setClientReviews([res.data, ...clientReviews]);
         setUserFeedback(res.data);
@@ -85,14 +83,21 @@ function ClientHistory({ owner_id }) {
   };
 
   const updateFeedback = () => {
-    axios
-      .patch(
-        `https://api-generator.retool.com/ECRLlk/feedback/${editingReview.id}`,
-        {
-          message: editingReview.message,
-          rate: editingReview.rate,
-        }
-      )
+    console.log("editingReview");
+    console.log(editingReview);
+    console.log( currentUser.user.access);
+    AxiosReviewInstance.patch(
+      `update/${editingReview.id}`,
+      {
+        message: editingReview.message,
+        rate: editingReview.rate,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${currentUser.user.access}`, 
+        },
+      }
+    )
       .then((res) => {
         setClientReviews(
           clientReviews.map((review) =>
@@ -111,9 +116,14 @@ function ClientHistory({ owner_id }) {
   };
 
   const deleteFeedback = () => {
-    axios
+    AxiosReviewInstance
       .delete(
-        `https://api-generator.retool.com/ECRLlk/feedback/${deletingReview.id}`
+        `delete/${deletingReview.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.user.access}`, // Or without Bearer if your backend doesn't require it
+          },
+        }
       )
       .then(() => {
         setClientReviews(
@@ -140,21 +150,42 @@ function ClientHistory({ owner_id }) {
               <Card.Title>
                 <div className="d-flex align-items-center">
                   <Image
-                    src={review.img}
+                    src={review.user_reviewr_details.image}
                     roundedCircle
                     width={50}
                     height={50}
                     className="me-2"
                   />
                   <div>
-                    <div>{clientDetails.name || "Anonymous"}</div>
+                    <div>{review.user_reviewr_details.first_name || "Anonymous"}</div>
                     <RateStars rating={review.rate} />
                   </div>
                 </div>
               </Card.Title>
               <div className="fw-bold">Review Message:</div>
               <div>{review.message}</div>
-              {currentUser?.user?.id === review.user_reviewr && (
+              {review.created_at && (
+          <div>
+            <span
+              className="text-secondary small fw-bold"
+              style={{
+                position: "absolute",
+                bottom: "5px",
+                right: "5px",
+              }}
+            >
+              {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              }).format(new Date(review.created_at))}
+            </span>
+          </div>
+        )}
+              {currentUser?.user?.user_id === review.user_reviewr_details.id && (
                 <div className="mt-2 d-flex">
                   <Button
                     variant="warning"
@@ -176,9 +207,9 @@ function ClientHistory({ owner_id }) {
         ))
       )}
 
-      {currentUser?.user != null &&
+      {currentUser.user != null &&
         !userFeedback &&
-        currentUser?.user?.role === "freelancer" && (
+        currentUser.user.role === "freelancer" && (
           <Card className="mt-3">
             <Card.Body>
               <Card.Title>Leave a Review</Card.Title>

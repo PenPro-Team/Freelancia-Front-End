@@ -18,6 +18,7 @@ function JobDetails() {
   const auth = getFromLocalStorage("auth");
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
+  const [proposals_refresh, setProposals_refresh] = useState(false);
   const params = useParams();
   const history = useHistory();
   useEffect(() => {
@@ -25,9 +26,6 @@ function JobDetails() {
     AxiosProjectsInstance.get(`/${params.project_id}`)
       .then((res) => {
         setProject(res.data);
-        console.log(res.data);
-        console.log(params.project_id);
-
         if (Object.keys(res.data).length) {
           setIsEmpty(false);
         } else {
@@ -44,6 +42,10 @@ function JobDetails() {
         setIsLoading(false);
       });
   }, [history, params.project_id]);
+
+  const toggleProposals_refresh = () => {
+    setProposals_refresh(!proposals_refresh);
+  };
 
   return (
     <>
@@ -63,7 +65,13 @@ function JobDetails() {
       <div className="" style={{ minHeight: "48vh" }}>
         <div className="d-flex flex-row flex-wrap gap-3 justify-content-center m-2 mb-5">
           <div className="col-lg-8 col-md-7 col-sm-12 col-12">
-            <JobDetailsCard project={project} isLoading={isLoading} />
+            {project && (
+              <JobDetailsCard
+                project={project}
+                isLoading={isLoading}
+                proposals_refresh={proposals_refresh}
+              />
+            )}
           </div>
           <div className="col-lg-3 col-md-4 col-sm-8 col-9">
             <ClientDetailsCard project={project} isLoading={isLoading} />
@@ -77,6 +85,7 @@ function JobDetails() {
                   <ProposeCard
                     project_id={project.id}
                     user={auth.user}
+                    CB_proposals_refresh={toggleProposals_refresh}
                     disabled={
                       !["open", "contract canceled and reopened"].includes(
                         project.project_state

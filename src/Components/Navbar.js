@@ -52,7 +52,7 @@ function NavBar() {
             isAuth ? (
               <Nav.Link
                 as={Link}
-                to={`/Freelancia-Front-End/Dashboard/${user.id}`}
+                to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}
               >
                 Your Profile
               </Nav.Link>
@@ -91,16 +91,16 @@ function NavBar() {
             <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
               <Nav.Link
                 as={Link}
-                to={`/Freelancia-Front-End/Dashboard/${user.id}`}
+                to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}
               >
                 <div className="d-flex flex-row gap-2 justify-content-center align-items-center">
                   <img
                     className="rounded-circle"
                     width={"48px"}
                     height={"48px"}
-                    src={personalImg}
+                    src={auth.user.image ? auth.user.image : personalImg}
                   />
-                  <span className="fs-5">{user.firstName}</span>
+                  <span className="fs-5">{auth.user.name}</span>
                 </div>
               </Nav.Link>
               <Nav.Link

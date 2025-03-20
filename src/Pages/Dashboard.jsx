@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import UpdateCertificate from "./UpdateCertificate";
 import UpdateProjects from "./UpdateProjects";
-import { AxiosRegisterInstance } from "../network/API/AxiosInstance";
+import { AxiosUserInstance } from "../network/API/AxiosInstance";
 
 function Dashboard() {
   const auth = getFromLocalStorage("auth");
@@ -29,8 +29,8 @@ function Dashboard() {
 
   useEffect(() => {
     setIsLoading(true);
-    AxiosRegisterInstance
-      .get(`${params.user_id}`)
+    console.log("Params :", params.user_id);
+    AxiosUserInstance.get(`${params.user_id}`)
       .then((res) => {
         setUserData(res.data);
         // console.log(params.user_id);
@@ -39,12 +39,12 @@ function Dashboard() {
           setIsEmpty(false);
         } else {
           setIsEmpty(true);
-          history.push("/Freelancia-Front-End/404");
+          // history.push("/Freelancia-Front-End/404");
         }
       })
       .catch((err) => {
         console.log(err);
-        history.push("/Freelancia-Front-End/404");
+        // history.push("/Freelancia-Front-End/404");
         setIsEmpty(true);
       })
       .finally(() => {
@@ -62,21 +62,24 @@ function Dashboard() {
               <Nav.Item>
                 <Nav.Link eventKey="first">User Info</Nav.Link>
               </Nav.Item>
-              {auth && user && user.user_id == user_id && user.user_id == userData.id && (
-                <>
-                  <Nav.Item>
-                    <Nav.Link eventKey="second">Update Profile</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="third">Update Secuity</Nav.Link>
-                  </Nav.Item>
-                  {auth && auth.user && auth.user.role === "freelancer" && (
+              {auth &&
+                user &&
+                user.user_id == user_id &&
+                user.user_id == userData.id && (
+                  <>
                     <Nav.Item>
-                      <Nav.Link eventKey="fourth">Update Skills</Nav.Link>
+                      <Nav.Link eventKey="second">Update Profile</Nav.Link>
                     </Nav.Item>
-                  )}
-                </>
-              )}
+                    <Nav.Item>
+                      <Nav.Link eventKey="third">Update Secuity</Nav.Link>
+                    </Nav.Item>
+                    {auth && auth.user && auth.user.role === "freelancer" && (
+                      <Nav.Item>
+                        <Nav.Link eventKey="fourth">Update Skills</Nav.Link>
+                      </Nav.Item>
+                    )}
+                  </>
+                )}
               {userData.role == "freelancer" && (
                 <>
                   <Nav.Item>

@@ -19,10 +19,10 @@ function FreelancerProposals() {
     if (auth) {
       if (auth.isAuthenticated && auth.user) {
         if (auth.user.role === "freelancer") {
-          const user_id = auth.user.id;
+          const user_id = auth.user.user_id;
           console.log(user_id);
           setIsLoading(true);
-          AxiosProposalsInstance.get(`?user_id=${user_id}`)
+          AxiosProposalsInstance.get(`?user=${user_id}`)
             .then((res) => {
               setProposals(res.data);
               console.log(res.data);
@@ -75,11 +75,11 @@ function FreelancerProposals() {
                 ))}
               </div>
             ) : (
-              <div>
+              <div className="text-center">
                 <div>There're no proposals for you to view </div>
                 <div>
                   {" "}
-                  Make A New One
+                  Make A New One {""}
                   <Button
                     variant="primary"
                     onClick={() =>

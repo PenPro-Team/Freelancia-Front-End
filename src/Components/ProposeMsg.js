@@ -7,6 +7,7 @@ import { AxiosProposalsInstance } from "../network/API/AxiosInstance";
 function ProposeMsg(props) {
   const auth = getFromLocalStorage("auth");
   const user = auth.user;
+  const user_id = user.user_id;
   const params = useParams();
   const project_id = params.project_id;
   const [itemInfo, setItemInfo] = useState({
@@ -41,7 +42,7 @@ function ProposeMsg(props) {
 
   // Check if the user Already Made A porposed
   useEffect(() => {
-    AxiosProposalsInstance.get(`?user=${user.id}&project=${project_id}`)
+    AxiosProposalsInstance.get(`?user=${user_id}&project=${project_id}`)
       .then((res) => {
         if (res.data.length > 0) {
           console.log("Already Made A Proposal");
@@ -70,29 +71,33 @@ function ProposeMsg(props) {
       .catch((err) => {
         console.log(err);
       });
-  }, [callingAPI, project_id, props, user.id]);
+  }, [callingAPI, project_id, props, user_id]);
 
   const propsal_object = () => {
-    const date = new Date();
-    const options = { year: "numeric", month: "short", day: "numeric" };
-    const formattedDate = date.toLocaleDateString("en-US", options);
-    setItemInfo({
-      ...itemInfo,
-      created_at: date,
-    });
+    // const date = new Date();
+    // const options = { year: "numeric", month: "short", day: "numeric" };
+    // const formattedDate = date.toLocaleDateString("en-US", options);
+    // setItemInfo({
+    //   ...itemInfo,
+    //   created_at: date,
+    // });
     return {
       propose_text: itemInfo.propose_text,
       price: itemInfo.price,
       deadline: itemInfo.deadline,
       project: project_id,
-      user: user.id,
+      user: user_id,
     };
   };
 
   // Save the data into the API
   const saveData = (isUpdate = false) => {
     setIsLoading(true);
-    AxiosProposalsInstance.post("", propsal_object())
+    AxiosProposalsInstance.post("", propsal_object(), {
+      headers: {
+        Authorization: `Bearer ${user.access}`,
+      },
+    })
       .then((response) => {
         // Handle success response
         console.log("Form data successfully sent:", response.data);
@@ -121,6 +126,7 @@ function ProposeMsg(props) {
         console.log("Finsished");
         setTimeout(() => {
           setIsLoading(false);
+          props.CB_proposals_refresh();
         }, 1000);
       });
   };
@@ -128,7 +134,11 @@ function ProposeMsg(props) {
   // Save the data into the API
   const updateData = (isUpdate = true) => {
     setIsLoading(true);
-    AxiosProposalsInstance.put(`/${proposal_id}`, propsal_object())
+    AxiosProposalsInstance.patch(`/${proposal_id}`, propsal_object(), {
+      headers: {
+        Authorization: `Bearer ${user.access}`,
+      },
+    })
       .then((response) => {
         // Handle success response
         console.log("Form data successfully sent:", response.data);
@@ -156,6 +166,7 @@ function ProposeMsg(props) {
         console.log("Finsished");
         setTimeout(() => {
           setIsLoading(false);
+          props.CB_proposals_refresh();
         }, 1000);
       });
   };

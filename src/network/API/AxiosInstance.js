@@ -1,6 +1,15 @@
+// this page is -> network/API/AxiosInstance
 import axios from "axios";
 
 let url = "http://127.0.0.1:8000";
+
+export const AxiosFreelancersInstance = axios.create({
+  baseURL: `${url}/freelancers/`, // Base URL for freelancers
+});
+
+export const AxiosClientsInstance = axios.create({
+  baseURL: `${url}/clients/`, // Base URL for freelancers
+});
 /**
  * This Api For Projects
  */
@@ -23,6 +32,22 @@ export const AxiosSkillsInstance = axios.create({
 // This Api For PostSkills For Freelancer (HTML,CSS,js,python)
 export const AxiosFreelancerSkillsInstance = axios.create({
   baseURL: "https://api-generator.retool.com/HrMfyx/data",
+});
+
+export const AxiosLoginInstance = axios.create({
+  baseURL: `${url}/auth-token/`,
+});
+
+export const AxiosReviewInstance = axios.create({
+  baseURL: `${url}/reviews/`,
+});
+
+export const AxiosLogOutInstance = axios.create({
+  baseURL: `${url}/logout`,
+});
+
+export const AxiosUserInstance = axios.create({
+  baseURL: `${url}/users/`,
 });
 /**
  * Demo Use it For getting Projects
