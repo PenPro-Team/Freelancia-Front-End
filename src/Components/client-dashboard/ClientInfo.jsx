@@ -15,7 +15,7 @@ import { AxiosUserInstance } from "../../network/API/AxiosInstance";
 export default function ClientInfo(props) {
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
-  const user = auth ? auth.user.id : null;
+  const user = auth ? (auth.user ? auth.user.id : null) : null;
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const params = useParams();
@@ -103,7 +103,10 @@ export default function ClientInfo(props) {
                   {userData.description && (
                     <p>
                       <strong className="me-2">
-                        <MdOutlineDriveFileRenameOutline color="blue" size="2rem" />{" "}
+                        <MdOutlineDriveFileRenameOutline
+                          color="blue"
+                          size="2rem"
+                        />{" "}
                         Description:
                       </strong>
                       {userData.description}.
