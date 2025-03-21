@@ -1,5 +1,6 @@
 import { Alert, Badge, Button, Card, Col, Form, InputGroup, Row } from "react-bootstrap";
-import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
+// import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate, useParams } from "react-router-dom";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import RateStars from '../Components/RateStars';
 import HeaderColoredText from "../Components/HeaderColoredText";
@@ -11,7 +12,7 @@ import DrawSkills from "../Components/DrawSkills";
 function DesplaySkills(props) {
     const auth = getFromLocalStorage("auth");
     const user = auth ? auth.user : null;
-    const history = useHistory();
+    const navigate = useNavigate();
     const [freelancerState, setFreelancerState] = useState([]); // Initialize as an empty array
     const [specificFreelancer, setSpecificFreelancer] = useState(null); // State for the specific freelancer
 

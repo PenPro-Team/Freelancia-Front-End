@@ -1,9 +1,9 @@
 import { Button, Card, Image } from "react-bootstrap";
 import RateStars from "./RateStars";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate } from "react-router-dom"; // Corrected import path
 
 function FreelancerProposalsCard(props) {
-  const history = useHistory();
+  const navigate = useNavigate(); // Correct usage of useNavigate
   return (
     <Card key={props.proposal.id} className="mb-3">
       <Card.Body style={{ position: "relative" }}>
@@ -64,7 +64,7 @@ function FreelancerProposalsCard(props) {
             <Button
               className="btn btn-primary"
               onClick={() => {
-                history.push(
+                navigate(
                   `/Freelancia-Front-End/job_details/${props.proposal.project.id}`
                 );
               }}
@@ -79,7 +79,7 @@ function FreelancerProposalsCard(props) {
           <Button
             className="btn btn-primary w-100"
             onClick={() => {
-              history.push(
+              navigate(
                 `/Freelancia-Front-End/job_details/${props.proposal.project_id}`
               );
             }}

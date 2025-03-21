@@ -1,13 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {
-  Link,
-  useHistory,
-  useParams,
-} from "react-router-dom/cjs/react-router-dom.min";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getFromLocalStorage } from "../../network/local/LocalStorage";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Card, Container, Row, Col, Placeholder } from "react-bootstrap";
+import { Card, Row, Col, Placeholder } from "react-bootstrap";
 import personalImg from "../../assets/default-user.png";
 import RateStars from "../RateStars";
 import { MdEmail, MdOutlineDriveFileRenameOutline } from "react-icons/md";
@@ -23,34 +19,31 @@ export default function ClientInfo(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const params = useParams();
-  const history = useHistory();
-  // console.log(params);
+  const navigate = useNavigate(); // Replaces useHistory
 
   useEffect(() => {
     setIsLoading(true);
-    AxiosUserInstance
-      .get(`${params.user_id}`)
+    AxiosUserInstance.get(`${params.user_id}`)
       .then((res) => {
         setUserData(res.data);
-        console.log(res.data);
-        // console.log(params.user_id);
 
         if (Object.keys(res.data).length) {
           setIsEmpty(false);
         } else {
           setIsEmpty(true);
-          history.push("/Freelancia-Front-End/404");
+          navigate("/Freelancia-Front-End/404"); // Updated to use navigate
         }
       })
       .catch((err) => {
         console.log(err);
-        history.push("/Freelancia-Front-End/404");
+        navigate("/Freelancia-Front-End/404"); // Updated to use navigate
         setIsEmpty(true);
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, [history, params,props.refreshFlag]);
+  }, [navigate, params, props.refreshFlag]);
+
   return (
     <>
       <Row className="justify-content-center mt-5">

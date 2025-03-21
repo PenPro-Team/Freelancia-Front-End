@@ -1,9 +1,9 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <Container
@@ -14,11 +14,11 @@ const NotFound = () => {
       <Row>
         <Col className="text-center">
           <h1 className="display-1">403</h1>
-          <h2 className="mb-4">Un Authrized Access</h2>
+          <h2 className="mb-4">Unauthorized Access</h2>
           <p className="mb-4">
-            Sorry, You Cant Access This Page, You Are Un Authrized.
+            Sorry, You Can't Access This Page. You Are Unauthorized.
           </p>
-          <Button variant="primary" onClick={() => history.push("/")}>
+          <Button variant="primary" onClick={() => navigate("/")}>
             Go Home
           </Button>
         </Col>

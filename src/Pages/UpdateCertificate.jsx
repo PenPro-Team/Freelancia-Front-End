@@ -1,5 +1,6 @@
 import { Alert, Button, Card, Col, Container, Form, Image, InputGroup, Placeholder, Row } from "react-bootstrap";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+// import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate } from "react-router-dom";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import RateStars from '../Components/RateStars';
 import HeaderColoredText from "../Components/HeaderColoredText";
@@ -12,7 +13,7 @@ import cert3 from "../assets/IMG_20250226_141719.jpg"
 function UpdateCertificate(props) {
   const auth = getFromLocalStorage("auth");
   const user = auth ? auth.user : null;
-  const history = useHistory();
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [skillsOptions, setSkillsOptions] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState("");

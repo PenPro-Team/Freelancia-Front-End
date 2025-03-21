@@ -51,6 +51,7 @@ export const AxiosLogOutInstance = axios.create({
 export const AxiosUserInstance = axios.create({
   baseURL: `${url}/users/`,
 });
+export const BASE_PATH = "/Freelancia-Front-End";
 /**
  * Demo Use it For getting Projects
  * AxiosProjectsInstance.get("What you will add to the url" , {"For Post The opject will be here"}).then().catch()
