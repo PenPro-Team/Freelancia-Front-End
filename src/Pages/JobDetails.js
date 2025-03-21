@@ -1,9 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import {
-  useHistory,
-  useParams,
-} from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate, useParams } from "react-router-dom";
 import JobDetailsCard from "../Components/JobDetailsCard";
 import ClientDetailsCard from "../Components/ClientDetailsCard";
 import ProposeCard from "../Components/ProposeCard";
@@ -20,7 +17,7 @@ function JobDetails() {
   const [isEmpty, setIsEmpty] = useState(true);
   const [proposals_refresh, setProposals_refresh] = useState(false);
   const params = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   useEffect(() => {
     setIsLoading(true);
     AxiosProjectsInstance.get(`/${params.project_id}`)
@@ -30,18 +27,18 @@ function JobDetails() {
           setIsEmpty(false);
         } else {
           setIsEmpty(true);
-          history.push("/Freelancia-Front-End/404");
+          navigate("/Freelancia-Front-End/404");
         }
       })
       .catch((err) => {
         console.log(err);
-        history.push("/Freelancia-Front-End/404");
+        navigate("/Freelancia-Front-End/404");
         setIsEmpty(true);
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, [history, params.project_id]);
+  }, [navigate, params.project_id]);
 
   const toggleProposals_refresh = () => {
     setProposals_refresh(!proposals_refresh);

@@ -1,15 +1,13 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { Form, InputGroup, Placeholder } from 'react-bootstrap';
-import { useHistory, useParams } from 'react-router-dom/cjs/react-router-dom.min';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Form, InputGroup, Placeholder } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function FilterSkills(props) {
-
     const [data, setData] = useState([]);
-    const history = useHistory()
-    const params = useParams()
-    const [selectedSkills, setSelectedSkills] = useState([])
-
+    const navigate = useNavigate(); // Updated from useHistory to useNavigate
+    const params = useParams();
+    const [selectedSkills, setSelectedSkills] = useState([]);
 
     useEffect(() => {
         axios
@@ -27,25 +25,28 @@ export default function FilterSkills(props) {
     ];
 
     const handleChange = (e) => {
-        
         const skill = e.target.id;
         const isChecked = e.target.checked;
-    
+
         setSelectedSkills((prevSkills) => {
             const updatedSkills = isChecked
                 ? [...prevSkills, skill]
                 : prevSkills.filter((s) => s !== skill);
-    
+
             props.skillCb(updatedSkills);
-            
+
             return updatedSkills;
         });
     };
+
     return (
         <>
             {uniqueSkills.length > 0 ? (
                 uniqueSkills.map((skill, index) => (
-                    <InputGroup className="mb-3 bg-light-subtle w-100 rounded-3 py-2 px-3 text-dark-emphasis" key={index}>
+                    <InputGroup
+                        className="mb-3 bg-light-subtle w-100 rounded-3 py-2 px-3 text-dark-emphasis"
+                        key={index}
+                    >
                         <Form.Check
                             type={"checkbox"}
                             id={skill}
@@ -64,5 +65,5 @@ export default function FilterSkills(props) {
                 </div>
             )}
         </>
-    )
+    );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+// import { useNavigate } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate } from "react-router-dom";
 import { AxiosProposalsInstance } from "../network/API/AxiosInstance";
 import { Button, Spinner } from "react-bootstrap";
 import FreelancerProposalsCard from "../Components/FreelancerProposalsCard";
@@ -11,11 +12,11 @@ function FreelancerProposals() {
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const [proposals, setProposals] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
   useEffect(() => {
     console.log("Here");
     console.log(auth);
-    console.log(history);
+    console.log(navigate);
     if (auth) {
       if (auth.isAuthenticated && auth.user) {
         if (auth.user.role === "freelancer") {
@@ -44,13 +45,13 @@ function FreelancerProposals() {
               setIsLoading(false);
             });
         } else {
-          history.push("/Freelancia-Front-End/403");
+          navigate("/Freelancia-Front-End/403");
         }
       } else {
-        history.push("/Freelancia-Front-End/403");
+        navigate("/Freelancia-Front-End/403");
       }
     } else {
-      history.push("/Freelancia-Front-End/403");
+      navigate("/Freelancia-Front-End/403");
     }
   }, []);
 
@@ -83,7 +84,7 @@ function FreelancerProposals() {
                   <Button
                     variant="primary"
                     onClick={() =>
-                      history.push("/Freelancia-Front-End/Job_List")
+                      navigate("/Freelancia-Front-End/Job_List")
                     }
                   >
                     View Jobs

@@ -1,7 +1,6 @@
 import { Spinner } from "react-bootstrap";
-import { useState } from "react";
-import { useEffect } from "react";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { AxiosProposalsInstance } from "../network/API/AxiosInstance";
 import FreelancerProposalsCard from "./FreelancerProposalsCard";
 
@@ -10,12 +9,12 @@ function ProjectProposals(props) {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const params = useParams();
+
   useEffect(() => {
     setIsLoading(true);
     AxiosProposalsInstance.get(`/project/${params.project_id}`)
       .then((res) => {
         setProposals(res.data);
-        setError(false);
         if (Object.keys(res.data).length) {
           setError(false);
         } else {
@@ -23,13 +22,14 @@ function ProjectProposals(props) {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setError(true);
       })
       .finally(() => {
         setIsLoading(false);
       });
   }, [params.project_id, props.proposals_refresh]);
+
   return (
     <div>
       {isLoading ? (
@@ -52,4 +52,5 @@ function ProjectProposals(props) {
     </div>
   );
 }
+
 export default ProjectProposals;

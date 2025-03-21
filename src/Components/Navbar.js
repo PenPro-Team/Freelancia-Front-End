@@ -1,7 +1,7 @@
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Container } from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import personalImg from "../assets/default-user.png";
 import { getFromLocalStorage, logout } from "../network/local/LocalStorage";
@@ -9,17 +9,16 @@ import { logout as userLogout } from "../Redux/Actions/authAction";
 
 function NavBar() {
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.auth);
   const auth = getFromLocalStorage("auth");
   const user = auth ? auth.user : null;
   const isAuth = auth ? auth.isAuthenticated : null;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleLogout = (e) => {
     e.preventDefault();
     logout();
     dispatch(userLogout());
-    history.push("/Freelancia-Front-End");
+    navigate("/Freelancia-Front-End"); // Corrected to use navigate
   };
 
   return (
