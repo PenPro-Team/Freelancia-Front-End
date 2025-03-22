@@ -29,7 +29,7 @@ function Dashboard() {
     AxiosUserInstance.get(`${params.user_id}`)
       .then((res) => {
         setUserData(res.data);
-
+        console.log("User Data from api", res.data);
         if (Object.keys(res.data).length) {
           setIsEmpty(false);
         } else {
@@ -45,6 +45,7 @@ function Dashboard() {
       .finally(() => {
         setIsLoading(false);
       });
+    console.log("User Check Data", user_id, user.user_id, userData.id);
   }, [params.user_id, refreshFlag, navigate]); // Fixed dependency list
 
   const refresh = () => {
@@ -63,8 +64,8 @@ function Dashboard() {
               </Nav.Item>
               {auth &&
                 user &&
-                user.user_id === user_id &&
-                user.user_id === userData.id && (
+                user.user_id == user_id &&
+                user.user_id == userData.id && (
                   <>
                     <Nav.Item>
                       <Nav.Link eventKey="second">Update Profile</Nav.Link>
