@@ -1,9 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getFromLocalStorage } from "../../network/local/LocalStorage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -23,7 +20,7 @@ import { AxiosUserInstance } from "../../network/API/AxiosInstance";
 export default function EditSecurity() {
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
-  const user = auth ? auth.user.id : null;
+  const user = auth ? (auth.user ? auth.user.id : null) : null;
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const params = useParams();
@@ -61,7 +58,10 @@ export default function EditSecurity() {
     if (name === "newPassword" && !robustPasswordRegex.test(value)) {
       errorMessage =
         "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long, with no spaces.";
-    } else if (name === "confirmPassword" && value !== newPassword.newPassword) {
+    } else if (
+      name === "confirmPassword" &&
+      value !== newPassword.newPassword
+    ) {
       errorMessage = "Passwords do not match!";
     }
 
@@ -178,7 +178,8 @@ export default function EditSecurity() {
     !isFormValid ||
     (userData.username === formValues.username &&
       userData.email === formValues.email &&
-      (!newPassword.newPassword || newPassword.newPassword !== newPassword.confirmPassword));
+      (!newPassword.newPassword ||
+        newPassword.newPassword !== newPassword.confirmPassword));
 
   return (
     <Row className="justify-content-center mt-5">
