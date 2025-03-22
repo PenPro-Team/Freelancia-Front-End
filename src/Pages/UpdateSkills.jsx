@@ -1,5 +1,6 @@
 import { Alert, Button, Card, Col, Form, InputGroup, Row } from "react-bootstrap";
-import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
+// import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate, useParams } from "react-router-dom";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import RateStars from '../Components/RateStars';
 import HeaderColoredText from "../Components/HeaderColoredText";
@@ -10,7 +11,7 @@ import { Link } from "react-bootstrap-icons";
 function UpdateSkills(props) {
     const auth = getFromLocalStorage("auth");
     const user = auth ? auth.user : null;
-    const history = useHistory();
+    const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [skillsOptions, setSkillsOptions] = useState([]);
     const [freelancerState, setFreelancerState] = useState(null);
@@ -88,14 +89,14 @@ function UpdateSkills(props) {
             user_id: user_id,
             skill: formData.skill.join(", "),
         })
-        .then((res) => {
-            setMessage("Skills Updated successfully");
-            setInitialData({ ...res.data });
-        })
-        .catch((error) => {
-            console.error(`Error ${method}ing skills:`, error);
-            setMessage(`Error ${method}ing skills: ` + error.message);
-        });
+            .then((res) => {
+                setMessage("Skills Updated successfully");
+                setInitialData({ ...res.data });
+            })
+            .catch((error) => {
+                console.error(`Error ${method}ing skills:`, error);
+                setMessage(`Error ${method}ing skills: ` + error.message);
+            });
     };
 
     return (
@@ -107,7 +108,7 @@ function UpdateSkills(props) {
                     <Card className="shadow-lg p-3 mb-5 bg-white rounded">
                         <Card.Body>
                             <Card.Title className="text-center">Freelancer Skills</Card.Title>
-                            
+
                             <div>
                                 <Form.Group controlId="skill" className="mb-3">
                                     <Form.Label>Required Skills</Form.Label>

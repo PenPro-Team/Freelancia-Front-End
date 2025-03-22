@@ -1,54 +1,87 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom"; // Fixed Import Path
+import { useState } from "react";
+import { Button, Form } from "react-bootstrap";
 
 const Footer = () => {
-  // Contact
+  const [freelancers, setFreelancers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [searchResults, setSearchResults] = useState([]); // State for search results
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim() === "") {
+      setSearchResults([]);
+      return;
+    }
+
+    // Filter freelancers by username
+    const results = freelancers.filter((freelancer) =>
+      freelancer.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setSearchResults(results);
+  };
+
   return (
-    <>
-      <div className="container-fluid blackBack mt-5 p-5">
-        <div className="d-flex text-light flex-wrap flex-column flex-lg-row justify-content-between">
-          <div className="col-12 col-md-6 mb-3 mb-1 ">
-            <h2>Lat's Take</h2>
+    <footer className="container-fluid blackBack mt-5 py-5">
+      <Container className="text-light">
+        <Row className="gy-4">
+          {/* Contact Section */}
+          <Col xs={12} lg={6} className="text-center text-lg-start">
+            <h2>Let's Take</h2>
             <p>
-              Evrey Project Starts with a chat. Joven leads our client converstation <br/> and will be happy to discuss your Project. He will also Pull in the Right <br/> people from the team when needed
+              Every project starts with a chat. Joven leads our client
+              conversations and will be happy to discuss your project. He will
+              also pull in the right people from the team when needed.
             </p>
-            <button className="btn btn-primary w-50">Tell Us about your Project</button>
-          </div>
-          <div className="col-2 ms-1">
-          <p>Our Responsers</p>
-            <Link className="text-decoration-none text-primary" to="">Links</Link>
-            <br />
-            <Link className="text-decoration-none text-primary" to="">Home</Link>
-            <br />
-            <Link className="text-decoration-none text-primary" to="">Portfolio</Link>
-          </div>
-          <div className="col-3">
-            <br/>
+            <button className="btn btn-primary w-100 w-lg-50">
+              Tell Us About Your Project
+            </button>
+          </Col>
+
+          {/* Links Section */}
+          <Col xs={6} lg={3} className="text-center text-lg-start">
+            <h5>Our Resources</h5>
+            <Link className="text-decoration-none text-primary d-block" to="/links">
+              Links
+            </Link>
+            <Link className="text-decoration-none text-primary d-block" to="/home">
+              Home
+            </Link>
+            <Link className="text-decoration-none text-primary d-block" to="/portfolio">
+              Portfolio
+            </Link>
+          </Col>
+
+          {/* Search Section */}
+          <Col xs={12} lg={3}>
             <div className="d-flex flex-column">
-              <div className="d-flex">
-                <input type="text" placeholder="Take a look in PlateForm" className="form-control w-100"/><button className="btn btn-primary ms-2">Search</button>
+              {/* Search Input */}
+              <Form onSubmit={handleSearch} className="d-flex mb-3">
+                <Form.Control
+                  type="text"
+                  placeholder="Search by username"
+                  className="me-2"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <Button type="submit" className="btn-primary">
+                  Search
+                </Button>
+              </Form>
+
+              {/* Copyright */}
+              <div className="mt-4 text-center text-lg-start">
+                © 2025, FreeLancia.com for PenPro Team
               </div>
-              
-              <div className="mt-5">© 2025, FreeLancia.com for PenPro Team</div>
             </div>
-          </div>
-        </div>
-      </div>
-    </>
+          </Col>
+        </Row>
+      </Container>
+    </footer>
   );
 };
 
 export default Footer;
-
-{
-  /* <Row className='blackBack text-light'>
-                    <div className='d-flex justify-content-center'>
-                       <Col>1 of 3</Col>
-                        <Col>2 of 3</Col>
-                        <Col>3 of 3</Col> 
-                    </div>
-                    
-</Row> */
-}

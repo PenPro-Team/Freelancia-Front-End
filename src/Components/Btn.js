@@ -1,9 +1,10 @@
 import { Button } from "react-bootstrap";
-
-const Btn = ({title}) => { // Destructure to easily use
-    
+import { BASE_PATH } from "../network/API/AxiosInstance";
+import { useNavigate } from "react-router-dom";
+const Btn = ({ title }) => { // Destructure to easily use
+    const navigate = useNavigate();
     return (
-        <Button className="btn btn-info mx-auto ">{title}</Button>
+        <Button onClick={() => navigate(`${BASE_PATH}/Job_List`)} className="btn btn-info mx-auto ">{title}</Button>
     )
 }
 

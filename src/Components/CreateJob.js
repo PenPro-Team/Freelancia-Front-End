@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import InputFieldForJobCreate from "./InputFieldForJobCreate";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
-import { Redirect, useHistory, useLocation } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import {
   AxiosProjectsInstance,
   AxiosSkillsInstance,
@@ -47,7 +47,7 @@ const VALIDATION_RULES = {
 
 const ClientJobForm = () => {
   // Hooks and State
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const user = getFromLocalStorage("auth");
 
@@ -130,7 +130,7 @@ const ClientJobForm = () => {
       setMessage("Job Created successfully");
 
       setTimeout(() => {
-        history.push("/Freelancia-Front-End/clientjoblist");
+        navigate("/Freelancia-Front-End/clientjoblist");
       }, 1000);
 
       setFormData(INITIAL_FORM_STATE);
@@ -162,7 +162,7 @@ const ClientJobForm = () => {
       setInitialData({ ...formData });
 
       setTimeout(() => {
-        history.push("/Freelancia-Front-End/clientjoblist");
+        navigate("/Freelancia-Front-End/clientjoblist");
       }, 1000);
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
@@ -205,7 +205,7 @@ const ClientJobForm = () => {
       setShowCancelModal(false);
 
       setTimeout(() => {
-        history.push("/Freelancia-Front-End/clientjoblist");
+        navigate("/Freelancia-Front-End/clientjoblist");
       }, 1000);
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
@@ -234,8 +234,8 @@ const ClientJobForm = () => {
       const processedSkills = Array.isArray(jobData.required_skills)
         ? jobData.required_skills.map((skill) => skill.skill || skill)
         : typeof jobData.required_skills === "string"
-        ? jobData.required_skills.split(", ").filter((skill) => skill)
-        : [];
+          ? jobData.required_skills.split(", ").filter((skill) => skill)
+          : [];
 
       const newFormData = {
         project_name: jobData.project_name || "",
@@ -261,9 +261,9 @@ const ClientJobForm = () => {
   };
 
   // Auth Check
-  if (!user?.user) return <Redirect to="/Freelancia-Front-End/403" />;
+  if (!user?.user) return <Navigate to="/Freelancia-Front-End/403" />;
   if (user.user.role !== "client")
-    return <Redirect to="/Freelancia-Front-End/403" />;
+    return <Navigate to="/Freelancia-Front-End/403" />;
 
   // Render Components
   const renderSkillsSection = () => (
@@ -358,9 +358,9 @@ const ClientJobForm = () => {
         onSubmit={
           updateMode
             ? (e) => {
-                e.preventDefault();
-                handleUpdate(jobData.id);
-              }
+              e.preventDefault();
+              handleUpdate(jobData.id);
+            }
             : handleSubmit
         }
       >

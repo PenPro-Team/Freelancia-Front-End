@@ -1,13 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {
-  Link,
-  useHistory,
-  useParams,
-} from "react-router-dom/cjs/react-router-dom.min";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getFromLocalStorage } from "../../network/local/LocalStorage";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Card, Container, Row, Col, Placeholder } from "react-bootstrap";
+import { Card, Row, Col, Placeholder } from "react-bootstrap";
 import personalImg from "../../assets/default-user.png";
 import RateStars from "../RateStars";
 import { MdEmail, MdOutlineDriveFileRenameOutline } from "react-icons/md";
@@ -19,38 +15,35 @@ import { AxiosUserInstance } from "../../network/API/AxiosInstance";
 export default function ClientInfo(props) {
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
-  const user = auth ? auth.user.id : null;
+  const user = auth ? (auth.user ? auth.user.id : null) : null;
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const params = useParams();
-  const history = useHistory();
-  // console.log(params);
+  const navigate = useNavigate(); // Replaces useHistory
 
   useEffect(() => {
     setIsLoading(true);
-    AxiosUserInstance
-      .get(`${params.user_id}`)
+    AxiosUserInstance.get(`${params.user_id}`)
       .then((res) => {
         setUserData(res.data);
-        console.log(res.data);
-        // console.log(params.user_id);
 
         if (Object.keys(res.data).length) {
           setIsEmpty(false);
         } else {
           setIsEmpty(true);
-          history.push("/Freelancia-Front-End/404");
+          navigate("/Freelancia-Front-End/404"); // Updated to use navigate
         }
       })
       .catch((err) => {
         console.log(err);
-        history.push("/Freelancia-Front-End/404");
+        navigate("/Freelancia-Front-End/404"); // Updated to use navigate
         setIsEmpty(true);
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, [history, params,props.refreshFlag]);
+  }, [navigate, params, props.refreshFlag]);
+
   return (
     <>
       <Row className="justify-content-center mt-5">
@@ -110,7 +103,10 @@ export default function ClientInfo(props) {
                   {userData.description && (
                     <p>
                       <strong className="me-2">
-                        <MdOutlineDriveFileRenameOutline color="blue" size="2rem" />{" "}
+                        <MdOutlineDriveFileRenameOutline
+                          color="blue"
+                          size="2rem"
+                        />{" "}
                         Description:
                       </strong>
                       {userData.description}.

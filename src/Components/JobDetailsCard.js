@@ -9,7 +9,7 @@ import DrawSkills from "./DrawSkills";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { AiFillSetting } from "react-icons/ai";
 import { TiCancel } from "react-icons/ti";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { useEffect } from "react";
 // ----------
 // Added cancel functionality import
@@ -18,7 +18,7 @@ import { AxiosProjectsInstance } from "../network/API/AxiosInstance";
 
 function JobDetailsCard(props) {
   const [activeTab, setActiveTab] = useState("first");
-  const history = useHistory();
+  const navigate = useNavigate();
   const auth = getFromLocalStorage("auth");
   const [project, setProject] = useState(null);
 
@@ -100,15 +100,15 @@ function JobDetailsCard(props) {
                   props.project.project_state === "finished"
                     ? "dark"
                     : props.project.project_state === "open"
-                    ? "primary"
-                    : props.project.project_state === "ongoing"
-                    ? "success"
-                    : props.project.project_state === "canceled"
-                    ? "danger"
-                    : props.project.project_state ===
-                      "contract canceled and reopened"
-                    ? "success"
-                    : "secondary"
+                      ? "primary"
+                      : props.project.project_state === "ongoing"
+                        ? "success"
+                        : props.project.project_state === "canceled"
+                          ? "danger"
+                          : props.project.project_state ===
+                            "contract canceled and reopened"
+                            ? "success"
+                            : "secondary"
                 }
               >
                 {props.project.project_state}
@@ -182,12 +182,12 @@ function JobDetailsCard(props) {
                 project.owner_id.id === auth.user.user_id &&
                 (props.project.project_state === "open" ||
                   props.project.project_state ===
-                    "contract canceled and reopened" ||
+                  "contract canceled and reopened" ||
                   props.project.project_state === "ongoing") && (
                   <div
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      history.push("/Freelancia-Front-End/postjob", {
+                      navigate("/Freelancia-Front-End/postjob", {
                         mode: "update",
                         jobData: props.project,
                       });
@@ -204,7 +204,7 @@ function JobDetailsCard(props) {
                 project.owner_id.id === auth.user.user_id &&
                 (props.project.project_state === "open" ||
                   props.project.project_state ===
-                    "contract canceled and reopened") && (
+                  "contract canceled and reopened") && (
                   <div
                     style={{ cursor: "pointer" }}
                     onClick={() => {
@@ -231,6 +231,7 @@ function JobDetailsCard(props) {
             </div>
           </div>
         );
+
       case "second":
         return <ProjectProposals proposals_refresh={props.proposals_refresh} />;
       // case "third":

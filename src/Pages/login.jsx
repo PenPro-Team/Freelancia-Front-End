@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card, Form, Button, Alert, InputGroup } from "react-bootstrap";
@@ -7,7 +7,8 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Spinner from "react-bootstrap/Spinner";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../Redux/Actions/authAction";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+// import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
 import {
   getFromLocalStorage,
   setToLocalStorage,
@@ -22,7 +23,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // Validation states
   const [inputTouched, setInputTouched] = useState(false);
@@ -35,7 +36,7 @@ const LoginForm = () => {
   const usernameRegex = /^[a-z0-9\._]{3,}$/;
 
   // Password validation regex (8+ chars, uppercase, lowercase, number, special char)
-  const passwordRegex =/^(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+  const passwordRegex = /^(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
   const isEmail = emailRegex.test(userInput);
   const isUsername = usernameRegex.test(userInput);
@@ -44,7 +45,7 @@ const LoginForm = () => {
   useEffect(() => {
     let user = getFromLocalStorage("auth");
     if (user && user.isAuthenticated) {
-      history.push("/Freelancia-Front-End");
+      navigate("/Freelancia-Front-End");
     }
   }, []);
 
@@ -68,7 +69,7 @@ const LoginForm = () => {
     };
 
     try {
-      const response =await AxiosLoginInstance.post("", {
+      const response = await AxiosLoginInstance.post("", {
         "username": userInput,
         "password": password,
       });
@@ -84,7 +85,7 @@ const LoginForm = () => {
         dispatch(loginSuccess(response.data));
         setError("");
         setIsLoading(true);
-        history.push("/Freelancia-Front-End"); // Redirect to dashboard
+        navigate("/Freelancia-Front-End"); // Redirect to dashboard
       } else {
         setError("Invalid username/email or password");
         setIsLoading(false);

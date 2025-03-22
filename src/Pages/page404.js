@@ -1,9 +1,9 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <Container
@@ -18,7 +18,7 @@ const NotFound = () => {
           <p className="mb-4">
             Sorry, the page you are looking for does not exist.
           </p>
-          <Button variant="primary" onClick={() => history.push("/")}>
+          <Button variant="primary" onClick={() => navigate("/")}>
             Go Home
           </Button>
         </Col>

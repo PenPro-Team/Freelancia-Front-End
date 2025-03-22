@@ -1,7 +1,7 @@
 import { Alert, Form, Spinner } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useParams } from "react-router-dom";
 import { AxiosProposalsInstance } from "../network/API/AxiosInstance";
 
 function ProposeMsg(props) {
@@ -372,8 +372,8 @@ function ProposeMsg(props) {
                     ? null
                     : handleUpdate
                   : isLoading
-                  ? null
-                  : handleSubmit
+                    ? null
+                    : handleSubmit
               }
               disabled={
                 errors.errText ||
@@ -393,8 +393,8 @@ function ProposeMsg(props) {
                   ? "Loading…"
                   : "Update"
                 : isLoading
-                ? "Loading…"
-                : "Propose"}
+                  ? "Loading…"
+                  : "Propose"}
             </button>
           )}
         </div>

@@ -9,8 +9,10 @@ import proImages from "../assets/hero-bg.jpg";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import { useSelector } from "react-redux";
-import { AxiosFreelancersInstance, AxiosClientsInstance } from "../network/API/AxiosInstance"; // Import the new Axios instance
+import { useNavigate } from "react-router-dom";
+import { AxiosFreelancersInstance, AxiosClientsInstance } from "../network/API/AxiosInstance";
 import RateStars from "../Components/RateStars";
+import { BASE_PATH } from "../network/API/AxiosInstance";
 
 function Home() {
   const user = useSelector((state) => state.auth.user);
@@ -19,13 +21,15 @@ function Home() {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [searchResults, setSearchResults] = useState([]); // State for search results
 
+  const navigate = useNavigate(); // Hook for navigation
+
   console.log("Logged in User:", user);
 
   // Fetch highest-rated freelancers
   useEffect(() => {
     const fetchFreelancers = async () => {
       try {
-        const response = await AxiosFreelancersInstance.get("highest-rated/"); // Use the new Axios instance
+        const response = await AxiosFreelancersInstance.get("highest-rated/");
         setFreelancers(response.data); // Update state with fetched data
       } catch (error) {
         console.error("Error fetching freelancers:", error);
@@ -35,14 +39,14 @@ function Home() {
     fetchFreelancers();
   }, []);
 
-  // Fetch highest-rated Client
+  // Fetch highest-rated clients
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await AxiosClientsInstance.get("highest-rated/"); // Use the new Axios instance
+        const response = await AxiosClientsInstance.get("highest-rated/");
         setClients(response.data); // Update state with fetched data
       } catch (error) {
-        console.error("Error fetching Clients:", error);
+        console.error("Error fetching clients:", error);
       }
     };
 
@@ -65,7 +69,10 @@ function Home() {
   };
 
   return (
+
     <Container className="text-center text-lg-start">
+
+      {/* Header Section */}
       <Row>
         <Col xs={10} md={6} className="d-flex align-content-center flex-wrap">
           <div>
@@ -108,11 +115,17 @@ function Home() {
           <h3>Search Results</h3>
           {searchResults.map((freelancer, idx) => (
             <Col key={idx} xs={12} md={6} lg={4} className="mb-4">
-              <Card className="shadow-lg">
+              <Card
+                className="shadow-lg"
+                onClick={() => navigate(`${BASE_PATH}/Dashboard/${freelancer.id}`)}
+
+                style={{ cursor: "pointer" }}
+              >
                 <Card.Img
                   variant="top"
-                  src={freelancer.image || proImages} // Use freelancer's image or a default image
+                  src={freelancer.image || proImages}
                   alt={freelancer.name}
+                  style={{ height: "250px", objectFit: "cover" }}
                 />
                 <Card.Body>
                   <Card.Title>
@@ -131,6 +144,7 @@ function Home() {
         </Row>
       )}
 
+      {/* Highlighted Cards Section */}
       <div className="d-flex flex-wrap row row-cols-1 row-cols-md-3 g-3 ms-1 mt-2 mb-4 justify-content-center align-items-center">
         <Cards
           title={"WordPress Themes"}
@@ -146,6 +160,7 @@ function Home() {
         />
       </div>
 
+      {/* Clients Section */}
       <Row>
         <Col xs={10} md={6} className="d-flex align-content-center flex-wrap">
           <div className="divhit g-1">
@@ -156,6 +171,8 @@ function Home() {
                 className="rounded"
                 src={client.image}
                 alt={`Client ${idx + 1}`}
+                onClick={() => navigate(`${BASE_PATH}/Dashboard/${client.id}`)}
+                style={{ height: "250px", objectFit: "cover", cursor: "pointer" }}
               />
             ))}
           </div>
@@ -164,30 +181,29 @@ function Home() {
           <h2 className="text-center text-lg-start">
             Unique themes and templates for every budget and every project.
           </h2>
-          <Btn title={"View all Projects"} />
+          {/* <Btn title={"View all Projects"} /> */}
+          <Button onClick={() => navigate(`${BASE_PATH}/Job_List`)} className="btn btn-info mx-auto ">View all Projects</Button>
         </Col>
       </Row>
 
+      {/* Top Rated Freelancers Section */}
       <div className="row mt-5">
-        <div className="col-md-4 rounded divhit text-center d-flex align-content-center flex-wrap">
-          <h3 className="mx-auto">Featured themes</h3>
-          <p>
-            Every week, our staff personally hand-pick some of the best new
-            website themes from our collection.
-          </p>
-          <Btn title={"View all featured themes"} />
-        </div>
+        <div className="col-md-12">
+          <Row xs={1} md={3} className="g-4">
+            {freelancers.slice(0, 6).map((freelancer, idx) => (
+              <Col key={idx}>
+                <Card
+                  className="shadow-lg"
+                  onClick={() => navigate(`${BASE_PATH}/Dashboard/${freelancer.id}`)}
 
-        {/* Top Rated Freelancers */}
-        <div className="col-md-8">
-          <Row xs={1} md={2} className="g-4">
-            {freelancers.slice(0, 4).map((freelancer, idx) => (
-              <Col key={idx} className="h-100">
-                <Card className="shadow-lg">
+                  style={{ cursor: "pointer" }}
+                >
+
                   <Card.Img
                     variant="top"
-                    src={freelancer.image || proImages} // Use freelancer's image or a default image
+                    src={freelancer.image || proImages}
                     alt={freelancer.username}
+                    style={{ height: "250px", objectFit: "cover" }}
                   />
                   <Card.Body>
                     <Card.Title>
@@ -206,8 +222,11 @@ function Home() {
           </Row>
         </div>
       </div>
+
     </Container>
+
   );
+
 }
 
 export default Home;
