@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { AxiosFreelancersInstance, AxiosClientsInstance } from "../network/API/AxiosInstance";
 import RateStars from "../Components/RateStars";
 import { BASE_PATH } from "../network/API/AxiosInstance";
+
 function Home() {
   const user = useSelector((state) => state.auth.user);
   const [freelancers, setFreelancers] = useState([]);
@@ -124,7 +125,7 @@ function Home() {
                   variant="top"
                   src={freelancer.image || proImages}
                   alt={freelancer.name}
-                  style={{ height: "200px", objectFit: "cover" }}
+                  style={{ height: "250px", objectFit: "cover" }}
                 />
                 <Card.Body>
                   <Card.Title>
@@ -171,7 +172,7 @@ function Home() {
                 src={client.image}
                 alt={`Client ${idx + 1}`}
                 onClick={() => navigate(`${BASE_PATH}/Dashboard/${client.id}`)}
-                style={{ height: "200px", objectFit: "cover", cursor: "pointer" }}
+                style={{ height: "250px", objectFit: "cover", cursor: "pointer" }}
               />
             ))}
           </div>
@@ -180,7 +181,8 @@ function Home() {
           <h2 className="text-center text-lg-start">
             Unique themes and templates for every budget and every project.
           </h2>
-          <Btn title={"View all Projects"} />
+          {/* <Btn title={"View all Projects"} /> */}
+          <Button onClick={() => navigate(`${BASE_PATH}/Job_List`)} className="btn btn-info mx-auto ">View all Projects</Button>
         </Col>
       </Row>
 
@@ -201,7 +203,7 @@ function Home() {
                     variant="top"
                     src={freelancer.image || proImages}
                     alt={freelancer.username}
-                    style={{ height: "200px", objectFit: "cover" }}
+                    style={{ height: "250px", objectFit: "cover" }}
                   />
                   <Card.Body>
                     <Card.Title>
