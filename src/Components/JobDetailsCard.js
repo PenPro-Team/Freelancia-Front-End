@@ -243,6 +243,8 @@ function JobDetailsCard(props) {
             project_id={props.project.id}
           />
         );
+      case "fifth":
+        return <div>Contract</div>;
       default:
         return "Disabled content or default content here.";
     }
@@ -296,6 +298,21 @@ function JobDetailsCard(props) {
               Client History
             </Nav.Link>
           </Nav.Item>
+          {
+            props.project.project_state === "ongoing" && (
+              <Nav.Item>
+                <Nav.Link
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActiveTab("fifth");
+                  }}
+                  active={activeTab === "fifth"}
+                >
+                  Contract
+                </Nav.Link>
+              </Nav.Item>
+            )
+          }
         </Nav>
       </Card.Header>
       <Card.Body>
