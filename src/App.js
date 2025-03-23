@@ -16,6 +16,7 @@ import FreelancerProfile from "./Pages/UpdateSkills";
 import Dashboard from "./Pages/Dashboard";
 import ProjectContract from "./Pages/Projectcontract";
 import ClientContracts from "./Pages/ClientContracts";
+import ContractDetails from "./Components/ContractDetails";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/Freelancia-Front-End/freelancerprofile" element={<FreelancerProfile />} />
           <Route path="/Freelancia-Front-End/contract" element={<ProjectContract />} />
           <Route path="/Freelancia-Front-End/clientContracts/:user_id" element={<ClientContracts />} />
+          <Route path="/Freelancia-Front-End/contractDetails/:contract_id" element={<ContractDetails />} />
           <Route path="/Freelancia-Front-End/dashboard/:user_id" element={<Dashboard />} />
 
           {/* Error Pages */}
