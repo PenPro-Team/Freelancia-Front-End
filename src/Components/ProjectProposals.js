@@ -12,7 +12,9 @@ function ProjectProposals(props) {
 
   useEffect(() => {
     setIsLoading(true);
-    AxiosProposalsInstance.get(`/project/${params.project_id}`)
+    console.log("Calling API");
+    console.log("Project ID: ", props.project_id);
+    AxiosProposalsInstance.get(`/project/${props.project_id}`)
       .then((res) => {
         setProposals(res.data);
         if (Object.keys(res.data).length) {
