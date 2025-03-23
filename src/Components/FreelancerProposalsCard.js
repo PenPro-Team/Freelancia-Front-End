@@ -1,28 +1,47 @@
 import { Button, Card, Image } from "react-bootstrap";
 import RateStars from "./RateStars";
 import { useNavigate } from "react-router-dom"; // Corrected import path
-
+import { getFromLocalStorage } from "../network/local/LocalStorage";
 function FreelancerProposalsCard(props) {
   const navigate = useNavigate(); // Correct usage of useNavigate
+  const curenUser = getFromLocalStorage("auth");
   return (
     <Card key={props.proposal.id} className="mb-3">
       <Card.Body style={{ position: "relative" }}>
         <Card.Title>
-          <div className="d-flex align-items-center">
-            <Image
-              src={props.proposal.user.image}
-              roundedCircle
-              alt={props.proposal.user.name}
-              width={50}
-              height={50}
-              className="me-2"
-            />
-            <div className="d-flex flex-column">
-              <div>{props.proposal.user.name}</div>
-              <div className="text-muted">
-                <RateStars rating={props.proposal.user.rate} />
+          <div className="d-flex justify-content-between">
+
+            <div className="d-flex align-items-center">
+              <Image
+                src={props.proposal.user.image}
+                roundedCircle
+                alt={props.proposal.user.name}
+                width={50}
+                height={50}
+                className="me-2"
+              />
+              <div className="d-flex flex-column">
+                <div>{props.proposal.user.name}</div>
+                <div className="text-muted">
+                  <RateStars rating={props.proposal.user.rate} />
+                </div>
               </div>
             </div>
+
+            {
+              curenUser.user.role === "client" && (
+                <div>
+                  <Button
+                    className="btn btn-primary"
+                    onClick={() => {
+                      navigate( "/Freelancia-Front-End/contract",{  state: { proposal: props.proposal } });
+                    }}
+                  >
+                    Contract
+                  </Button>
+                </div>
+              )
+            }
           </div>
         </Card.Title>
         <div className="mt-2">
