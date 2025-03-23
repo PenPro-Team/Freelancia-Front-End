@@ -59,6 +59,14 @@ function NavBar() {
                 </Nav.Link>
               </>
             )}
+               {isAuth && (
+              <Nav.Link
+                as={Link}
+                to={`/Freelancia-Front-End/clientContracts/${user.user_id}`}
+              >
+                Your Contracts
+              </Nav.Link>
+            )}
           </Nav>
           {isAuth ? (
             <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">

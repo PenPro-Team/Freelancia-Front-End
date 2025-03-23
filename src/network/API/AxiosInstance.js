@@ -52,6 +52,10 @@ export const AxiosUserInstance = axios.create({
   baseURL: `${url}/users/`,
 });
 export const BASE_PATH = "/Freelancia-Front-End";
+
+export const AxiosContractsInstance = axios.create({
+  baseURL: `${url}/contract/`,
+});
 /**
  * Demo Use it For getting Projects
  * AxiosProjectsInstance.get("What you will add to the url" , {"For Post The opject will be here"}).then().catch()
