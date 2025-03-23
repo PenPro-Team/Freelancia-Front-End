@@ -233,7 +233,7 @@ function JobDetailsCard(props) {
         );
 
       case "second":
-        return <ProjectProposals proposals_refresh={props.proposals_refresh} />;
+        return <ProjectProposals proposals_refresh={props.proposals_refresh} project_id={project.id} />;
       // case "third":
       //   return <All_Proposals />;
       case "fourth":

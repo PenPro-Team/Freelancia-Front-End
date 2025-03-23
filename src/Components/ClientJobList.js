@@ -28,6 +28,8 @@ const ClientJobList = ({ userId }) => {
     setIsLoading(true);
     const fetchProjects = async () => {
       try {
+        console.log("Calling API");
+        console.log("User ID: ", userId); 
         const response = await AxiosProjectsInstance.get(`?owner_id=${userId}`);
         setProjects(response.data);
       } catch (error) {
