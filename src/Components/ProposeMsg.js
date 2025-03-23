@@ -32,8 +32,8 @@ function ProposeMsg(props) {
   const [AlreadyPropsed, setAlreadyProposed] = useState(true);
   const [proposal_id, setProposal_id] = useState(0);
 
-  const [APIError, setAPIError] = useState(false);
-  const [APISuccess, setAPISuccess] = useState(false);
+  const [APIError, setAPIError] = useState(null);
+  const [APISuccess, setAPISuccess] = useState(null);
 
   const [showAlert, setShowAlert] = useState(true);
   const handleClose = () => setShowAlert(false);
@@ -45,6 +45,9 @@ function ProposeMsg(props) {
     AxiosProposalsInstance.get(`?user=${user_id}&project=${project_id}`)
       .then((res) => {
         if (res.data.length > 0) {
+          console.log("Already Made A Proposal");
+          // console.log(res.data.length);
+          // console.log(res.data);
           setAlreadyProposed(true);
           setItemInfo({
             propose_text: res.data[0].propose_text,
@@ -58,6 +61,7 @@ function ProposeMsg(props) {
             deadline: res.data[0].deadline,
             created_at: res.data[0].created_at,
           });
+          console.log("Proposal Saved ID: ", res.data[0].id);
           setProposal_id(res.data[0].id);
           props.cb(true);
         } else {
@@ -65,11 +69,18 @@ function ProposeMsg(props) {
         }
       })
       .catch((err) => {
-        console.error(err);
+        console.log(err);
       });
   }, [callingAPI, project_id, props, user_id]);
 
   const propsal_object = () => {
+    // const date = new Date();
+    // const options = { year: "numeric", month: "short", day: "numeric" };
+    // const formattedDate = date.toLocaleDateString("en-US", options);
+    // setItemInfo({
+    //   ...itemInfo,
+    //   created_at: date,
+    // });
     return {
       propose_text: itemInfo.propose_text,
       price: itemInfo.price,
@@ -79,7 +90,8 @@ function ProposeMsg(props) {
     };
   };
 
-  const saveData = () => {
+  // Save the data into the API
+  const saveData = (isUpdate = false) => {
     setIsLoading(true);
     AxiosProposalsInstance.post("", propsal_object(), {
       headers: {
@@ -87,18 +99,31 @@ function ProposeMsg(props) {
       },
     })
       .then((response) => {
+        // Handle success response
+        console.log("Form data successfully sent:", response.data);
+        // Call your callback function after success (you can pass the data back if needed)
+        if (props.callback) {
+          props.callback(
+            itemInfo.propose_text,
+            itemInfo.price,
+            itemInfo.deadline,
+            itemInfo.created_at
+          );
+        }
         setAPIError(false);
         setAPISuccess(true);
         setShowAlert(true);
         setCallingAPI(callingAPI + 1);
       })
       .catch((error) => {
-        console.error(error);
+        // Handle error response
+        console.error("Error sending form data:", error);
         setAPIError(true);
         setAPISuccess(false);
         setShowAlert(true);
       })
       .finally(() => {
+        console.log("Finsished");
         setTimeout(() => {
           setIsLoading(false);
           props.CB_proposals_refresh();
@@ -106,7 +131,8 @@ function ProposeMsg(props) {
       });
   };
 
-  const updateData = () => {
+  // Save the data into the API
+  const updateData = (isUpdate = true) => {
     setIsLoading(true);
     AxiosProposalsInstance.patch(`/${proposal_id}`, propsal_object(), {
       headers: {
@@ -114,18 +140,30 @@ function ProposeMsg(props) {
       },
     })
       .then((response) => {
+        // Handle success response
+        console.log("Form data successfully sent:", response.data);
+        // Call your callback function after success (you can pass the data back if needed)
+        if (props.callback) {
+          props.callback(
+            itemInfo.propose_text,
+            itemInfo.price,
+            itemInfo.deadline
+          );
+        }
         setAPIError(false);
         setAPISuccess(true);
         setShowAlert(true);
         setCallingAPI(callingAPI + 1);
       })
       .catch((error) => {
-        console.error(error);
+        // Handle error response
+        console.error("Error sending form data:", error);
         setAPIError(true);
         setAPISuccess(false);
         setShowAlert(true);
       })
       .finally(() => {
+        console.log("Finsished");
         setTimeout(() => {
           setIsLoading(false);
           props.CB_proposals_refresh();
@@ -133,30 +171,48 @@ function ProposeMsg(props) {
       });
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     if (itemInfo.propose_text.trim() === "") {
-      setErrors({ ...errors, errText: "Invalid Message Text" });
+      setErrors({
+        ...errors,
+        errText: "Invalid Message Text",
+      });
     } else if (itemInfo.price === "") {
-      setErrors({ ...errors, priceErr: "Invalid Price" });
+      setErrors({
+        ...errors,
+        priceErr: "Invalid Price",
+      });
     } else if (itemInfo.deadline === "") {
-      setErrors({ ...errors, deadlineErr: "Invalid Deadline" });
+      setErrors({
+        ...errors,
+        deadlineErr: "Invalid Deadline",
+      });
     } else {
+      // console.log(user);
       setIsLoading(true);
-      saveData();
+      // Push the data to the database
+      saveData(false);
     }
   };
 
   const handleUpdate = (e) => {
     e.preventDefault();
+    // Update the item info
     setIsLoading(true);
+    // console.log("In Handle Update");
+    // console.log("itemInfo", itemInfo);
+    // console.log("savedItem", savedItem);
     if (
       itemInfo.deadline !== savedItem.deadline ||
       itemInfo.price !== savedItem.price ||
       itemInfo.propose_text !== savedItem.propose_text
     ) {
-      updateData();
+      // console.log("Updating");
+      updateData(true);
     } else {
+      // console.log("Not Updating");
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
@@ -164,6 +220,7 @@ function ProposeMsg(props) {
     }
   };
 
+  // Handle input change and validation
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -171,6 +228,8 @@ function ProposeMsg(props) {
     const textReg = /^[a-zA-Z0-9\s._*]+$/;
     const priceReg = /^[0-9]*\.?[0-9]{0,2}$/;
     const deadlineReg = /^\d{1,}$/;
+
+    // console.log(e.target);
 
     let check = true;
     if (name === "propose_text") {
@@ -181,22 +240,58 @@ function ProposeMsg(props) {
       check = deadlineReg.test(value);
     }
 
+    // console.log("Check", check);
+
     if (check || value === "") {
       setItemInfo({ ...itemInfo, [name]: value });
     }
 
     if (name === "propose_text") {
-      setErrors({ ...errors, errText: !check ? "Invalid Message text" : "" });
+      if (value.trim() === "" || value.length < 5 || !check) {
+        setErrors({
+          ...errors,
+          errText: "Invalid Message text",
+        });
+      } else {
+        setErrors({
+          ...errors,
+          errText: "",
+        });
+      }
     } else if (name === "price") {
-      setErrors({ ...errors, priceErr: !check ? "Invalid Price" : "" });
+      if (value === "" || !check) {
+        setErrors({
+          ...errors,
+          priceErr: "Invalid Price",
+        });
+      } else {
+        setErrors({
+          ...errors,
+          priceErr: "",
+        });
+      }
     } else if (name === "deadline") {
-      setErrors({ ...errors, deadlineErr: !check ? "Invalid Deadline" : "" });
+      if (value === "" || !check) {
+        setErrors({
+          ...errors,
+          deadlineErr: "Invalid Deadline",
+        });
+      } else {
+        setErrors({
+          ...errors,
+          deadlineErr: "",
+        });
+      }
+    } else {
+      // Ending Handling all the cases
     }
   };
 
   return (
     <div className="card p-3 shadow-lg">
       <Alert
+        id="alert"
+        name="alert"
         variant={APISuccess ? "success" : APIError ? "danger" : ""}
         show={showAlert && (APISuccess || APIError)}
         onClose={handleClose}
@@ -207,54 +302,62 @@ function ProposeMsg(props) {
       </Alert>
 
       <Form>
-        <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-          <Form.Label>Propose Message</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={5}
-            placeholder="Enter an Attractive Message"
-            value={itemInfo.propose_text}
-            onChange={handleChange}
-            name="propose_text"
-            isInvalid={errors.errText !== ""}
-            disabled={props.disabled}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.errText}
-          </Form.Control.Feedback>
-        </Form.Group>
+        <div className="mb-3">
+          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+            <Form.Label>Propose Message</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={5}
+              placeholder="Enter an Attractive Message"
+              value={itemInfo.propose_text}
+              onChange={handleChange}
+              name="propose_text"
+              isInvalid={errors.errText !== "" && errors.errText !== null}
+              disabled={props.disabled}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.errText}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </div>
 
-        <Form.Group className="mb-3" controlId="formPrice">
-          <Form.Label>Price</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Enter Price"
-            value={itemInfo.price}
-            onChange={handleChange}
-            name="price"
-            isInvalid={errors.priceErr !== ""}
-            disabled={props.disabled}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.priceErr}
-          </Form.Control.Feedback>
-        </Form.Group>
+        <div className="mb-3">
+          <Form.Group className="mb-3" controlId="formPrice">
+            <Form.Label>Price</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter Price"
+              value={itemInfo.price}
+              onChange={handleChange}
+              name="price"
+              isInvalid={errors.priceErr !== "" && errors.priceErr !== null}
+              disabled={props.disabled}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.priceErr}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </div>
 
-        <Form.Group className="mb-3" controlId="formDeadline">
-          <Form.Label>Deadline In Days</Form.Label>
-          <Form.Control
-            type="number"
-            value={itemInfo.deadline}
-            onChange={handleChange}
-            name="deadline"
-            placeholder="Enter Estimated Deadline in Days"
-            isInvalid={errors.deadlineErr !== ""}
-            disabled={props.disabled}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.deadlineErr}
-          </Form.Control.Feedback>
-        </Form.Group>
+        <div className="mb-3">
+          <Form.Group className="mb-3" controlId="formDeadline">
+            <Form.Label>Deadline In Days</Form.Label>
+            <Form.Control
+              type="number"
+              value={itemInfo.deadline}
+              onChange={handleChange}
+              name="deadline"
+              placeholder="Enter Estimated Deadline in Days"
+              isInvalid={
+                errors.deadlineErr !== "" && errors.deadlineErr !== null
+              }
+              disabled={props.disabled}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.deadlineErr}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </div>
 
         <div className="d-flex justify-content-center">
           {isLoading ? (
@@ -263,15 +366,35 @@ function ProposeMsg(props) {
             <button
               type="submit"
               className="btn btn-primary w-50"
-              onClick={AlreadyPropsed ? handleUpdate : handleSubmit}
+              onClick={
+                AlreadyPropsed
+                  ? isLoading
+                    ? null
+                    : handleUpdate
+                  : isLoading
+                    ? null
+                    : handleSubmit
+              }
               disabled={
                 errors.errText ||
+                itemInfo.propose_text === "" ||
                 errors.priceErr ||
+                itemInfo.price === "" ||
                 errors.deadlineErr ||
-                isLoading
+                itemInfo.deadline === "" ||
+                isLoading ||
+                (itemInfo.propose_text === savedItem.propose_text &&
+                  itemInfo.price === savedItem.price &&
+                  itemInfo.deadline === savedItem.deadline)
               }
             >
-              {AlreadyPropsed ? "Update" : "Propose"}
+              {AlreadyPropsed
+                ? isLoading
+                  ? "Loading…"
+                  : "Update"
+                : isLoading
+                  ? "Loading…"
+                  : "Propose"}
             </button>
           )}
         </div>
