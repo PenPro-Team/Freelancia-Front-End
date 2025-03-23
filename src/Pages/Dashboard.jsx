@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import UpdateCertificate from "./UpdateCertificate";
 import UpdateProjects from "./UpdateProjects";
 import { AxiosUserInstance } from "../network/API/AxiosInstance";
+import DisplayCertificate from "./DisplayCertificate";
 
 function Dashboard() {
   const auth = getFromLocalStorage("auth");
@@ -78,6 +79,11 @@ function Dashboard() {
                         <Nav.Link eventKey="fourth">Update Skills</Nav.Link>
                       </Nav.Item>
                     )}
+                    {auth && auth.user && auth.user.role === "freelancer" && (
+                      <Nav.Item>
+                        <Nav.Link eventKey="ten">Update Certificate</Nav.Link>
+                      </Nav.Item>
+                    )}
                   </>
                 )}
               {userData.role === "freelancer" && (
@@ -86,7 +92,7 @@ function Dashboard() {
                     <Nav.Link eventKey="fifth">Skills</Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
-                    <Nav.Link eventKey="six">Certificate</Nav.Link>
+                    <Nav.Link eventKey="eight">Certificate</Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
                     <Nav.Link eventKey="seven">Projects</Nav.Link>
@@ -113,8 +119,12 @@ function Dashboard() {
                 <DesplaySkills />
                 {/* <ManageSkills /> */}
               </Tab.Pane>
-              <Tab.Pane eventKey="six">
+              <Tab.Pane eventKey="ten">
                 <UpdateCertificate />
+                {/* <ManageSkills /> */}
+              </Tab.Pane>
+              <Tab.Pane eventKey="eight">
+                <DisplayCertificate />
               </Tab.Pane>
               <Tab.Pane eventKey="seven">
                 <UpdateProjects />
