@@ -16,6 +16,7 @@ export default function RequiredSkills(props) {
   const required = [skills];
   return (
     <>
+      <h1>22222</h1>
       {skills.map((skill) => (
         <Badge key={skill} bg="primary">
           {skill}

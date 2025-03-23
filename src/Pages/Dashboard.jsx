@@ -111,6 +111,7 @@ function Dashboard() {
               </Tab.Pane>
               <Tab.Pane eventKey="fifth">
                 <DesplaySkills />
+                {/* <ManageSkills /> */}
               </Tab.Pane>
               <Tab.Pane eventKey="six">
                 <UpdateCertificate />
