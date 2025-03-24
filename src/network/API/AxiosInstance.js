@@ -68,3 +68,7 @@ export const BASE_PATH = "/Freelancia-Front-End";
 export const AxiosContractsInstance = axios.create({
   baseURL: `${url}/contract/`,
 });
+
+export const AxiosWSAuthInstance = axios.create({
+  baseURL: `${url}/auth_for_ws_connection/`,
+});
