@@ -1,7 +1,9 @@
-import { w3cwebsocket as W3CWebSocket } from "websocket";
+import { w3cwebsocket } from "websocket";
 import { useState, useEffect, useRef } from "react";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import axios from "axios";
+import HeaderColoredText from "../Components/HeaderColoredText";
+import { AxiosWSAuthInstance } from "../network/API/AxiosInstance";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -14,20 +16,16 @@ const Chat = () => {
   const user = auth ? auth.user : null;
   const token = user ? user.access : null;
 
-  // First effect: Get UUID when component mounts
   useEffect(() => {
-    if (!token) return;
+    if (!token || uuid) return;
 
     const fetchUuid = async () => {
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/auth_for_ws_connection/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await AxiosWSAuthInstance.get(``, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         console.log("UUID:", response.data.uuid);
         setUuid(response.data.uuid);
       } catch (error) {
@@ -37,21 +35,18 @@ const Chat = () => {
 
     fetchUuid();
 
-    // Cleanup function
     return () => {
       if (clientRef.current) {
         clientRef.current.close();
       }
     };
-  }, [token]);
+  }, [token, uuid]);
 
-  // Second effect: Establish WebSocket connection when UUID is available
   useEffect(() => {
-    if (!uuid) return;
+    if (!uuid || isConnected) return;
 
-    // Create new WebSocket connection with both UUID and token
-    const newClient = new W3CWebSocket(
-      `ws://127.0.0.1:8000/ws/chat/lobby/?uuid=${uuid}&token=${token}`
+    const newClient = new w3cwebsocket(
+      `ws://127.0.0.1:8000/ws/chat/lobby/?uuid=${uuid}`
     );
 
     newClient.onopen = () => {
@@ -79,7 +74,6 @@ const Chat = () => {
       console.log("WebSocket Client Disconnected", event);
       setIsConnected(false);
 
-      // Handle different close codes
       if (event.code === 4001) {
         console.error("Authentication failed - please login again");
       } else if (event.code === 4003) {
@@ -88,7 +82,6 @@ const Chat = () => {
         console.error("Server database error - please try again later");
       }
 
-      // Attempt reconnection for network errors (code 1006)
       if (event.code === 1006) {
         console.log("Attempting to reconnect...");
         setTimeout(() => setUuid((uuid) => uuid), 2000);
@@ -107,7 +100,7 @@ const Chat = () => {
         newClient.close(1000, "Component unmounting");
       }
     };
-  }, [uuid, token]); // Added token to dependencies
+  }, [uuid, isConnected]);
 
   const sendMessage = () => {
     if (
@@ -136,7 +129,7 @@ const Chat = () => {
 
   return (
     <div>
-      <h1>Live Chat</h1>
+      <HeaderColoredText text="Live Chat" />
       <div>
         {messages.map((msg, index) => (
           <div key={index}>
@@ -149,7 +142,7 @@ const Chat = () => {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyPress}
         disabled={!isConnected}
       />
       <button onClick={sendMessage} disabled={!isConnected}>

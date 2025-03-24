@@ -3,7 +3,6 @@ import axios from "axios";
 
 let url = "http://127.0.0.1:8000";
 
-
 export const AxiosFreelancersCertificate = axios.create({
   baseURL: `${url}/certificates/`, // API for Post and Get Certificate for freelancers
 });
@@ -59,4 +58,8 @@ export const BASE_PATH = "/Freelancia-Front-End";
 
 export const AxiosContractsInstance = axios.create({
   baseURL: `${url}/contract/`,
+});
+
+export const AxiosWSAuthInstance = axios.create({
+  baseURL: `${url}/auth_for_ws_connection/`,
 });
