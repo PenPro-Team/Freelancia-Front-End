@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { AxiosContractsInstance } from '../network/API/AxiosInstance';
 import { getFromLocalStorage } from '../network/local/LocalStorage';
 import HeaderColoredText from './HeaderColoredText';
-
+import PersonalImg from '../assets/default-user.png';
 const ContractDetails = () => {
     const params = useParams();
     const contract_id = params.contract_id;
@@ -27,6 +27,20 @@ const ContractDetails = () => {
                 setLoading(false);
             });
     }, [contract_id]);
+    
+
+const handleAcceptOrDeclineContract = (e) => {
+    AxiosContractsInstance.patch(`update/${contract_id}`, 
+        {
+            contract_state: e.target.name === 'Accept' ? 'aproved' : 'canceled'
+        },
+        {    
+            headers: {
+                'Authorization': `Bearer ${current_user.user.access}`
+            }
+        }
+    )
+}
 
     if (loading) return <div className="d-flex justify-content-center my-5"><div className="spinner-border" role="status"><span className="visually-hidden">Loading...</span></div></div>;
     if (error) return <div className="alert alert-danger m-3" role="alert">{error}</div>;
@@ -55,7 +69,7 @@ const ContractDetails = () => {
                                         <h5 className="card-title">Client</h5>
                                         <div className="text-center mb-3">
                                             <img 
-                                                src={contract.client_details.image} 
+                                                src={contract.client_details.image ? contract.client_details.image : PersonalImg}
                                                 alt={`${contract.client_details.first_name} ${contract.client_details.last_name}`}
                                                 className="rounded-circle"
                                                 style={{ width: '80px', height: '80px', objectFit: 'cover' }}
@@ -70,12 +84,14 @@ const ContractDetails = () => {
                                     <div className="card-body">
                                         <h5 className="card-title">Freelancer</h5>
                                         <div className="text-center mb-3">
-                                            <img 
-                                                src={contract.freelancer_details.image} 
-                                                alt={`${contract.freelancer_details.first_name} ${contract.freelancer_details.last_name}`}
-                                                className="rounded-circle"
-                                                style={{ width: '80px', height: '80px', objectFit: 'cover' }}
-                                            />
+                                     
+                        <img 
+                          src={contract.freelancer_details.image?contract.freelancer_details.image:PersonalImg} 
+                          alt={`${contract.freelancer_details.first_name.charAt(0)} ${contract.freelancer_details.last_name.charAt(0)}`}
+                          className="rounded-circle"
+                          style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                        />
+                      
                                         </div>
                                         <p className="card-text mb-1"><strong>Name:</strong> {contract.freelancer_details.first_name} {contract.freelancer_details.last_name}</p>
                                     </div>
@@ -107,10 +123,10 @@ const ContractDetails = () => {
                         </div>
                     </div>
 
-                    {contract.contract_state === 'pending' && current_user.user.role === "freelancer" && (
+                    {contract.contract_state === 'pending' && current_user.user.role === "freelancer" && current_user.user.user_id === contract.freelancer_details.id && (
                         <div className="d-flex justify-content-end mt-4">
-                            <button className="btn btn-success me-2">Accept Contract</button>
-                            <button className="btn btn-danger">Decline Contract</button>
+                            <button name='Accept' onClick={handleAcceptOrDeclineContract} className="btn btn-success me-2">Accept Contract</button>
+                            <button name='Decline' onClick={handleAcceptOrDeclineContract} className="btn btn-danger">Decline Contract</button>
                         </div>
                     )}
                 </div>

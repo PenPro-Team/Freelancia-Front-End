@@ -2,6 +2,8 @@
 import { Card, Badge, Button, Row, Col } from 'react-bootstrap';
 import { getFromLocalStorage } from '../network/local/LocalStorage';
 import { useNavigate } from 'react-router-dom';
+import PersonalImg from '../assets/default-user.png';
+
 const ContractCard = ({ contract }) => {
     const current_user = getFromLocalStorage("auth");
     const navigate = useNavigate();
@@ -37,24 +39,24 @@ const ContractCard = ({ contract }) => {
                 current_user.user.role === 'client' ?   <div className="freelancer-info text-center">
                 <h6>Freelancer</h6>
                 <div className="avatar-container mb-2">
-                  <img 
-                    src={`${contract.freelancer_details.image}`} 
-                    alt={`${contract.freelancer_details.first_name} ${contract.freelancer_details.last_name}`}
-                    className="rounded-circle"
-                    style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                  />
+                <img 
+                          src={contract.freelancer_details.image?contract.freelancer_details.image:PersonalImg} 
+                          alt={`${contract.freelancer_details.first_name.charAt(0)} ${contract.freelancer_details.last_name.charAt(0)}`}
+                          className="rounded-circle"
+                          style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                        />
                 </div>
                 <p>{contract.freelancer_details.first_name} {contract.freelancer_details.last_name}</p>
               </div>:
                 <div className="client-info text-center">
                   <h6>Client</h6>
                   <div className="avatar-container mb-2">
-                    <img 
-                      src={`${contract.client_details.image}`} 
-                      alt={`${contract.client_details.first_name} ${contract.client_details.last_name}`}
-                      className="rounded-circle"
-                      style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                    />
+                  <img 
+                                                src={contract.client_details.image ? contract.client_details.image : PersonalImg}
+                                                alt={`${contract.client_details.first_name} ${contract.client_details.last_name}`}
+                                                className="rounded-circle"
+                                                style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                            />
                   </div>
                   <p>{contract.client_details.first_name} {contract.client_details.last_name}</p>
                 </div>
