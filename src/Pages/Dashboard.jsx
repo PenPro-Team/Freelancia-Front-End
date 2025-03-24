@@ -74,6 +74,9 @@ function Dashboard() {
                     <Nav.Item>
                       <Nav.Link eventKey="third">Update Security</Nav.Link>
                     </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="sixth">Wallet</Nav.Link>
+                    </Nav.Item>
                     {auth && auth.user && auth.user.role === "freelancer" && (
                       <Nav.Item>
                         <Nav.Link eventKey="fourth">Update Skills</Nav.Link>
@@ -128,6 +131,11 @@ function Dashboard() {
               </Tab.Pane>
               <Tab.Pane eventKey="seven">
                 <UpdateProjects />
+              </Tab.Pane>
+              <Tab.Pane eventKey="sixth">
+                <Container>
+                  <h1>Coming Soon</h1>
+                </Container>
               </Tab.Pane>
             </Tab.Content>
           </Col>
