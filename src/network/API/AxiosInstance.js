@@ -4,6 +4,14 @@ import axios from "axios";
 let url = "http://127.0.0.1:8000";
 
 
+export const AxiosFreelancersGetPortfolios = axios.create({
+  baseURL: `${url}/portfolios/?user=`, // API for GET Portfolios for freelancers
+});
+
+export const AxiosFreelancersPortfolios = axios.create({
+  baseURL: `${url}/portfolios/`, // API for Post Portfolios for freelancers
+});
+
 export const AxiosFreelancersCertificate = axios.create({
   baseURL: `${url}/certificates/`, // API for Post and Get Certificate for freelancers
 });
