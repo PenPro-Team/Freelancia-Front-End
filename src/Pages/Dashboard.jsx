@@ -12,6 +12,7 @@ import UpdateCertificate from "./UpdateCertificate";
 import UpdateProjects from "./UpdateProjects";
 import { AxiosUserInstance } from "../network/API/AxiosInstance";
 import DisplayCertificate from "./DisplayCertificate";
+import DisplayProjects from "./DisplayProjects";
 
 function Dashboard() {
   const auth = getFromLocalStorage("auth");
@@ -87,6 +88,11 @@ function Dashboard() {
                         <Nav.Link eventKey="ten">Update Certificate</Nav.Link>
                       </Nav.Item>
                     )}
+                    {auth && auth.user && auth.user.role === "freelancer" && (
+                      <Nav.Item>
+                        <Nav.Link eventKey="elevn">Update Projects</Nav.Link>
+                      </Nav.Item>
+                    )}
                   </>
                 )}
               {userData.role === "freelancer" && (
@@ -129,13 +135,16 @@ function Dashboard() {
               <Tab.Pane eventKey="eight">
                 <DisplayCertificate />
               </Tab.Pane>
-              <Tab.Pane eventKey="seven">
+              <Tab.Pane eventKey="elevn">
                 <UpdateProjects />
               </Tab.Pane>
               <Tab.Pane eventKey="sixth">
                 <Container>
                   <h1>Coming Soon</h1>
                 </Container>
+              </Tab.Pane>
+              <Tab.Pane eventKey="seven">
+                <DisplayProjects />
               </Tab.Pane>
             </Tab.Content>
           </Col>

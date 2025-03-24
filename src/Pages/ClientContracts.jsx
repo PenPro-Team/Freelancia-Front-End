@@ -11,7 +11,7 @@ function ClientContracts() {
   const [contracts, setContracts] = useState([]);
 const current_user = getFromLocalStorage("auth");
   useEffect(() => {
-    AxiosContractsInstance.get(`user/contracts/${prams.user_id}`,
+    AxiosContractsInstance.get(`user/contracts/${current_user.user.user_id}`,
       {
         headers: {
           'Authorization': `Bearer ${current_user.user.access}`
