@@ -1,9 +1,11 @@
 import { w3cwebsocket } from "websocket";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import axios from "axios";
 import HeaderColoredText from "../Components/HeaderColoredText";
 import { AxiosWSAuthInstance } from "../network/API/AxiosInstance";
+import Card from "react-bootstrap/Card";
+import { WebSocketChatInstance } from "../network/API/WebSocketInstance";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -11,98 +13,88 @@ const Chat = () => {
   const [uuid, setUuid] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const clientRef = useRef(null);
+  const isFetchingRef = useRef(false);
 
   const auth = getFromLocalStorage("auth");
   const user = auth ? auth.user : null;
   const token = user ? user.access : null;
 
   useEffect(() => {
-    if (!token || uuid) return;
+    if (!token) return;
+    if (isFetchingRef.current) return;
 
-    const fetchUuid = async () => {
-      try {
-        const response = await AxiosWSAuthInstance.get(``, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log("UUID:", response.data.uuid);
-        setUuid(response.data.uuid);
-      } catch (error) {
-        console.error("Error fetching UUID:", error);
+    isFetchingRef.current = true;
+    AxiosWSAuthInstance.get("", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (uuid !== res.data.uuid) {
+          setUuid(res.data.uuid);
+        }
+        isFetchingRef.current = false;
+      })
+      .catch(() => {
+        isFetchingRef.current = false;
+      });
+  }, [token]);
+
+  useEffect(() => {
+    if (!uuid) return;
+    console.log("UUID: ", uuid);
+    if (clientRef.current) {
+      clientRef.current.close();
+    }
+
+    const client = WebSocketChatInstance("lobby", uuid);
+
+    client.onopen = () => {
+      console.log("Connected to the chat server");
+      setIsConnected(true);
+    };
+
+    client.onmessage = (event) => {
+      if (event.data) {
+        try {
+          const parsedData = JSON.parse(event.data);
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              text: parsedData.message,
+              username: parsedData.sender,
+              date: parsedData.message_date,
+            },
+          ]);
+        } catch (error) {
+          console.error("Error parsing message:", error);
+        }
       }
     };
 
-    fetchUuid();
+    client.onclose = () => {
+      console.log("Disconnected from the chat server");
+      setIsConnected(false);
+    };
+
+    client.onerror = (error) => {
+      if (clientRef.current === client) {
+        console.error("WebSocket Error:", error);
+        setIsConnected(false);
+      }
+    };
+
+    clientRef.current = client;
 
     return () => {
       if (clientRef.current) {
         clientRef.current.close();
+        clientRef.current = null;
       }
     };
-  }, [token, uuid]);
+  }, [uuid]);
 
-  useEffect(() => {
-    if (!uuid || isConnected) return;
-
-    const newClient = new w3cwebsocket(
-      `ws://127.0.0.1:8000/ws/chat/lobby/?uuid=${uuid}`
-    );
-
-    newClient.onopen = () => {
-      console.log("WebSocket Client Connected");
-      setIsConnected(true);
-    };
-
-    newClient.onmessage = (message) => {
-      try {
-        const data = JSON.parse(message.data);
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            text: data.message,
-            username: data.sender,
-            date: data.message_date,
-          },
-        ]);
-      } catch (error) {
-        console.error("Error parsing message:", error);
-      }
-    };
-
-    newClient.onclose = (event) => {
-      console.log("WebSocket Client Disconnected", event);
-      setIsConnected(false);
-
-      if (event.code === 4001) {
-        console.error("Authentication failed - please login again");
-      } else if (event.code === 4003) {
-        console.error("UUID missing - please refresh and try again");
-      } else if (event.code === 4005) {
-        console.error("Server database error - please try again later");
-      }
-
-      if (event.code === 1006) {
-        console.log("Attempting to reconnect...");
-        setTimeout(() => setUuid((uuid) => uuid), 2000);
-      }
-    };
-
-    newClient.onerror = (error) => {
-      console.error("WebSocket Error:", error);
-      setIsConnected(false);
-    };
-
-    clientRef.current = newClient;
-
-    return () => {
-      if (newClient.readyState === newClient.OPEN) {
-        newClient.close(1000, "Component unmounting");
-      }
-    };
-  }, [uuid, isConnected]);
-
-  const sendMessage = () => {
+  const handleSendMessage = () => {
     if (
       !clientRef.current ||
       clientRef.current.readyState !== clientRef.current.OPEN
@@ -121,33 +113,75 @@ const Chat = () => {
     setMessage("");
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      sendMessage();
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSendMessage();
     }
   };
 
   return (
     <div>
       <HeaderColoredText text="Live Chat" />
-      <div>
-        {messages.map((msg, index) => (
-          <div key={index}>
-            <strong>{msg.username}:</strong> {msg.text}
-            <small> ({new Date(msg.date).toLocaleTimeString()})</small>
+      <div
+        className="d-flex justify-content-center"
+        style={{ minHeight: "20vh" }}
+      >
+        <div className="chat-container d-flex flex-column justify-content-between card w-75">
+          <div
+            className="chat-messages p-2 overflow-auto"
+            style={{ maxHeight: "80vh" }}
+          >
+            <div className="d-flex flex-column gap-2">
+              {messages.map((msg, index) => (
+                <div key={index}>
+                  <div>
+                    <Card>
+                      <Card.Body>
+                        <Card.Title>
+                          {" "}
+                          <span>{msg.username}</span>
+                        </Card.Title>
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "5px",
+                            right: "5px",
+                          }}
+                        >
+                          <span className="text-secondary small fw-bold">
+                            {new Date(msg.date).toLocaleTimeString()}
+                          </span>
+                        </div>
+                        <Card.Text>{msg.text}</Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+          <div className="chat-input w-100">
+            <div className="p-2 w-100  d-flex gap-2">
+              <input
+                className="form-control"
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={!isConnected}
+              />
+              <button
+                className="btn btn-primary"
+                onClick={handleSendMessage}
+                disabled={!isConnected}
+              >
+                {isConnected ? "Send" : "Connecting..."}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={handleKeyPress}
-        disabled={!isConnected}
-      />
-      <button onClick={sendMessage} disabled={!isConnected}>
-        {isConnected ? "Send" : "Connecting..."}
-      </button>
+
       <div>{!isConnected && uuid && "Connecting to chat..."}</div>
     </div>
   );
