@@ -16,6 +16,7 @@ import FreelancerProfile from "./Pages/UpdateSkills";
 import Dashboard from "./Pages/Dashboard";
 import ProjectContract from "./Pages/Projectcontract";
 import ClientContracts from "./Pages/ClientContracts";
+import Chat from "./Pages/chat";
 import ContractDetails from "./Components/ContractDetails";
 
 function App() {
@@ -29,14 +30,23 @@ function App() {
           <Route path="/Freelancia-Front-End" element={<Home />} />
           <Route path="/Freelancia-Front-End/login" element={<LoginForm />} />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/Freelancia-Front-End/register" element={<RegisterForm />} />
+          <Route
+            path="/Freelancia-Front-End/register"
+            element={<RegisterForm />}
+          />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/Freelancia-Front-End/job_list" element={<JobList />} />
           <Route path="/job_list" element={<JobList />} />
           <Route path="/job_details/:project_id" element={<JobDetails />} />
-          <Route path="/Freelancia-Front-End/job_details/:project_id" element={<JobDetails />} />
+          <Route
+            path="/Freelancia-Front-End/job_details/:project_id"
+            element={<JobDetails />}
+          />
           <Route path="/Freelancia-Front-End/postjob" element={<Createjob />} />
-          <Route path="/Freelancia-Front-End/clientjoblist" element={<ClientJobs />} />
+          <Route
+            path="/Freelancia-Front-End/clientjoblist"
+            element={<ClientJobs />}
+          />
           <Route path="/Dashboard/:id" element={<Dashboard />} />
           <Route path="/Freelancia-Front-End/proposals" element={<FreelancerProposals />} />
           <Route path="/Freelancia-Front-End/freelancerprofile" element={<FreelancerProfile />} />
@@ -45,9 +55,14 @@ function App() {
           <Route path="/Freelancia-Front-End/contractDetails/:contract_id" element={<ContractDetails />} />
           <Route path="/Freelancia-Front-End/dashboard/:user_id" element={<Dashboard />} />
 
+          {/* Under testing */}
+          <Route path="/Freelancia-Front-End/chat" element={<Chat />} />
           {/* Error Pages */}
           <Route path="/403" element={<unauthrizedpage />} />
-          <Route path="/Freelancia-Front-End/403" element={<unauthrizedpage />} />
+          <Route
+            path="/Freelancia-Front-End/403"
+            element={<unauthrizedpage />}
+          />
           <Route path="/404" element={<page404 />} />
           <Route path="/Freelancia-Front-End/404" element={<page404 />} />
 
