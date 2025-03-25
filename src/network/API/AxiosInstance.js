@@ -1,5 +1,6 @@
 // this page is -> network/API/AxiosInstance
 import axios from "axios";
+import { getFromLocalStorage } from "../local/LocalStorage";
 
 let url = "http://127.0.0.1:8000";
 
@@ -29,6 +30,14 @@ export const AxiosClientsInstance = axios.create({
  */
 export const AxiosProjectsInstance = axios.create({
   baseURL: `${url}/projects/`,
+});
+
+// this is api for paypal payment
+export const AxiosPayPalInstance = axios.create({
+  baseURL: `${url}/payments/paypal/`,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 /**

@@ -8,14 +8,14 @@ import personalImg from "../../assets/default-user.png";
 import RateStars from "../RateStars";
 import { MdEmail, MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { BsHexagon } from "react-icons/bs";
-import { FaAddressCard, FaRegUserCircle } from "react-icons/fa";
+import { FaAddressCard, FaMoneyBillWave, FaRegUserCircle } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import { AxiosUserInstance } from "../../network/API/AxiosInstance";
 
 export default function ClientInfo(props) {
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
-  const user = auth ? (auth.user ? auth.user.id : null) : null;
+  const user_id = auth ? (auth.user ? auth.user.user_id : null) : null;
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const params = useParams();
@@ -73,7 +73,7 @@ export default function ClientInfo(props) {
                       {userData.name}
                     </Card.Title>
                     <div>
-                      <RateStars rating={3} />
+                      <RateStars rating={auth.user.rate} />
                     </div>
                   </div>
                   <p>
@@ -88,6 +88,14 @@ export default function ClientInfo(props) {
                     </strong>
                     {userData.username}.
                   </p>
+                  {userData.id == user_id && (
+                    <p>
+                      <strong className="me-2">
+                        <FaMoneyBillWave color="blue" size="2rem" />:{" "}
+                      </strong>
+                      {userData.user_balance}$.
+                    </p>
+                  )}
                   <p>
                     <strong className="me-2">
                       <SlCalender color="blue" size="2rem" />:{" "}
