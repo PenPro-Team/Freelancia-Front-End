@@ -30,6 +30,8 @@ const ContractDetails = () => {
     
 
 const handleAcceptOrDeclineContract = (e) => {
+    setLoading(true); // Show loading state
+    
     AxiosContractsInstance.patch(`update/${contract_id}`, 
         {
             contract_state: e.target.name === 'Accept' ? 'aproved' : 'canceled'
@@ -40,6 +42,17 @@ const handleAcceptOrDeclineContract = (e) => {
             }
         }
     )
+    .then(() => {
+        console.log(`Contract ${e.target.name}ed successfully`);
+        setContract((prevContract) => ({ ...prevContract, contract_state: e.target.name === 'Accept' ? 'aproved' : 'canceled' }));
+        setLoading(false);
+
+    })
+    .catch((error) => {
+        console.error("Error updating contract:", error);
+        setError(error.message);
+        setLoading(false);
+    });
 }
 
     if (loading) return <div className="d-flex justify-content-center my-5"><div className="spinner-border" role="status"><span className="visually-hidden">Loading...</span></div></div>;
@@ -52,9 +65,9 @@ const handleAcceptOrDeclineContract = (e) => {
             <div className="card shadow ">
                 <div className="card-header d-flex justify-content-between align-items-center">
                     <h3 className="mb-0">{contract.project_details.project_name}</h3>
-                    <span className={`badge ${contract.contract_state === 'active' ? 'bg-success' : 
+                    <span className={`badge ${contract.contract_state === 'aproved' ? 'bg-success' : 
                         contract.contract_state === 'pending' ? 'bg-warning' : 
-                        contract.contract_state === 'completed' ? 'bg-info' : 'bg-secondary'}`}>
+                        contract.contract_state === 'finished' ? 'bg-info' :contract.contract_state === 'canceled'? 'danger': 'bg-secondary'}`}>
                         {contract.contract_state}
                     </span>
                 </div>

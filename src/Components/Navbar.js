@@ -14,9 +14,9 @@ function NavBar() {
   const isAuth = auth ? auth.isAuthenticated : null;
   const navigate = useNavigate();
 
-  const handleLogout = (e) => {
+  const handleLogout = async (e) => {
     e.preventDefault();
-    logout();
+    await logout();
     dispatch(userLogout());
     navigate("/Freelancia-Front-End"); // Corrected to use navigate
   };

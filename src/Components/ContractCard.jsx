@@ -10,9 +10,9 @@ const ContractCard = ({ contract }) => {
     const getStatusBadgeVariant = (status) => {
         switch (status) {
           case 'pending': return 'warning';
-          case 'active': return 'success';
-          case 'completed': return 'info';
-          case 'cancelled': return 'danger';
+          case 'aproved': return 'success';
+          case 'finished': return 'info';
+          case 'canceled': return 'danger';
           default: return 'secondary';
         }
       };
