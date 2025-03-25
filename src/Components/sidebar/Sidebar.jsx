@@ -7,7 +7,7 @@ import axios from "axios";
 import RateStars from "../RateStars";
 import { Image, Placeholder } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import persImg from "../../assets/hero-bg.jpg";
+import persImg from "../../assets/default-user.png";
 import FilterSkills from "../FilterJobs/FilterSkills";
 import JobStateFilter from "../FilterJobs/JobStateFilter";
 import { getFromLocalStorage } from "../../network/local/LocalStorage";
@@ -42,20 +42,21 @@ export default function Sidebar(props) {
 
         {isAuth ? (
           <div className="d-flex row p-3 rounded-4 bg-primary-subtle mb-3 w-100">
+            
             <div className="d-flex align-items-center">
               <Image
-                src={persImg}
+                src={auth.user.image ? auth.user.image : persImg}
                 roundedCircle
                 alt="aa"
-                width={64}
-                height={64}
+                width={128}
+                height={128}
                 className="me-2"
               />
               <div className="d-flex flex-column">
-                <div className="fw-bold fs-3">{user.firstName}</div>
+                <div className="fw-bold fs-3">{auth.user.name}</div>
                 <p className="fs-6 text-muted">Full stack developer</p>
                 <div className="text-muted">
-                  <RateStars rating="2" />
+                  <RateStars rating={auth.user.rate} />
                 </div>
               </div>
             </div>

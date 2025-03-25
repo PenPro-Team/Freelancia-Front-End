@@ -59,7 +59,7 @@ function NavBar() {
                 </Nav.Link>
               </>
             )}
-               {isAuth && (
+            {isAuth && (
               <Nav.Link
                 as={Link}
                 to={`/Freelancia-Front-End/clientContracts/${user.user_id}`}
@@ -82,7 +82,12 @@ function NavBar() {
                     src={auth.user.image ? auth.user.image : personalImg}
                   />
                   <span className="fs-5">{auth.user.name}</span>
+                  <div className="d-flex flex-row gap-2 justify-content-center align-items-center">
+                    <span className="fs-6 text-info">Balance:</span>
+                    <span className="fs-6">{auth.user.user_balance}$</span>
+                  </div>
                 </div>
+
               </Nav.Link>
               <Nav.Link
                 as={Link}

@@ -13,6 +13,7 @@ import UpdateProjects from "./UpdateProjects";
 import { AxiosUserInstance } from "../network/API/AxiosInstance";
 import DisplayCertificate from "./DisplayCertificate";
 import DisplayProjects from "./DisplayProjects";
+import Wallet from "../Components/wallet/Wallet";
 
 function Dashboard() {
   const auth = getFromLocalStorage("auth");
@@ -139,9 +140,7 @@ function Dashboard() {
                 <UpdateProjects />
               </Tab.Pane>
               <Tab.Pane eventKey="sixth">
-                <Container>
-                  <h1>Coming Soon</h1>
-                </Container>
+                <Wallet />
               </Tab.Pane>
               <Tab.Pane eventKey="seven">
                 <DisplayProjects />
