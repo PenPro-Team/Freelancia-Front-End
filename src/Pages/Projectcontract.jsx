@@ -29,7 +29,7 @@ function ProjectContract() {
         if (form.checkValidity() === false) {
             e.stopPropagation();
         } else {
-            updateProjectState()
+            createContract()
      
             // console.log('Contract submitted:', formData);
             // You would typically make an API call here to save the contract
@@ -62,29 +62,6 @@ function ProjectContract() {
           });
     };
 
-
-    const updateProjectState=()=>{
-        AxiosProjectsInstance.patch(
-            `${proposal.project.id}`,
-            {
-                project_state: "ongoing",
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${currentUser.user.access}`,
-              },
-            }
-        ).then((response)=>{
-            console.log("Project state updated successfully");
-            console.log(response);
-            createContract();
-        }
-        ).catch((error)=>{
-            setError(error.response.data.message);
-            console.log(error);
-        }
-        )
-    };
 
     // Update form data
     const handleChange = (e) => {

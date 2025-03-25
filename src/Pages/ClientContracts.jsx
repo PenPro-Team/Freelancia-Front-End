@@ -7,7 +7,6 @@ import HeaderColoredText from '../Components/HeaderColoredText';
 import { getFromLocalStorage } from '../network/local/LocalStorage';
 function ClientContracts() {
     const prams=useParams();
-  // Sample contract data (in a real application, this would come from an API)
   const [contracts, setContracts] = useState([]);
 const current_user = getFromLocalStorage("auth");
   useEffect(() => {

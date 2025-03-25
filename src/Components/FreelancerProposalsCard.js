@@ -29,7 +29,7 @@ function FreelancerProposalsCard(props) {
             </div>
 
             {
-              curenUser.user.role === "client" && props.proposal.project.project_state ==="open"&& curenUser.user.user_id== props.proposal.project.owner_id.id &&(
+              curenUser.user.role === "client" && props.proposal.project.project_state !="canceled"&& curenUser.user.user_id== props.proposal.project.owner_id.id &&(
                 <div>
                   <Button
                     className="btn btn-primary"

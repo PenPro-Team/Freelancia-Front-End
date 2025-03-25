@@ -42,27 +42,41 @@ export const removeFromLocalStorage = (key) => {
  * Removes an the logged in user data from localStorage.
  *
  */
- const curruntUser = getFromLocalStorage("auth");
-export const logout = () => {
+export const logout = async () => {
   try {
-    AxiosLogOutInstance.post(
+    console.log("Logout API call");
+    // Get current user inside function to ensure fresh data
+    const currentUser = getFromLocalStorage("auth");
+    
+    if (!currentUser?.user?.refresh || !currentUser?.user?.access) {
+      console.warn("No valid tokens found for logout");
+      // Still clear storage even if tokens aren't available
+      removeFromLocalStorage("auth");
+      localStorage.setItem("auth", JSON.stringify(loginInitialState));
+      return true;
+    }
+    
+    await AxiosLogOutInstance.post(
       "/",
       {
-        refresh_token: curruntUser.user.refresh,
+        refresh_token: currentUser.user.refresh,
       },
       {
         headers: {
-          Authorization: `Bearer ${curruntUser.user.access}`,
+          Authorization: `Bearer ${currentUser.user.access}`,
         },
       }
-     
-    )
-    .then(() => console.log("Logout successful"))
-    .catch(err => console.error("Logout API error:", err));
+    );
+    
+    console.log("Logout successful");
+    return true;
   } catch (error) {
     console.error("Logout error:", error);
+    return false;
   } finally {
+    // Always clear storage regardless of API success/failure
     localStorage.removeItem("auth");
     localStorage.setItem("auth", JSON.stringify(loginInitialState));
+    console.log("Logout finally block - storage cleared");
   }
 };
