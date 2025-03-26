@@ -3,7 +3,6 @@ import axios from "axios";
 
 let url = "http://127.0.0.1:8000";
 
-
 export const AxiosFreelancersGetPortfolios = axios.create({
   baseURL: `${url}/portfolios/?user=`, // API for GET Portfolios for freelancers
 });
@@ -71,4 +70,8 @@ export const AxiosContractsInstance = axios.create({
 
 export const AxiosWSAuthInstance = axios.create({
   baseURL: `${url}/auth_for_ws_connection/`,
+});
+
+export const AxiosChatInstance = axios.create({
+  baseURL: `${url}/chat/`,
 });
