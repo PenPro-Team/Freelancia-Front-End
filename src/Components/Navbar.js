@@ -20,7 +20,7 @@ function NavBar() {
     dispatch(userLogout());
     navigate("/Freelancia-Front-End"); // Corrected to use navigate
   };
-  
+
   return (
     <Navbar bg="dark" expand="lg" className="navbar-dark">
       <Container>
@@ -67,6 +67,11 @@ function NavBar() {
                 Your Contracts
               </Nav.Link>
             )}
+            {isAuth && (
+              <Nav.Link as={Link} to={`/Freelancia-Front-End/chatrooms/`}>
+                Chat Rooms
+              </Nav.Link>
+            )}
           </Nav>
           {isAuth ? (
             <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
@@ -84,10 +89,11 @@ function NavBar() {
                   <span className="fs-5">{user.name}</span>
                   <div className="d-flex flex-row gap-2 justify-content-center align-items-center">
                     <span className="fs-6 text-info">Balance:</span>
-                    <span className="fs-6">{user.user_balance ? user.user_balance : 0.00 }$</span>
+                    <span className="fs-6">
+                      {user.user_balance ? user.user_balance : 0.0}$
+                    </span>
                   </div>
                 </div>
-
               </Nav.Link>
               <Nav.Link
                 as={Link}

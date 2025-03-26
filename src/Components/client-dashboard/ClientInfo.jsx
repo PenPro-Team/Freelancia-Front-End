@@ -32,7 +32,6 @@ export default function ClientInfo(props) {
   const navigate = useNavigate(); // Replaces useHistory
 
   // Chat Variable By A.A
-  const user = auth ? auth.user : null;
   const token = user ? user.access : null;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -125,9 +124,9 @@ export default function ClientInfo(props) {
                       <RateStars rating={userData ? userData.rate : 0} />
                     </div>
                     {token && userData && user && (
-                      <div>
+                      <div className="m-2">
                         <Button
-                          variant="info"
+                          variant="primary"
                           onClick={() => handleSendMessage()}
                         >
                           Message
