@@ -51,7 +51,21 @@
   }
 }
 
-/* .divhit{
-  height: 25%;
-  width: ;
-} */
+/* For Chat Pages */
+.nav-pills .nav-link.custom-tab {
+  background-color: #1a1a1a;
+  color: white;
+  transition: all 0.3s ease;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+.nav-pills .nav-link.custom-tab:hover {
+  background-color: #608bc1;
+}
+
+.nav-pills .nav-link.custom-tab.active {
+  background-color: #133e87;
+  color: white;
+  font-weight: bold;
+}
