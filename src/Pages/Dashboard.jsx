@@ -48,7 +48,6 @@ function Dashboard() {
       .finally(() => {
         setIsLoading(false);
       });
-    console.log("User Check Data", user_id, user.user_id, userData.id);
   }, [params.user_id, refreshFlag, navigate]); // Fixed dependency list
 
   const refresh = () => {

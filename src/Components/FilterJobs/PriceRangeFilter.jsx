@@ -3,7 +3,7 @@ import { Alert, Form, InputGroup } from "react-bootstrap";
 
 export default function PriceRangeFilter({ onChange }) {
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(2500);
+  const [maxPrice, setMaxPrice] = useState(10000);
   const [priceError, setPriceError] = useState()
   // Call onChange whenever either price changes.
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function PriceRangeFilter({ onChange }) {
       </InputGroup>
       <InputGroup className="mb-3">
         <InputGroup.Text>Max.</InputGroup.Text>
-        <InputGroup.Text>2500</InputGroup.Text>
+        <InputGroup.Text>10000</InputGroup.Text>
         <Form.Control
           aria-label="Dollar amount (with dot and two decimal places)"
           value={maxPrice}

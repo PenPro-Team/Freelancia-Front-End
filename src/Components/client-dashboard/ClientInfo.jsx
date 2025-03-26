@@ -24,6 +24,7 @@ import { BASE_PATH } from "../../network/API/AxiosInstance";
 export default function ClientInfo(props) {
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
+  const user = auth ? auth.user : null;
   const user_id = auth ? (auth.user ? auth.user.user_id : null) : null;
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
@@ -121,7 +122,7 @@ export default function ClientInfo(props) {
                       {userData.name}
                     </Card.Title>
                     <div>
-                      <RateStars rating={auth.user.rate} />
+                      <RateStars rating={userData ? userData.rate : 0} />
                     </div>
                     {token && userData && user && (
                       <div>
