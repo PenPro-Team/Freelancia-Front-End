@@ -8,9 +8,18 @@ import personalImg from "../../assets/default-user.png";
 import RateStars from "../RateStars";
 import { MdEmail, MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { BsHexagon } from "react-icons/bs";
-import { FaAddressCard, FaMoneyBillWave, FaRegUserCircle } from "react-icons/fa";
+import {
+  FaAddressCard,
+  FaMoneyBillWave,
+  FaRegUserCircle,
+} from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
-import { AxiosUserInstance } from "../../network/API/AxiosInstance";
+import {
+  AxiosChatInstance,
+  AxiosUserInstance,
+} from "../../network/API/AxiosInstance";
+import { Button } from "react-bootstrap";
+import { BASE_PATH } from "../../network/API/AxiosInstance";
 
 export default function ClientInfo(props) {
   const [userData, setUserData] = useState({});
@@ -21,6 +30,11 @@ export default function ClientInfo(props) {
   const [isEmpty, setIsEmpty] = useState(true);
   const params = useParams();
   const navigate = useNavigate(); // Replaces useHistory
+
+  // Chat Variable By A.A
+  const token = user ? user.access : null;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -44,6 +58,39 @@ export default function ClientInfo(props) {
         setIsLoading(false);
       });
   }, [navigate, params, props.refreshFlag]);
+
+  const handleSendMessage = () => {
+    if (!token || !userData || !user) return;
+
+    let users_names = [user.username, userData.username];
+    users_names.sort();
+    let chat_room_name = users_names.join("-");
+
+    let data = {
+      name: chat_room_name,
+      participants: [user.user_id, userData.id],
+    };
+
+    setLoading(true);
+
+    AxiosChatInstance.post("userchatrooms/", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        console.log("Created:", res.data);
+        navigate(`${BASE_PATH}/chatrooms/?chat_room=${chat_room_name}`);
+      })
+      .catch((err) => {
+        console.error("Error:", err.response ? err.response.data : err.message);
+        setError("Failed to create chat room");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <>
@@ -76,6 +123,16 @@ export default function ClientInfo(props) {
                     <div>
                       <RateStars rating={userData ? userData.rate : 0} />
                     </div>
+                    {token && userData && user && (
+                      <div className="m-2">
+                        <Button
+                          variant="primary"
+                          onClick={() => handleSendMessage()}
+                        >
+                          Message
+                        </Button>
+                      </div>
+                    )}
                   </div>
                   <p>
                     <strong className="me-2">

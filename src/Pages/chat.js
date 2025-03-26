@@ -7,6 +7,8 @@ import { AxiosWSAuthInstance } from "../network/API/AxiosInstance";
 import Card from "react-bootstrap/Card";
 import { WebSocketChatInstance } from "../network/API/WebSocketInstance";
 import personalImg from "../assets/default-user.png";
+import { BASE_PATH } from "../network/API/AxiosInstance";
+import { useNavigate } from "react-router-dom";
 
 const Chat = (props) => {
   const [messages, setMessages] = useState([]);
@@ -22,6 +24,8 @@ const Chat = (props) => {
   const token = user ? user.access : null;
   const chat_room = props.chat_room ? props.chat_room : "lobby";
   const participants = props.participants ? props.participants : [];
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) return;
@@ -140,6 +144,14 @@ const Chat = (props) => {
     return participant?.image || personalImg;
   };
 
+  const getUserID = (username) => {
+    if (username === user?.username) {
+      return user?.user_id;
+    }
+    const participant = participants.find((p) => p.username === username);
+    return participant?.id || 0;
+  };
+
   return (
     <div>
       <HeaderColoredText text={chat_room} />
@@ -149,12 +161,12 @@ const Chat = (props) => {
       >
         <div
           className="chat-container d-flex flex-column justify-content-between card w-100"
-          style={{ backgroundColor: "#27445D" }}
+          style={{ backgroundColor: "#000B58" }}
         >
           <div
             ref={messagesContainerRef}
             className="chat-messages p-2 overflow-auto"
-            style={{ maxHeight: "80vh" }}
+            style={{ height: "80vh" }}
           >
             <div className="d-flex flex-column gap-2">
               {messages.map((msg, index) => {
@@ -173,14 +185,19 @@ const Chat = (props) => {
                       <img
                         src={userImage}
                         alt={msg.username}
+                        onClick={() => {
+                          const id = getUserID(msg.username);
+                          navigate(`${BASE_PATH}/Dashboard/${id}`);
+                        }}
                         style={{
-                          width: "32px",
-                          height: "32px",
+                          width: "48px",
+                          height: "48px",
                           borderRadius: "50%",
                           objectFit: "cover",
                           alignSelf: "flex-end",
                           marginRight: "8px",
                           marginBottom: "16px",
+                          cursor: "pointer",
                         }}
                       />
                     )}
@@ -204,7 +221,16 @@ const Chat = (props) => {
                       >
                         <Card.Body className="p-0 ps-2 pe-2">
                           <div>
-                            <span className="fs-5 fw-bold">{msg.username}</span>
+                            <span
+                              onClick={() => {
+                                const id = getUserID(msg.username);
+                                navigate(`${BASE_PATH}/Dashboard/${id}`);
+                              }}
+                              className="fs-5 fw-bold"
+                              style={{ cursor: "pointer" }}
+                            >
+                              {msg.username}
+                            </span>
                           </div>
                           <Card.Text
                             className="m-0"
@@ -243,14 +269,19 @@ const Chat = (props) => {
                       <img
                         src={userImage}
                         alt={msg.username}
+                        onClick={() => {
+                          const id = getUserID(msg.username);
+                          navigate(`${BASE_PATH}/Dashboard/${id}`);
+                        }}
                         style={{
-                          width: "32px",
-                          height: "32px",
+                          width: "48px",
+                          height: "48px",
                           borderRadius: "50%",
                           objectFit: "cover",
                           alignSelf: "flex-end",
                           marginLeft: "8px",
                           marginBottom: "16px",
+                          cursor: "pointer",
                         }}
                       />
                     )}

@@ -8,6 +8,7 @@ import Tab from "react-bootstrap/Tab";
 import Spinner from "react-bootstrap/Spinner";
 import Chat from "./chat";
 import HeaderColoredText from "../Components/HeaderColoredText";
+import { useSearchParams } from "react-router-dom";
 
 const ChatRooms = (props) => {
   const auth = getFromLocalStorage("auth");
@@ -17,6 +18,9 @@ const ChatRooms = (props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeKey, setActiveKey] = useState("first");
+
+  const [searchParams] = useSearchParams();
+  const urlChatRoom = searchParams.get("chat_room");
 
   useEffect(() => {
     if (!token) return;
@@ -31,7 +35,13 @@ const ChatRooms = (props) => {
         setChatRooms(res.data);
         setError(null);
         if (res.data.length > 0) {
-          setActiveKey(res.data[0].id.toString());
+          const roomFromUrl = urlChatRoom
+            ? res.data.find((room) => room.name === urlChatRoom)
+            : null;
+
+          setActiveKey(
+            roomFromUrl ? roomFromUrl.id.toString() : res.data[0].id.toString()
+          );
         }
       })
       .catch((err) => {
@@ -62,6 +72,10 @@ const ChatRooms = (props) => {
     return <div className="p-3">No chat rooms available</div>;
   }
 
+  const handleTabSelect = (selectedKey) => {
+    setActiveKey(selectedKey);
+  };
+
   return (
     <div className="container-fluid px-5">
       <HeaderColoredText text="Chatting" />
@@ -73,18 +87,24 @@ const ChatRooms = (props) => {
         <Row>
           <Col sm={3}>
             <Nav variant="pills" className="flex-column m-5">
-              {chatRooms.map((chatRoom) => (
-                <Nav.Item key={chatRoom.id}>
-                  <Nav.Link eventKey={chatRoom.id.toString()}>
-                    <div className="d-flex flex-column">
-                      <strong>{chatRoom.name}</strong>
-                      <small className="text-muted">
-                        {chatRoom.participants?.length || 0} participants
-                      </small>
-                    </div>
-                  </Nav.Link>
-                </Nav.Item>
-              ))}
+              {chatRooms.map((chatRoom) => {
+                const isActive = chatRoom.id.toString() === activeKey;
+                return (
+                  <Nav.Item key={chatRoom.id}>
+                    <Nav.Link
+                      eventKey={chatRoom.id.toString()}
+                      className={`custom-tab ${isActive ? "active" : ""}`}
+                    >
+                      <div className="d-flex flex-column">
+                        <strong>{chatRoom.name}</strong>
+                        <small className="text-light">
+                          {chatRoom.participants?.length || 0} participants
+                        </small>
+                      </div>
+                    </Nav.Link>
+                  </Nav.Item>
+                );
+              })}
             </Nav>
           </Col>
           <Col sm={9}>

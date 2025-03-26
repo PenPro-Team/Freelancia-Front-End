@@ -77,7 +77,7 @@ function App() {
           {/* Under testing */}
           <Route path="/Freelancia-Front-End/chat" element={<Chat />} />
           <Route
-            path="/Freelancia-Front-End/chatroom"
+            path="/Freelancia-Front-End/chatrooms"
             element={<ChatRooms />}
           />
           {/* Error Pages */}
