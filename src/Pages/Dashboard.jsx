@@ -13,6 +13,7 @@ import UpdateProjects from "./UpdateProjects";
 import { AxiosUserInstance } from "../network/API/AxiosInstance";
 import DisplayCertificate from "./DisplayCertificate";
 import DisplayProjects from "./DisplayProjects";
+import Wallet from "../Components/wallet/Wallet";
 
 function Dashboard() {
   const auth = getFromLocalStorage("auth");
@@ -75,6 +76,9 @@ function Dashboard() {
                     <Nav.Item>
                       <Nav.Link eventKey="third">Update Security</Nav.Link>
                     </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="sixth">Wallet</Nav.Link>
+                    </Nav.Item>
                     {auth && auth.user && auth.user.role === "freelancer" && (
                       <Nav.Item>
                         <Nav.Link eventKey="fourth">Update Skills</Nav.Link>
@@ -134,6 +138,9 @@ function Dashboard() {
               </Tab.Pane>
               <Tab.Pane eventKey="elevn">
                 <UpdateProjects />
+              </Tab.Pane>
+              <Tab.Pane eventKey="sixth">
+                <Wallet />
               </Tab.Pane>
               <Tab.Pane eventKey="seven">
                 <DisplayProjects />
