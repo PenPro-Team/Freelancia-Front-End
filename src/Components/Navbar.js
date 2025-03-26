@@ -20,7 +20,7 @@ function NavBar() {
     dispatch(userLogout());
     navigate("/Freelancia-Front-End"); // Corrected to use navigate
   };
-
+  
   return (
     <Navbar bg="dark" expand="lg" className="navbar-dark">
       <Container>
@@ -79,12 +79,12 @@ function NavBar() {
                     className="rounded-circle"
                     width={"48px"}
                     height={"48px"}
-                    src={auth.user.image ? auth.user.image : personalImg}
+                    src={user.image ? user.image : personalImg}
                   />
-                  <span className="fs-5">{auth.user.name}</span>
+                  <span className="fs-5">{user.name}</span>
                   <div className="d-flex flex-row gap-2 justify-content-center align-items-center">
                     <span className="fs-6 text-info">Balance:</span>
-                    <span className="fs-6">{auth.user.user_balance}$</span>
+                    <span className="fs-6">{user.user_balance ? user.user_balance : 0.00 }$</span>
                   </div>
                 </div>
 
