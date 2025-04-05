@@ -11,22 +11,8 @@ function DisplayProjects() {
     const BASE_URL = "http://127.0.0.1:8000/";
     // Fetch projects for the freelancer
     useEffect(() => {
-        // Get the authentication token
-        const auth = getFromLocalStorage("auth");
-        const token = auth?.user?.access; // Extract the token
-
-        // Ensure token exists before making the request
-        if (!token) {
-            setError("Authentication token is missing. Please log in.");
-            return;
-        }
-
         // Fetch projects for the freelancer
-        AxiosFreelancersGetPortfolios.get(`?user=${user_id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-            },
-        })
+        AxiosFreelancersGetPortfolios.get(`?user=${user_id}`)
             .then((response) => {
                 setProjects(response.data); // Set the fetched projects
             })
