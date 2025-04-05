@@ -6,6 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import personalImg from "../assets/default-user.png";
 import { getFromLocalStorage, logout } from "../network/local/LocalStorage";
 import { logout as userLogout } from "../Redux/Actions/authAction";
+import { Axios } from "axios";
+import { AxiosUserInstance } from "../network/API/AxiosInstance";
+import { useEffect } from "react";
 
 function NavBar() {
   const dispatch = useDispatch();
@@ -13,6 +16,34 @@ function NavBar() {
   const user = auth ? auth.user : null;
   const isAuth = auth ? auth.isAuthenticated : null;
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (!auth) return;
+    if (!user) return;
+    AxiosUserInstance.get(`${user.user_id}`).then((res) => {
+      if (res.data.user_balance) {
+        const updatedUser = {
+          ...user,
+          user_balance: res.data.user_balance,
+          name: res.data.name,
+          image: res.data.image,
+          email: res.data.email,
+          rate: res.data.rate,
+          role: res.data.role,
+          username: res.data.username,
+        };
+        
+        dispatch({
+          type: "UPDATE_USER",
+          payload: updatedUser,
+        });
+        localStorage.setItem("auth", JSON.stringify({ ...auth, user: updatedUser }));
+      }
+    });
+
+  }, [user, dispatch, auth]);
+
 
   const handleLogout = async (e) => {
     e.preventDefault();
