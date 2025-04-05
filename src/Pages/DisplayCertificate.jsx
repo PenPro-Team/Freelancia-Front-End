@@ -11,24 +11,10 @@ function DisplayCertificate() {
 
     // Fetch certificates for the freelancer
     useEffect(() => {
-        // Get the authentication token
-        const auth = getFromLocalStorage("auth");
-        const token = auth?.user?.access; // Extract the token
-
-        // Ensure token exists before making the request
-        if (!token) {
-            setError("Authentication token is missing. Please log in.");
-            return;
-        }
-
-        // Fetch certificates for the freelancer
-        AxiosFreelancersCertificate.get(`?user=${user_id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-            },
-        })
+        // Fetch certificates for the freelancer without authentication
+        AxiosFreelancersCertificate.get(`?user=${user_id}`)
             .then((response) => {
-                setCertificates(response.data); // Set the fetched certificates
+                setCertificates(response.data);
             })
             .catch((error) => {
                 console.error("Error fetching certificates:", error);

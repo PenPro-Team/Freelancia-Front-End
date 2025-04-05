@@ -1,4 +1,4 @@
-import { w3cwebsocket } from "websocket";
+// import { w3cwebsocket } from "websocket";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import axios from "axios";
@@ -256,11 +256,10 @@ const Chat = (props) => {
                                 left: isCurrentUser && "1px",
                                 right: !isCurrentUser && "1px",
                               }}
-                              className={`small fw-bold ${
-                                isCurrentUser
+                              className={`small fw-bold ${isCurrentUser
                                   ? "text-body-secondary"
                                   : "text-light"
-                              }`}
+                                }`}
                             >
                               {new Date(msg.date).toLocaleTimeString()}
                             </span>
