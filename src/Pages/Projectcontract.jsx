@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Container, Form, Button, Card, Row, Col, Alert } from "react-bootstrap";
+import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
 import HeaderColoredText from "../Components/HeaderColoredText";
-import { AxiosContractsInstance,AxiosProjectsInstance } from "../network/API/AxiosInstance";
+import { AxiosContractsInstance } from "../network/API/AxiosInstance";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { useNavigate } from "react-router-dom"; 
 
 function ProjectContract() {
     const location = useLocation();
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const proposal = location.state?.proposal;
-    console.log(proposal);
     const [validated, setValidated] = useState(false);
+    const [budgetError, setBudgetError] = useState('');
     const currentUser = getFromLocalStorage("auth");
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         terms: proposal?.propose_text || '',
         deadline: proposal?.deadline || '',
@@ -21,51 +22,65 @@ function ProjectContract() {
         freelancer: proposal?.user?.name || ''
     });
 
-    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
         const form = e.currentTarget;
+        setBudgetError('');
+        
+        if (parseFloat(formData.budget) > parseFloat(currentUser.user.user_balance)) {
+            setBudgetError('Budget exceeds your available balance');
+            e.stopPropagation();
+            return;
+        }
         
         if (form.checkValidity() === false) {
             e.stopPropagation();
         } else {
-            createContract()
-     
-            // console.log('Contract submitted:', formData);
-            // You would typically make an API call here to save the contract
+            createContract();
         }
         
         setValidated(true);
     };
-    const createContract=()=>{
-        AxiosContractsInstance.post("create",{
-            contract_terms:formData.terms,
-            deadline:formData.deadline,
-            budget:formData.budget,
-            freelancer:proposal.user.id,
-            client:currentUser.user.user_id,
-            project:proposal.project.id,
+
+    const createContract = () => {
+        setIsLoading(true);
+        AxiosContractsInstance.post("create", {
+            contract_terms: formData.terms,
+            deadline: formData.deadline,
+            budget: formData.budget,
+            freelancer: proposal.user.id,
+            client: currentUser.user.user_id,
+            project: proposal.project.id,
           },
           {
             headers: {
               Authorization: `Bearer ${currentUser.user.access}`, 
             },
           }
-        ).then((response)=>{
+        ).then((response) => {
             console.log("Contract created successfully");
             console.log(response);
             navigate(`/Freelancia-Front-End/clientContracts/${currentUser.user.user_id}`);
-
-          }).catch((error)=>{
+          }).catch((error) => {
             setError(error.response.data.message);
             console.log(error);
-          });
+          }).finally(() => {
+            setIsLoading(false);
+          }
+        );
     };
 
-
-    // Update form data
     const handleChange = (e) => {
         const { id, value } = e.target;
+        
+        if (id === 'budget') {
+            setBudgetError('');
+            
+            if (parseFloat(value) > parseFloat(currentUser.user.user_balance)) {
+                setBudgetError('Budget exceeds your available balance');
+            }
+        }
+        
         setFormData({...formData, [id]: value});
     };
 
@@ -81,7 +96,7 @@ function ProjectContract() {
     return (
         <Container className="my-5">
             {error && <Alert variant="danger">{error}</Alert>}
-          
+            
             <HeaderColoredText text="Create Contract" />
             
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -128,10 +143,14 @@ function ProjectContract() {
                         value={formData.budget}
                         onChange={handleChange}
                         required
+                        isInvalid={!!budgetError || (validated && !formData.budget)}
                     />
                     <Form.Control.Feedback type="invalid">
-                        Please enter a valid budget amount.
+                        {budgetError || "Please enter a valid budget amount."}
                     </Form.Control.Feedback>
+                    <Form.Text className="text-muted">
+                        Your available balance: ${currentUser.user.user_balance || 0}
+                    </Form.Text>
                 </Form.Group>
                 
                 <Form.Group className="mb-4">
@@ -144,11 +163,16 @@ function ProjectContract() {
                     />
                 </Form.Group>
                 
-                <div className="d-grid gap-2 mt-4">
+                { isLoading ?
+               <div className="d-flex justify-content-center">
+               <Spinner animation="border" variant="primary" />
+             </div>
+                   : <div className="d-grid gap-2 mt-4">
                     <Button variant="primary" type="submit" size="lg">
                         Create Contract
                     </Button>
                 </div>
+                }
             </Form>
         </Container>
     );
