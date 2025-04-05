@@ -1,4 +1,4 @@
-import { AxiosPayPalInstance } from "../../network/API/AxiosInstance";
+import { AxiosPayPalInstance, AxiosWithdrawalsInstance } from "../../network/API/AxiosInstance";
 import { getFromLocalStorage } from "../../network/local/LocalStorage";
 
 export const PayPalService = {
@@ -52,7 +52,13 @@ export const PayPalService = {
                     }
                 }
             );
-            return response.data;
+            // Log the response for debugging
+            console.log('Payment verification response:', response.data);
+            return {
+                status: response.data.status,
+                message: response.data.message,
+                new_balance: response.data.new_balance // Ensure this matches the backend response
+            };
         } catch (error) {
             const errorDetails = {
                 status: error.response?.status,
@@ -91,6 +97,50 @@ export const PayPalService = {
         } catch (error) {
             console.error('Payment status check failed:', error);
             return { status: 'error', message: error.message };
+        }
+    },
+
+    requestWithdrawal: async (amount, paypalEmail) => {
+        const auth = getFromLocalStorage("auth");
+        if (!auth || !auth.user.access) {
+            throw new Error('Authentication required');
+        }
+        
+        try {
+            const response = await AxiosWithdrawalsInstance.post('create/', {
+                amount: parseFloat(amount),
+                paypal_email: paypalEmail
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${auth.user.access}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'Withdrawal request failed';
+            throw new Error(errorMessage);
+        }
+    },
+
+    getWithdrawalLogs: async () => {
+        const auth = getFromLocalStorage("auth");
+        if (!auth || !auth.user.access) {
+            throw new Error('Authentication required');
+        }
+        
+        try {
+            const response = await AxiosWithdrawalsInstance.get('', {  // Add specific endpoint
+                headers: {
+                    'Authorization': `Bearer ${auth.user.access}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log('Withdrawal logs response:', response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching withdrawal logs:', error);
+            throw new Error(error.response?.data?.message || 'Failed to fetch withdrawal logs');
         }
     }
 };
