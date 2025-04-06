@@ -33,7 +33,7 @@ export default function ProjectCard({
   useEffect(() => {
     AxiosProjectsInstance.get(`?_page=${currentPage}&_limit=10`)
       .then((response) => {
-        setData(response.data);
+        setData(response.data.results);
       })
       .catch((error) =>
         console.error("There was an error fetching data", error)
@@ -125,7 +125,8 @@ export default function ProjectCard({
                       ? "success"
                       : project.project_state === "canceled"
                       ? "danger"
-                      : project.project_state === "contract canceled and reopened"
+                      : project.project_state ===
+                        "contract canceled and reopened"
                       ? "success"
                       : "secondary"
                   }
