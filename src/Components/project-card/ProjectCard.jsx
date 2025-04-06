@@ -24,8 +24,8 @@ export default function ProjectCard({
     AxiosProjectsInstance.get("/")
       .then((response) => {
         console.log("Total Projects Response:", response.data);
-        if (Array.isArray(response.data)) {
-          setTotalPages(Math.ceil(response.data.length / 10));
+        if (Array.isArray(response.data.results)) {
+          setTotalPages(Math.ceil(response.data.results.length / 10));
         } else {
           console.error("Unexpected response structure:", response.data);
           setErrorMessage("Invalid response format received.");
