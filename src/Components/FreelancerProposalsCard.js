@@ -10,7 +10,6 @@ function FreelancerProposalsCard(props) {
       <Card.Body style={{ position: "relative" }}>
         <Card.Title>
           <div className="d-flex justify-content-between">
-
             <div className="d-flex align-items-center">
               <Image
                 src={props.proposal.user.image}
@@ -28,20 +27,24 @@ function FreelancerProposalsCard(props) {
               </div>
             </div>
 
-            {
-              curenUser.user.role === "client" && props.proposal.project.project_state !="canceled"&& curenUser.user.user_id== props.proposal.project.owner_id.id &&(
+            {curenUser &&
+              curenUser.user &&
+              curenUser.user.role === "client" &&
+              props.proposal.project.project_state != "canceled" &&
+              curenUser.user.user_id == props.proposal.project.owner_id.id && (
                 <div>
                   <Button
                     className="btn btn-primary"
                     onClick={() => {
-                      navigate( "/Freelancia-Front-End/contract",{  state: { proposal: props.proposal } });
+                      navigate("/Freelancia-Front-End/contract", {
+                        state: { proposal: props.proposal },
+                      });
                     }}
                   >
                     Contract
                   </Button>
                 </div>
-              )
-            }
+              )}
           </div>
         </Card.Title>
         <div className="mt-2">

@@ -256,10 +256,11 @@ const Chat = (props) => {
                                 left: isCurrentUser && "1px",
                                 right: !isCurrentUser && "1px",
                               }}
-                              className={`small fw-bold ${isCurrentUser
+                              className={`small fw-bold ${
+                                isCurrentUser
                                   ? "text-body-secondary"
                                   : "text-light"
-                                }`}
+                              }`}
                             >
                               {new Date(msg.date).toLocaleTimeString()}
                             </span>

@@ -25,7 +25,7 @@ function FreelancerProposals() {
           setIsLoading(true);
           AxiosProposalsInstance.get(`?user=${user_id}`)
             .then((res) => {
-              setProposals(res.data);
+              setProposals(res.data.results);
               console.log(res.data);
               console.log(user_id);
 
@@ -83,9 +83,7 @@ function FreelancerProposals() {
                   Make A New One {""}
                   <Button
                     variant="primary"
-                    onClick={() =>
-                      navigate("/Freelancia-Front-End/Job_List")
-                    }
+                    onClick={() => navigate("/Freelancia-Front-End/Job_List")}
                   >
                     View Jobs
                   </Button>

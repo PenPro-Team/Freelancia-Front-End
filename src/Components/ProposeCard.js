@@ -6,7 +6,7 @@ import { getFromLocalStorage } from "../network/local/LocalStorage";
 function ProposeCard(props) {
   const [isUpdate, setIsUpdae] = useState(false);
   const auth = getFromLocalStorage("auth");
-  const user = auth.user;
+  const user = auth ? auth.user : null;
   const isAuth = auth.isAuthenticated;
 
   const [show, setShow] = useState(false);
@@ -19,7 +19,7 @@ function ProposeCard(props) {
   };
   return (
     <>
-      {auth && isAuth && user.role === "freelancer" && (
+      {auth && isAuth && user && user.role === "freelancer" && (
         <div className="d-flex justify-content-center">
           <Button variant="primary" onClick={handleShow}>
             Handle Your Proposal
@@ -38,7 +38,7 @@ function ProposeCard(props) {
             <Modal.Body>
               <div>
                 <ProposeMsg
-                  user={props.user}
+                  user={props.user ? props.user : user}
                   project_id={props.project_id}
                   disabled={props.disabled}
                   cb={handlecb}
