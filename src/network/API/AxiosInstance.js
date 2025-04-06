@@ -39,6 +39,11 @@ export const AxiosPayPalInstance = axios.create({
   },
 });
 
+// this is an api for withdrawals
+export const AxiosWithdrawalsInstance = axios.create({
+  baseURL: `${url}/api/payments/withdrawals/`,
+});
+
 /**
  * This API For Propsals
  */

@@ -41,16 +41,7 @@ export default function ProjectCard({
   useEffect(() => {
     AxiosProjectsInstance.get("/", { params: { _page: currentPage, _limit: 10 } })
       .then((response) => {
-        console.log("Fetched Projects Response:", response.data);
-
-        // Ensure `data` is always an array
-        const projects = Array.isArray(response.data)
-          ? response.data
-          : response.data?.results && Array.isArray(response.data.results)
-            ? response.data.results
-            : [];
-
-        setData(projects);
+        setData(response.data.results);
       })
       .catch((error) => {
         console.error("Error fetching projects:", error);
@@ -135,7 +126,10 @@ export default function ProjectCard({
                           ? "success"
                           : project.project_state === "canceled"
                             ? "danger"
-                            : "secondary"
+                            : project.project_state ===
+                              "contract canceled and reopened"
+                              ? "success"
+                              : "secondary"
                   }
                 >
                   {project.project_state}
