@@ -19,7 +19,7 @@ import ClientContracts from "./Pages/ClientContracts";
 import Chat from "./Pages/chat";
 import ContractDetails from "./Components/ContractDetails";
 import ChatRooms from "./Pages/ChatRooms";
-
+import Chatbot from "./Components/Chatbot/Chatbot";
 function App() {
   return (
     <div className="bgControl">
@@ -94,6 +94,7 @@ function App() {
         </Routes>
         <Footer />
       </BrowserRouter>
+      <Chatbot />
     </div>
   );
 }
