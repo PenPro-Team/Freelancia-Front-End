@@ -7,10 +7,9 @@ export default function JobStateFilter({ cb }) {
   const [selectedJobStates, setSelectedJobStates] = useState([]);
 
   useEffect(() => {
-    AxiosProjectsInstance
-      .get(``)
+    AxiosProjectsInstance.get(``)
       .then((response) => {
-        setData(response.data);
+        setData(response.data.results);
       })
       .catch((error) =>
         console.error("There was an error fetching data", error)
@@ -25,7 +24,7 @@ export default function JobStateFilter({ cb }) {
 
   const handleChange = (e) => {
     console.log(e.target);
-    
+
     const jobState = e.target.id;
     const isChecked = e.target.checked;
 

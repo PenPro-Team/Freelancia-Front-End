@@ -1,4 +1,4 @@
-import { w3cwebsocket } from "websocket";
+// import { w3cwebsocket } from "websocket";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import axios from "axios";
@@ -160,8 +160,9 @@ const Chat = (props) => {
         style={{ minHeight: "20vh" }}
       >
         <div
-          className="chat-container d-flex flex-column justify-content-between card w-100"
+          className="chat-container d-flex flex-column justify-content-between card w-100 shadow p-2"
           style={{ backgroundColor: "#000B58" }}
+          // style={{ backgroundColor: "#e1e9f7" }}
         >
           <div
             ref={messagesContainerRef}
@@ -214,6 +215,9 @@ const Chat = (props) => {
                           backgroundColor: isCurrentUser
                             ? "#CBDCEB"
                             : "#608BC1",
+                          // backgroundColor: isCurrentUser
+                          //   ? "#D3E0F4"
+                          //   : "#B7CEF0",
                           color: isCurrentUser ? "black" : "white",
                           borderRadius: "10px",
                           padding: "0px",
@@ -299,6 +303,7 @@ const Chat = (props) => {
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
                 disabled={!isConnected}
+                style={{ backgroundColor: "#f2f4f7" }}
               />
               <button
                 className="btn btn-primary"

@@ -3,35 +3,65 @@ import { useEffect, useState } from "react";
 import { AxiosSkillsInstance } from "../network/API/AxiosInstance";
 
 function UpdateSkills() {
-    const [skillsOptions, setSkillsOptions] = useState([]); // Available skills for dropdown
-    const [selectedSkill, setSelectedSkill] = useState(""); // Skill chosen by freelancer
-    const [selectedSkills, setSelectedSkills] = useState([]); // Array of selected skills
+    const [skillsOptions, setSkillsOptions] = useState([]);
+    const [selectedSkill, setSelectedSkill] = useState("");
+    const [selectedSkills, setSelectedSkills] = useState([]);
     const [message, setMessage] = useState("");
+    const [editMode, setEditMode] = useState(false);
+    const [editIndex, setEditIndex] = useState(null);
 
-    // Fetch skills for the dropdown
     useEffect(() => {
+        // Load saved skills from localStorage when component mounts
+        const savedSkills = localStorage.getItem("selectedSkills");
+        if (savedSkills) {
+            setSelectedSkills(JSON.parse(savedSkills));
+        }
+
+        // Fetch available skills from the backend
         AxiosSkillsInstance.get("")
             .then((response) => {
                 setSkillsOptions(response.data);
             })
             .catch((error) => {
                 console.error("Error fetching skills:", error);
+                setMessage("Error loading available skills");
             });
     }, []);
 
-    // Add selected skill to the list
     const handleAddSkill = () => {
         if (selectedSkill && !selectedSkills.includes(selectedSkill)) {
-            setSelectedSkills((prev) => [...prev, selectedSkill]);
-            setSelectedSkill(""); // Reset dropdown
-            setMessage("Skill added successfully!");
+            if (editMode && editIndex !== null) {
+                // Update existing skill
+                const updatedSkills = [...selectedSkills];
+                updatedSkills[editIndex] = selectedSkill;
+                setSelectedSkills(updatedSkills);
+                setEditMode(false);
+                setEditIndex(null);
+                setMessage("Skill updated successfully!");
+            } else {
+                // Add new skill
+                setSelectedSkills((prev) => [...prev, selectedSkill]);
+                setMessage("Skill added successfully!");
+            }
+            setSelectedSkill("");
         }
     };
 
-    // Save selected skills to localStorage
+    const handleEditSkill = (index) => {
+        setSelectedSkill(selectedSkills[index]);
+        setEditMode(true);
+        setEditIndex(index);
+    };
+
+    const handleDeleteSkill = (index) => {
+        const updatedSkills = selectedSkills.filter((_, i) => i !== index);
+        setSelectedSkills(updatedSkills);
+        setMessage("Skill deleted successfully!");
+    };
+
     const handleUpdateSkills = () => {
-        localStorage.setItem("selectedSkills", JSON.stringify(selectedSkills)); // Save skills
-        console.log("Saved Skills to localStorage:", selectedSkills); // Debugging log
+        localStorage.setItem("selectedSkills", JSON.stringify(selectedSkills));
+        console.log("Saved Skills to localStorage:", selectedSkills);
         setMessage("Skills have been updated and saved!");
     };
 
@@ -42,7 +72,6 @@ function UpdateSkills() {
                     <Card.Body>
                         <Card.Title className="text-center">Update Your Skills</Card.Title>
 
-                        {/* Dropdown for selecting skills */}
                         <Form.Group controlId="skill" className="mb-3">
                             <Form.Label>Available Skills</Form.Label>
                             <InputGroup>
@@ -59,15 +88,38 @@ function UpdateSkills() {
                                     ))}
                                 </Form.Control>
                                 <Button variant="secondary" onClick={handleAddSkill}>
-                                    Add
+                                    {editMode ? 'Update' : 'Add'}
                                 </Button>
                             </InputGroup>
-                            <Form.Control
-                                type="text"
-                                readOnly
-                                value={selectedSkills.join(", ")}
-                                className="mt-2"
-                            />
+
+                            {/* Display selected skills with edit/delete buttons */}
+                            <div className="mt-3">
+                                {selectedSkills.map((skill, index) => (
+                                    <div key={index} className="d-flex align-items-center mb-2">
+                                        <Form.Control
+                                            type="text"
+                                            readOnly
+                                            value={skill}
+                                            className="me-2"
+                                        />
+                                        <Button
+                                            variant="outline-info"
+                                            size="sm"
+                                            className="me-2"
+                                            onClick={() => handleEditSkill(index)}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            variant="outline-danger"
+                                            size="sm"
+                                            onClick={() => handleDeleteSkill(index)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
                         </Form.Group>
 
                         {message && <Alert variant="info">{message}</Alert>}
@@ -80,5 +132,4 @@ function UpdateSkills() {
         </Row>
     );
 }
-
 export default UpdateSkills;
