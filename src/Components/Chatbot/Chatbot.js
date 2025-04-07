@@ -102,7 +102,7 @@ function Chatbot() {
     messageId,
     question,
     responseText,
-    rating
+    rating // اسم المتغير المستقبل للقيمة (1 أو -1)
   ) => {
     if (feedbackSent[messageId]) return;
     console.log(
@@ -118,7 +118,9 @@ function Chatbot() {
         body: JSON.stringify({
           question: question,
           response: responseText,
-          rating: rating,
+          // ***** التعديل هنا *****
+          rate: rating, // اسم الحقل في JSON هو rate، وقيمته هي المتغير rating
+          // ***** نهاية التعديل *****
         }),
       });
       if (!apiResponse.ok) {
@@ -134,6 +136,7 @@ function Chatbot() {
       setFeedbackSent((prev) => ({ ...prev, [messageId]: true }));
     } catch (error) {
       console.error("Failed to send feedback:", error);
+      // يمكنك إضافة رسالة للمستخدم هنا إذا فشل إرسال التقييم
     }
   };
 
@@ -190,7 +193,7 @@ function Chatbot() {
                             message.id,
                             message.originalQuestion,
                             message.text,
-                            1
+                            1 // يرسل القيمة 1 كـ rating
                           )
                         }
                         disabled={feedbackSent[message.id]}
@@ -207,7 +210,7 @@ function Chatbot() {
                             message.id,
                             message.originalQuestion,
                             message.text,
-                            -1
+                            -1 // يرسل القيمة -1 كـ rating
                           )
                         }
                         disabled={feedbackSent[message.id]}
