@@ -9,12 +9,14 @@ import personalImg from "../../assets/default-user.png";
 function ReportDetailsModal({ show, onHide, report, type = "user" }) {
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
-    try {
-      const { format } = require("date-fns");
-      return format(new Date(dateString), "PPpp");
-    } catch (e) {
-      return new Date(dateString).toLocaleString();
-    }
+    const date = new Date(dateString);
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   const getStatusBadge = (status) => {
