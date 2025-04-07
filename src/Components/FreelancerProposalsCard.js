@@ -36,7 +36,7 @@ function FreelancerProposalsCard(props) {
             {curenUser &&
               curenUser.user &&
               curenUser.user.role === "client" &&
-              props.proposal.project.project_state != "canceled" &&
+              (props.proposal.project.project_state != "canceled"   && props.proposal.project.project_state != "finished" ) &&
               curenUser.user.user_id == props.proposal.project.owner_id.id && (
                 <div>
                   <Button

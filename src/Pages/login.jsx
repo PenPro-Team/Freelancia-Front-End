@@ -92,7 +92,20 @@ const LoginForm = () => {
       }
       setisSpin(false);
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      if (axios.isAxiosError(err)) {
+        if (err.response && err.response.status === 401) {
+          if (err.response.data && err.response.data["detail"] == "User is Banned") {
+            setError("User is Banned");
+          }
+          else {
+
+            setError("Invalid username/email or password");
+          }
+        } else {
+          setError("An error occurred. Please try again.");
+        }
+      }
+     
       // setIsLoading(false);
       setisSpin(false);
     }
