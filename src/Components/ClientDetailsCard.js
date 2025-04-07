@@ -7,6 +7,7 @@ import RateStars from "./RateStars";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import personalImg from "../assets/default-user.png";
 
 function ClientDetailsCard(props) {
   const [clientDetails, setClientDetails] = useState({
@@ -56,7 +57,7 @@ function ClientDetailsCard(props) {
             <div className="d-flex align-items-center">
               {clientDetails.image || !props.isLoading || !userLoading ? (
                 <Image
-                  src={clientDetails.image}
+                  src={clientDetails.image ? clientDetails.image : personalImg}
                   roundedCircle
                   alt={clientDetails.name}
                   width={50}

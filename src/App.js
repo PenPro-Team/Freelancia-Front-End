@@ -20,6 +20,7 @@ import Chat from "./Pages/chat";
 import ContractDetails from "./Components/ContractDetails";
 import ChatRooms from "./Pages/ChatRooms";
 import Chatbot from "./Components/Chatbot/Chatbot";
+import AdminPanelLayout from "./Pages/AdminPanelLayout";
 function App() {
   return (
     <div className="bgControl">
@@ -73,7 +74,10 @@ function App() {
             path="/Freelancia-Front-End/dashboard/:user_id"
             element={<Dashboard />}
           />
-
+          <Route
+            path="/Freelancia-Front-End/admin/"
+            element={<AdminPanelLayout />}
+          />
           {/* Under testing */}
           <Route path="/Freelancia-Front-End/chat" element={<Chat />} />
           <Route

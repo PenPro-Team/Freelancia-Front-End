@@ -20,6 +20,10 @@ import {
 } from "../../network/API/AxiosInstance";
 import { Button } from "react-bootstrap";
 import { BASE_PATH } from "../../network/API/AxiosInstance";
+import { FaExclamationTriangle } from "react-icons/fa";
+import ReportUserModal from "../Admin-Panel/ReportUserModal";
+import { FaUserSlash, FaUserCheck } from "react-icons/fa";
+import BanUserModal from "../Admin-Panel/BanUserModal";
 
 export default function ClientInfo(props) {
   const [userData, setUserData] = useState({});
@@ -30,6 +34,9 @@ export default function ClientInfo(props) {
   const [isEmpty, setIsEmpty] = useState(true);
   const params = useParams();
   const navigate = useNavigate(); // Replaces useHistory
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showBanModal, setShowBanModal] = useState(false);
+  const isAdmin = user?.role === "admin";
 
   // Chat Variable By A.A
   const token = user ? user.access : null;
@@ -109,6 +116,44 @@ export default function ClientInfo(props) {
                 </div>
               ) : (
                 <div>
+                  <div className="d-flex justify-content-end w-100">
+                    {token &&
+                      userData &&
+                      user &&
+                      user.user_id !== userData.id && (
+                        <div className="text-end">
+                          <Button
+                            variant="danger"
+                            onClick={() => setShowReportModal(true)}
+                          >
+                            <FaExclamationTriangle /> Report User
+                          </Button>
+                        </div>
+                      )}
+                    {token &&
+                      userData &&
+                      user &&
+                      user.user_id !== userData.id &&
+                      isAdmin && (
+                        <div className="text-start">
+                          <Button
+                            variant={userData.is_active ? "danger" : "success"}
+                            onClick={() => setShowBanModal(true)}
+                            className="ms-2"
+                          >
+                            {userData.is_active ? (
+                              <>
+                                <FaUserSlash /> Ban User
+                              </>
+                            ) : (
+                              <>
+                                <FaUserCheck /> Unban User
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      )}
+                  </div>
                   <div className="d-flex flex-wrap flex-column align-items-center mb-4">
                     <img
                       className="rounded-circle mb-2 mx-3"
@@ -190,6 +235,29 @@ export default function ClientInfo(props) {
           </Card>
         </Col>
       </Row>
+      <ReportUserModal
+        show={showReportModal}
+        onHide={() => setShowReportModal(false)}
+        userData={userData}
+        onSuccess={() => {
+          console.log("Report submitted successfully");
+        }}
+      />
+      <BanUserModal
+        show={showBanModal}
+        onHide={() => setShowBanModal(false)}
+        userData={userData}
+        isBanned={!userData.is_active}
+        onSuccess={() => {
+          AxiosUserInstance.get(`${params.user_id}`)
+            .then((res) => {
+              setUserData(res.data);
+            })
+            .catch((err) => {
+              console.log("Error refreshing user data:", err);
+            });
+        }}
+      />
     </>
   );
 }

@@ -2,6 +2,8 @@ import { Button, Card, Image } from "react-bootstrap";
 import RateStars from "./RateStars";
 import { useNavigate } from "react-router-dom"; // Corrected import path
 import { getFromLocalStorage } from "../network/local/LocalStorage";
+import personalImg from "../assets/default-user.png";
+
 function FreelancerProposalsCard(props) {
   const navigate = useNavigate(); // Correct usage of useNavigate
   const curenUser = getFromLocalStorage("auth");
@@ -12,7 +14,11 @@ function FreelancerProposalsCard(props) {
           <div className="d-flex justify-content-between">
             <div className="d-flex align-items-center">
               <Image
-                src={props.proposal.user.image}
+                src={
+                  props.proposal.user.image
+                    ? props.proposal.user.image
+                    : personalImg
+                }
                 roundedCircle
                 alt={props.proposal.user.name}
                 width={50}

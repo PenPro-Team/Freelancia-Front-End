@@ -103,6 +103,11 @@ function NavBar() {
                 Chat Rooms
               </Nav.Link>
             )}
+            {isAuth && user && user.role === "admin" && (
+              <Nav.Link as={Link} to={`/Freelancia-Front-End/admin/`}>
+                Admin Panel
+              </Nav.Link>
+            )}
           </Nav>
           {isAuth ? (
             <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">

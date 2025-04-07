@@ -182,8 +182,7 @@ function JobDetailsCard(props) {
                 project.owner_id.id === auth.user.user_id &&
                 (props.project.project_state === "open" ||
                   props.project.project_state ===
-                    "contract canceled and reopened" ||
-                  props.project.project_state === "ongoing") && (
+                    "contract canceled and reopened") && (
                   <div
                     style={{ cursor: "pointer" }}
                     onClick={() => {

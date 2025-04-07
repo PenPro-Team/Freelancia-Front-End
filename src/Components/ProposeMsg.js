@@ -44,25 +44,25 @@ function ProposeMsg(props) {
   useEffect(() => {
     AxiosProposalsInstance.get(`?user=${user_id}&project=${project_id}`)
       .then((res) => {
-        if (res.data.length > 0) {
+        if (res.data.results.length > 0) {
           console.log("Already Made A Proposal");
           // console.log(res.data.length);
           // console.log(res.data);
           setAlreadyProposed(true);
           setItemInfo({
-            propose_text: res.data[0].propose_text,
-            price: res.data[0].price,
-            deadline: res.data[0].deadline,
-            created_at: res.data[0].created_at,
+            propose_text: res.data.results[0].propose_text,
+            price: res.data.results[0].price,
+            deadline: res.data.results[0].deadline,
+            created_at: res.data.results[0].created_at,
           });
           setSavedItem({
-            propose_text: res.data[0].propose_text,
-            price: res.data[0].price,
-            deadline: res.data[0].deadline,
-            created_at: res.data[0].created_at,
+            propose_text: res.data.results[0].propose_text,
+            price: res.data.results[0].price,
+            deadline: res.data.results[0].deadline,
+            created_at: res.data.results[0].created_at,
           });
-          console.log("Proposal Saved ID: ", res.data[0].id);
-          setProposal_id(res.data[0].id);
+          console.log("Proposal Saved ID: ", res.data.results[0].id);
+          setProposal_id(res.data.results[0].id);
           props.cb(true);
         } else {
           setAlreadyProposed(false);
@@ -372,8 +372,8 @@ function ProposeMsg(props) {
                     ? null
                     : handleUpdate
                   : isLoading
-                    ? null
-                    : handleSubmit
+                  ? null
+                  : handleSubmit
               }
               disabled={
                 errors.errText ||
@@ -393,8 +393,8 @@ function ProposeMsg(props) {
                   ? "Loading…"
                   : "Update"
                 : isLoading
-                  ? "Loading…"
-                  : "Propose"}
+                ? "Loading…"
+                : "Propose"}
             </button>
           )}
         </div>
