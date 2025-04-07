@@ -25,8 +25,7 @@ function ClientContracts() {
             .catch((error) => {
                 console.error(error);
             });
-    }, [current_user.user.user_id]); // Changed from prams.user_id to current_user.user.user_id
-
+    }, [current_user.user.user_id]); 
     return (
         <Container className="py-4">
             <HeaderColoredText text="Your Contracts" />
