@@ -82,6 +82,10 @@ export const AxiosContractsInstance = axios.create({
   baseURL: `${url}/contract/`,
 });
 
+export const AxiosReportInstance = axios.create({
+  baseURL: `${url}/reports/`,
+});
+
 export const AxiosWSAuthInstance = axios.create({
   baseURL: `${url}/auth_for_ws_connection/`,
 });
