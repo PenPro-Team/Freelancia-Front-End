@@ -4,7 +4,6 @@ import Row from "react-bootstrap/Row";
 import proImage from "../assets/hero-image--popular-items-2963d5759f434e6691a0bb5363bf2d1707c8885ab10b6dba3b0648f8c5f94da5.webp";
 import { Button, Form } from "react-bootstrap";
 import Cards from "../Components/Cards";
-import Btn from "../Components/Btn";
 import proImages from "../assets/hero-bg.jpg";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
@@ -63,157 +62,96 @@ function Home() {
 
     // Filter freelancers by username
     const results = freelancers.filter((freelancer) =>
-      freelancer.name.toLowerCase().includes(searchQuery.toLowerCase())
+      freelancer.name?.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setSearchResults(results); // Update search results
   };
 
   return (
-
-    <Container className="text-center text-lg-start">
-
-      {/* Header Section */}
-      <Row>
-        <Col xs={10} md={6} className="d-flex align-content-center flex-wrap">
-          <div>
-            <h2>
-              Welcome to <span className="text-primary">FreeLancia</span> where
-              your Business Dream Can Be Real
-            </h2>
-          </div>
-          <p className="fs-5">
+    <Container className="py-4">
+      {/* Enhanced Header Section */}
+      <Row className="mb-5 py-3 bg-light rounded shadow-sm align-items-center">
+        <Col xs={12} md={7} className="p-4">
+          <h2 className="fw-bold mb-3">
+            Welcome to <span className="text-primary">FreeLancia</span> where
+            your Business Dream Can Be Real
+          </h2>
+          <p className="fs-5 text-secondary mb-4">
             Discover the world of Freelance and Make Your Dreams Real
           </p>
 
-          <Row className="mx-auto mb-4">
-            <Col xs="auto">
-              <Form onSubmit={handleSearch}>
+          <Form onSubmit={handleSearch} className="mb-4">
+            <Row className="g-2">
+              <Col xs={8} md={8}>
                 <Form.Control
                   type="text"
                   placeholder="Search by username"
-                  className="mr-sm-2 w-100"
+                  className="border-primary"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-              </Form>
-            </Col>
-            <Col xs="auto" className="d-none d-lg-inline">
-              <Button type="submit" onClick={handleSearch}>
-                Search
-              </Button>
-            </Col>
-          </Row>
+              </Col>
+              <Col xs={4} md={4}>
+                <Button type="submit" variant="primary" className="w-100" onClick={handleSearch}>
+                  Search
+                </Button>
+              </Col>
+            </Row>
+          </Form>
         </Col>
-        <Col xs={4} md={2}>
-          <img width={"350%"} src={proImage} alt="Freelance Platform" />
+        <Col xs={12} md={5} className="text-center">
+          <img
+            className="img-fluid rounded"
+            src={proImage}
+            alt="Freelance Platform"
+            style={{ maxHeight: "300px" }}
+          />
         </Col>
       </Row>
 
-      {/* Display Search Results */}
+      {/* Enhanced Search Results Section */}
       {searchResults.length > 0 && (
-        <Row className="mt-4">
-          <h3>Search Results</h3>
-          {searchResults.map((freelancer, idx) => (
-            <Col key={idx} xs={12} md={6} lg={4} className="mb-4">
-              <Card
-                className="shadow-lg"
-                onClick={() => navigate(`${BASE_PATH}/Dashboard/${freelancer.id}`)}
-
-                style={{ cursor: "pointer" }}
-              >
-                <Card.Img
-                  variant="top"
-                  src={freelancer.image || proImages}
-                  alt={freelancer.name}
-                  style={{ height: "250px", objectFit: "cover" }}
-                />
-                <Card.Body>
-                  <Card.Title>
-                    {freelancer.name}
-                    <br />
-                    <RateStars rating={freelancer.rate} />
-                  </Card.Title>
-                  <Card.Text>
-                    <strong>Description:</strong>{" "}
-                    {freelancer.description || "No description available."}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      )}
-
-      {/* Highlighted Cards Section */}
-      <div className="d-flex flex-wrap row row-cols-1 row-cols-md-3 g-3 ms-1 mt-2 mb-4 justify-content-center align-items-center">
-        <Cards
-          title={"WordPress Themes"}
-          pragraph={"Email, newsletter and landing page."}
-        />
-        <Cards
-          title={"eCommerce Templates"}
-          pragraph={"Over 1,700 CMS website templates"}
-        />
-        <Cards
-          title={"Website Templates"}
-          pragraph={"Blogger templates and themes"}
-        />
-      </div>
-
-      {/* Clients Section */}
-      <Row>
-        <Col xs={10} md={6} className="d-flex align-content-center flex-wrap">
-          <div className="divhit g-1">
-            {clients.slice(0, 4).map((client, idx) => (
-              <img
-                key={idx}
-                width={"50%"}
-                className="rounded"
-                src={client.image}
-                alt={`Client ${idx + 1}`}
-                onClick={() => navigate(`${BASE_PATH}/Dashboard/${client.id}`)}
-                style={{ height: "250px", objectFit: "cover", cursor: "pointer" }}
-              />
-            ))}
-          </div>
-        </Col>
-        <Col xs={6} md={4} className="d-flex align-content-center flex-wrap">
-          <h2 className="text-center text-lg-start">
-            Unique themes and templates for every budget and every project.
-          </h2>
-          {/* <Btn title={"View all Projects"} /> */}
-          <Button onClick={() => navigate(`${BASE_PATH}/Job_List`)} className="btn btn-info mx-auto ">View all Projects</Button>
-        </Col>
-      </Row>
-
-      {/* Top Rated Freelancers Section */}
-      <div className="row mt-5">
-        <div className="col-md-12">
-          <Row xs={1} md={3} className="g-4">
-            {freelancers.slice(0, 6).map((freelancer, idx) => (
-              <Col key={idx}>
+        <div className="mb-5">
+          <h3 className="fw-bold mb-4 border-bottom pb-2">Search Results</h3>
+          <Row>
+            {searchResults.map((freelancer, idx) => (
+              <Col key={idx} xs={12} md={6} lg={4} className="mb-4">
                 <Card
-                  className="shadow-lg"
+                  className="h-100 shadow-sm border-light"
                   onClick={() => navigate(`${BASE_PATH}/Dashboard/${freelancer.id}`)}
-
-                  style={{ cursor: "pointer" }}
+                  style={{
+                    cursor: "pointer",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    borderRadius: "8px",
+                    overflow: "hidden"
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = "translateY(-5px)";
+                    e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 .125rem .25rem rgba(0,0,0,.075)";
+                  }}
                 >
-
                   <Card.Img
                     variant="top"
                     src={freelancer.image || proImages}
-                    alt={freelancer.username}
-                    style={{ height: "250px", objectFit: "cover" }}
+                    alt={freelancer.name}
+                    style={{ height: "200px", objectFit: "cover" }}
                   />
-                  <Card.Body>
-                    <Card.Title>
-                      {freelancer.username}
-                      <br />
+                  <Card.Body className="d-flex flex-column">
+                    <Card.Title className="mb-2 fw-bold">{freelancer.name}</Card.Title>
+                    <div className="mb-2">
                       <RateStars rating={freelancer.rate} />
-                    </Card.Title>
-                    <Card.Text>
+                    </div>
+                    <Card.Text className="text-secondary">
                       <strong>Description:</strong>{" "}
-                      {freelancer.description || "No description available."}
+                      {freelancer.description
+                        ? (freelancer.description.length > 100
+                          ? `${freelancer.description.substring(0, 100)}...`
+                          : freelancer.description)
+                        : "No description available."}
                     </Card.Text>
                   </Card.Body>
                 </Card>
@@ -221,12 +159,194 @@ function Home() {
             ))}
           </Row>
         </div>
+      )}
+
+      {/* Enhanced Category Cards Section */}
+      <div className="mb-5">
+        <h3 className="fw-bold mb-4 border-bottom pb-2">Popular Categories</h3>
+        <Row className="g-4 justify-content-center">
+          <Col xs={12} md={4}>
+            <Cards
+              title={"WordPress Themes"}
+              pragraph={"Email, newsletter and landing page."}
+              customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
+            />
+          </Col>
+          <Col xs={12} md={4}>
+            <Cards
+              title={"eCommerce Templates"}
+              pragraph={"Over 1,700 CMS website templates"}
+              customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
+            />
+          </Col>
+          <Col xs={12} md={4}>
+            <Cards
+              title={"Website Templates"}
+              pragraph={"Blogger templates and themes"}
+              customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
+            />
+          </Col>
+        </Row>
       </div>
 
+      {/* Enhanced Clients Section */}
+      <div className="mb-5 py-4 bg-light rounded shadow-sm">
+        <h3 className="fw-bold mb-4 text-center">Featured Clients</h3>
+        <Row className="align-items-center">
+          <Col xs={12} md={7} className="mb-4 mb-md-0">
+            <Row className="g-3">
+              {clients.slice(0, 4).map((client, idx) => (
+                <Col key={idx} xs={6} className="text-center">
+                  <div
+                    className="position-relative rounded shadow-sm overflow-hidden"
+                    onClick={() => navigate(`${BASE_PATH}/Dashboard/${client.id}`)}
+                    style={{
+                      cursor: "pointer",
+                      transition: "transform 0.2s, box-shadow 0.2s"
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = "scale(1.05)";
+                      e.currentTarget.style.boxShadow = "0 5px 15px rgba(0,0,0,0.1)";
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = "scale(1)";
+                      e.currentTarget.style.boxShadow = "0 .125rem .25rem rgba(0,0,0,.075)";
+                    }}
+                  >
+                    <img
+                      className="img-fluid w-100"
+                      src={client.image || proImages}
+                      alt={`Client ${idx + 1}`}
+                      style={{ height: "150px", objectFit: "cover" }}
+                    />
+                  </div>
+                </Col>
+              ))}
+            </Row>
+          </Col>
+          <Col xs={12} md={5} className="text-center text-md-start px-4">
+            <h4 className="fw-bold mb-3">
+              Unique themes and templates for every budget and every project.
+            </h4>
+            <Button
+              onClick={() => navigate(`${BASE_PATH}/Job_List`)}
+              variant="info"
+              className="text-white fw-semibold"
+            >
+              View all Projects
+            </Button>
+          </Col>
+        </Row>
+      </div>
+
+      {/* Enhanced Top Rated Freelancers Section */}
+      <div className="mb-4">
+        <div className="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+          <h3 className="fw-bold mb-0">Top Rated Freelancers</h3>
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={() => navigate(`${BASE_PATH}/freelancers`)}
+          >
+            View All
+          </Button>
+        </div>
+        <Row className="g-4">
+          {freelancers.slice(0, 6).map((freelancer, idx) => (
+            <Col key={idx} xs={12} md={6} lg={4}>
+              <Card
+                className="h-100 shadow-sm border-light"
+                onClick={() => navigate(`${BASE_PATH}/Dashboard/${freelancer.id}`)}
+                style={{
+                  cursor: "pointer",
+                  transition: "transform 0.2s, box-shadow 0.2s",
+                  borderRadius: "8px",
+                  overflow: "hidden"
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                  e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 .125rem .25rem rgba(0,0,0,.075)";
+                }}
+              >
+                <Card.Img
+                  variant="top"
+                  src={freelancer.image || proImages}
+                  alt={freelancer.username}
+                  style={{ height: "200px", objectFit: "cover" }}
+                />
+                <Card.Body>
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <Card.Title className="mb-0 fw-bold">{freelancer.username}</Card.Title>
+                    <div className="badge bg-light text-dark">
+                      {freelancer.category || "Freelancer"}
+                    </div>
+                  </div>
+                  <div className="mb-3">
+                    <RateStars rating={freelancer.rate} />
+                  </div>
+                  <Card.Text className="text-secondary">
+                    <strong>Description:</strong>{" "}
+                    {freelancer.description
+                      ? (freelancer.description.length > 100
+                        ? `${freelancer.description.substring(0, 100)}...`
+                        : freelancer.description)
+                      : "No description available."}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </div>
+
+      {/* Conditional Call to Action Section - Only shown to non logged in users */}
+      {!user && (
+        <div className="text-center py-4 my-5 bg-primary text-white rounded shadow">
+          <h3 className="fw-bold mb-3">Ready to Start Your Journey?</h3>
+          <p className="mb-4">Join thousands of professionals on FreeLancia today!</p>
+          <Button
+            variant="light"
+            className="fw-semibold me-2"
+            onClick={() => navigate(`${BASE_PATH}/register`)}
+          >
+            Sign Up Now
+          </Button>
+          <Button
+            variant="outline-light"
+            onClick={() => navigate(`${BASE_PATH}/Job_List`)}
+          >
+            Browse Projects
+          </Button>
+        </div>
+      )}
+
+      {/* Alternative CTA for logged-in users */}
+      {user && (
+        <div className="text-center py-4 my-5 bg-light rounded shadow">
+          <h3 className="fw-bold mb-3">Explore More Opportunities</h3>
+          <p className="mb-4">Find the perfect match for your skills or project needs.</p>
+          <Button
+            variant="primary"
+            className="fw-semibold me-2"
+            onClick={() => navigate(`${BASE_PATH}/Job_List`)}
+          >
+            Browse Projects
+          </Button>
+          <Button
+            variant="outline-primary"
+            onClick={() => navigate(`${BASE_PATH}/Dashboard`)}
+          >
+            Go to Dashboard
+          </Button>
+        </div>
+      )}
+
     </Container>
-
   );
-
 }
 
 export default Home;
