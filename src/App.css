@@ -69,3 +69,7 @@
   color: white;
   font-weight: bold;
 }
+
+.hover-primary:hover {
+  color: #0d6efd !important;
+}
