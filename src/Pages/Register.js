@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useCallback } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Form,
   Button,
@@ -10,15 +9,15 @@ import {
   Container,
   Card,
   InputGroup,
+  Spinner,
 } from "react-bootstrap";
 import { EyeSlash, Eye } from "react-bootstrap-icons";
-import Spinner from "react-bootstrap/Spinner";
 import InputField from "../Components/InputField";
-import { Link } from "react-router-dom";
 import HeaderColoredText from "../Components/HeaderColoredText";
 import { AxiosUserInstance } from "../network/API/AxiosInstance";
 
 const RegisterForm = () => {
+  // --- Component State ---
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     firstName: "",
@@ -32,128 +31,342 @@ const RegisterForm = () => {
     address: "",
     role: "",
   });
-
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [usernameExists, setUsernameExists] = useState(false);
-  const [emailExists, setEmailExists] = useState(false);
+  const [usernameCheck, setUsernameCheck] = useState({
+    loading: false,
+    exists: false,
+  });
+  const [emailCheck, setEmailCheck] = useState({
+    loading: false,
+    exists: false,
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  // --- Constants and Regex ---
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const robustPasswordRegex = /^(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
   const userNameReg = /^[a-z0-9\._]{3,}$/;
-
-  const [isLoading, setisLoading] = useState(false);
-
+  const lettersOnlyRegex = /^[a-zA-Z]+$/;
+  const numbersOnlyRegex = /^\d+$/;
   const today = new Date();
-  const year = today.getFullYear() - 18;
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
-  const maxBirthDate = `${year}-${month}-${day}`;
+  const maxBirthDate = new Date(
+    today.getFullYear() - 18,
+    today.getMonth(),
+    today.getDate()
+  )
+    .toISOString()
+    .split("T")[0];
+
+  // --- Validation Logic ---
+  const validateField = useCallback(
+    (
+      name,
+      value,
+      currentFormValues,
+      currentUsernameExists,
+      currentEmailExists
+    ) => {
+      let errorMsg = "";
+      const trimmedValue = typeof value === "string" ? value.trim() : value;
+
+      if (
+        touched[name] &&
+        !trimmedValue &&
+        name !== "password" &&
+        name !== "confirmPassword"
+      ) {
+        // Allow spaces temporarily in password fields during typing
+        errorMsg = "This field is required";
+      } else if (
+        touched[name] &&
+        (name === "password" || name === "confirmPassword") &&
+        !value
+      ) {
+        // Check raw value for password required
+        errorMsg = "This field is required";
+      } else if (
+        trimmedValue ||
+        ((name === "password" || name === "confirmPassword") && value)
+      ) {
+        // Proceed validation if there is value
+        switch (name) {
+          case "firstName":
+          case "lastName":
+            if (!lettersOnlyRegex.test(trimmedValue)) {
+              errorMsg = "Only letters are allowed";
+            }
+            break;
+          case "username":
+            if (!userNameReg.test(trimmedValue)) {
+              errorMsg =
+                "Username must be at least 3 characters (letters, numbers, '.', '_').";
+            } else if (currentUsernameExists) {
+              errorMsg = "Username already exists";
+            }
+            break;
+          case "email":
+            if (!emailRegex.test(trimmedValue)) {
+              errorMsg = "Invalid email format";
+            } else if (currentEmailExists) {
+              errorMsg = "Email already exists";
+            }
+            break;
+          case "password":
+            if (!robustPasswordRegex.test(value)) {
+              errorMsg = "Password: 8+ chars, upper, lower, digit, no spaces.";
+            }
+            break;
+          case "confirmPassword":
+            if (value !== currentFormValues.password) {
+              errorMsg = "Passwords do not match";
+            }
+            break;
+          case "birthdate":
+            if (!trimmedValue) {
+              // Check again if required validation didn't catch it (e.g., not touched yet but submitted)
+              errorMsg = "This field is required";
+            } else {
+              const selectedDate = new Date(trimmedValue);
+              const maxDate = new Date(maxBirthDate);
+              if (selectedDate > maxDate) {
+                errorMsg = "You must be at least 18 years old";
+              }
+            }
+            break;
+          case "postalCode":
+            if (!numbersOnlyRegex.test(trimmedValue)) {
+              errorMsg = "Postal code must contain only numbers";
+            }
+            break;
+          case "address":
+            if (trimmedValue.length < 10) {
+              errorMsg = "Address must be at least 10 characters long";
+            }
+            break;
+          case "role":
+            if (!trimmedValue) {
+              errorMsg = "Please select a role";
+            } else if (
+              trimmedValue !== "client" &&
+              trimmedValue !== "freelancer"
+            ) {
+              errorMsg = "Please select a valid role";
+            }
+            break;
+          default:
+            break;
+        }
+      }
+      return errorMsg;
+    },
+    [touched, maxBirthDate]
+  ); // Include dependencies used inside useCallback
+
+  // --- Event Handlers ---
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let processedValue = value;
+    if (name === "username") {
+      processedValue = value.replace(/\s+/g, "").replace(/[^a-z0-9._]/gi, "");
+    }
+
+    const newFormValues = { ...formValues, [name]: processedValue };
+    setFormValues(newFormValues);
+
+    if (!touched[name]) {
+      setTouched({ ...touched, [name]: true });
+    }
+
+    const error = validateField(
+      name,
+      processedValue,
+      newFormValues,
+      usernameCheck.exists,
+      emailCheck.exists
+    );
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+
+    if (name === "password" && formValues.confirmPassword) {
+      const confirmPasswordError = validateField(
+        "confirmPassword",
+        formValues.confirmPassword,
+        newFormValues,
+        usernameCheck.exists,
+        emailCheck.exists
+      );
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        confirmPassword: confirmPasswordError,
+      }));
+    }
+    // Also validate password when confirmPassword changes
+    if (name === "confirmPassword" && formValues.password) {
+      const passwordError = validateField(
+        "password",
+        formValues.password,
+        newFormValues,
+        usernameCheck.exists,
+        emailCheck.exists
+      );
+      setErrors((prevErrors) => ({ ...prevErrors, password: passwordError }));
+    }
+  };
 
   const handleBlur = async (e) => {
     const { name, value } = e.target;
-    if (name === "username" || name === "email") {
+    const processedValue =
+      name === "username"
+        ? value.replace(/\s+/g, "").replace(/[^a-z0-9._]/gi, "")
+        : value; // Process username again on blur if needed
+    const trimmedValue =
+      typeof processedValue === "string"
+        ? processedValue.trim()
+        : processedValue;
+
+    if (!touched[name]) {
+      setTouched({ ...touched, [name]: true });
+    }
+
+    // Use processedValue for validation, especially password which shouldn't be trimmed for regex check
+    const formatError = validateField(
+      name,
+      processedValue,
+      formValues,
+      false,
+      false
+    );
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: formatError }));
+
+    if (
+      (name === "username" || name === "email") &&
+      trimmedValue &&
+      !formatError
+    ) {
+      const checkStateSetter =
+        name === "username" ? setUsernameCheck : setEmailCheck;
+      checkStateSetter({ loading: true, exists: false });
+
       try {
-        const response = await AxiosUserInstance.get(`?${name}=${value}`);
+        const response = await AxiosUserInstance.get(
+          `/?${name}=${trimmedValue}`
+        );
         const isExists = response.data.length > 0;
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [name]: isExists ? `${name} already exists` : "",
-        }));
-        name === "username" && setUsernameExists(isExists);
-        name === "email" && setEmailExists(isExists);
+        checkStateSetter({ loading: false, exists: isExists });
+
+        const finalError = validateField(
+          name,
+          trimmedValue,
+          formValues,
+          name === "username" ? isExists : usernameCheck.exists,
+          name === "email" ? isExists : emailCheck.exists
+        );
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: finalError }));
       } catch (err) {
         console.error(`Error checking ${name} availability:`, err);
+        checkStateSetter({ loading: false, exists: false });
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: `Could not verify ${name}. Please try again.`,
+        }));
       }
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    let newValue = value.trim();
-    if (name === "username") {
-      newValue = value.replace(/\s+/g, "").replace(/[^a-z0-9._]/gi, "");
-    }
-    setFormValues({ ...formValues, [name]: newValue });
-
-    let errorMessage = "";
-    if (newValue === "") {
-      errorMessage = "This field is required";
+    } else if (name === "username" || name === "email") {
+      const checkStateSetter =
+        name === "username" ? setUsernameCheck : setEmailCheck;
+      checkStateSetter({ loading: false, exists: false });
+      // If formatError exists, keep it, otherwise clear if field is empty/invalid format
+      if (!formatError) {
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: "" })); // Clear potential "Could not verify" error if now invalid/empty
+      }
     } else {
-      switch (name) {
-        case "firstName":
-        case "lastName":
-          if (!/^[a-zA-Z]+$/.test(newValue)) {
-            errorMessage = "Only letters are allowed";
-          }
-          break;
-        case "password":
-          if (!robustPasswordRegex.test(newValue)) {
-            errorMessage =
-              "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long, with no spaces.";
-          }
-          break;
-        case "confirmPassword":
-          if (newValue !== formValues.password) {
-            errorMessage = "Passwords do not match";
-          }
-          break;
-        case "birthdate":
-          const selectedDate = new Date(newValue);
-          const currentDate = new Date();
-          const age = currentDate.getFullYear() - selectedDate.getFullYear();
-          if (age < 18) {
-            errorMessage = "You must be at least 18 years old";
-          }
-          break;
-        case "postalCode":
-          if (!/^\d+$/.test(newValue)) {
-            errorMessage = "Postal code must contain only numbers";
-          }
-          break;
-        case "address":
-          if (newValue.length < 5) {
-            errorMessage = "Address must be at least 5 characters long";
-          }
-          break;
-        case "role":
-          if (
-            newValue.toLowerCase() !== "client" &&
-            newValue.toLowerCase() !== "freelancer"
-          ) {
-            errorMessage = "Please select a valid role";
-          }
-          break;
-        case "username":
-          if (!userNameReg.test(newValue)) {
-            errorMessage =
-              "Username must be at least 3 characters and follow the correct format.";
-          }
-          break;
-        case "email":
-          if (!emailRegex.test(newValue)) {
-            errorMessage = "Invalid email format";
-          }
-          break;
-        default:
-          break;
-      }
+      // For other fields, simply ensure validation runs on blur
+      const error = validateField(
+        name,
+        processedValue,
+        formValues,
+        usernameCheck.exists,
+        emailCheck.exists
+      );
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
     }
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
   };
 
-  const isFormValid =
-    Object.values(errors).every((error) => error === "") &&
-    Object.values(formValues).every((value) => value !== "");
+  const isFormValid = () => {
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "username",
+      "email",
+      "password",
+      "confirmPassword",
+      "birthdate",
+      "postalCode",
+      "address",
+      "role",
+    ];
+    let isValid = true;
+
+    // Check all fields for errors *and* ensure required fields have values
+    for (const field of requiredFields) {
+      // Run validation again for potentially untouched fields
+      const error = validateField(
+        field,
+        formValues[field],
+        formValues,
+        usernameCheck.exists,
+        emailCheck.exists
+      );
+      if (error) {
+        isValid = false;
+        // Update errors state for fields that might not have been touched/blurred
+        if (!errors[field]) {
+          setErrors((prev) => ({ ...prev, [field]: error }));
+        }
+      }
+      // Check if required field is actually filled (handles empty strings after trimming)
+      const valueToCheck =
+        field === "password" || field === "confirmPassword"
+          ? formValues[field]
+          : formValues[field]?.trim();
+      if (!valueToCheck) {
+        isValid = false;
+        if (!errors[field] && touched[field]) {
+          // Only show required if touched and validation didn't catch it
+          setErrors((prev) => ({ ...prev, [field]: "This field is required" }));
+        }
+      }
+    }
+
+    const asyncChecksDone = !usernameCheck.loading && !emailCheck.loading;
+
+    return isValid && asyncChecksDone;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setisLoading(true);
 
+    const allFieldsTouched = Object.keys(formValues).reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {});
+    setTouched(allFieldsTouched);
+
+    // Re-run validation logic for all fields before submitting
+    if (!isFormValid()) {
+      // isFormValid already updates the errors state if needed
+      console.log("Form is invalid. Errors:", errors);
+      setSnackbarMessage("Please fix the errors in the form.");
+      setShowSnackbar(true);
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
       const formData = {
         username: formValues.username.trim(),
         first_name: formValues.firstName.trim(),
@@ -162,8 +375,8 @@ const RegisterForm = () => {
         password: formValues.password,
         role: formValues.role,
         birth_date: formValues.birthdate,
-        postal_code: formValues.postalCode,
-        address: formValues.address,
+        postal_code: formValues.postalCode.trim(),
+        address: formValues.address.trim(),
       };
 
       const response = await AxiosUserInstance.post("", formData, {
@@ -173,57 +386,79 @@ const RegisterForm = () => {
       });
 
       console.log("Registration response:", response);
-
-      setSnackbarMessage("Registration successful!");
+      setSnackbarMessage("Registration successful! Redirecting to login...");
       setShowSnackbar(true);
-      setTimeout(() => navigate("/Freelancia-Front-End/login"), 2000);
+      setTimeout(() => navigate("/Freelancia-Front-End/login"), 500);
     } catch (error) {
       console.error("Registration error:", error);
-      setSnackbarMessage(
-        error.response?.data?.message || "Registration failed!"
-      );
+      const message =
+        error.response?.data?.detail ||
+        error.response?.data?.message ||
+        (error.response?.data && typeof error.response.data === "object"
+          ? JSON.stringify(error.response.data)
+          : null) ||
+        "Registration failed! Please check your details and try again.";
+      setSnackbarMessage(message);
       setShowSnackbar(true);
     } finally {
-      setisLoading(false);
+      setIsLoading(false);
     }
   };
 
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const toggleConfirmPasswordVisibility = () =>
+    setShowConfirmPassword(!showConfirmPassword);
+
+  // --- JSX Structure ---
   return (
     <Container className="my-5 d-flex flex-column align-items-center">
       <HeaderColoredText text="Freelancia" />
       <Card className="shadow p-4" style={{ maxWidth: "800px", width: "100%" }}>
         <h3 className="text-center mb-4">Register</h3>
-        <Form onSubmit={handleSubmit}>
+        <Form noValidate onSubmit={handleSubmit}>
+          {/* Name Fields */}
           <Row>
-            <Col>
+            <Col md={6}>
               <InputField
                 label="First Name"
                 name="firstName"
                 value={formValues.firstName}
                 onChange={handleChange}
-                isInvalid={Boolean(errors.firstName)}
+                onBlur={handleBlur}
+                isInvalid={touched.firstName && !!errors.firstName}
                 feedback={errors.firstName}
+                feedbackType="invalid"
               />
             </Col>
-            <Col>
+            <Col md={6}>
               <InputField
                 label="Last Name"
                 name="lastName"
                 value={formValues.lastName}
                 onChange={handleChange}
-                isInvalid={Boolean(errors.lastName)}
+                onBlur={handleBlur}
+                isInvalid={touched.lastName && !!errors.lastName}
                 feedback={errors.lastName}
+                feedbackType="invalid"
               />
             </Col>
           </Row>
+
+          {/* Username and Email Fields */}
           <InputField
             label="Username"
             name="username"
             value={formValues.username}
             onChange={handleChange}
             onBlur={handleBlur}
-            isInvalid={Boolean(errors.username)}
-            feedback={errors.username}
+            isInvalid={
+              touched.username && (!!errors.username || usernameCheck.loading)
+            }
+            feedback={
+              errors.username ||
+              (usernameCheck.loading ? "Checking availability..." : "")
+            }
+            feedbackType="invalid"
           />
           <InputField
             label="Email"
@@ -232,35 +467,79 @@ const RegisterForm = () => {
             value={formValues.email}
             onChange={handleChange}
             onBlur={handleBlur}
-            isInvalid={Boolean(errors.email)}
-            feedback={errors.email}
+            isInvalid={touched.email && (!!errors.email || emailCheck.loading)}
+            feedback={
+              errors.email ||
+              (emailCheck.loading ? "Checking availability..." : "")
+            }
+            feedbackType="invalid"
           />
-          <InputField
-            label="Password"
-            type="password"
-            name="password"
-            value={formValues.password}
-            onChange={handleChange}
-            isInvalid={Boolean(errors.password)}
-            feedback={errors.password}
-          />
-          <InputField
-            label="Confirm Password"
-            type="password"
-            name="confirmPassword"
-            value={formValues.confirmPassword}
-            onChange={handleChange}
-            isInvalid={Boolean(errors.confirmPassword)}
-            feedback={errors.confirmPassword}
-          />
+
+          {/* Password Fields */}
+          <Form.Group className="mb-3" controlId="formPassword">
+            <Form.Label>Password</Form.Label>
+            <InputGroup hasValidation>
+              <Form.Control
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formValues.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                isInvalid={touched.password && !!errors.password}
+                placeholder="Enter password"
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={togglePasswordVisibility}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeSlash /> : <Eye />}
+              </Button>
+              <Form.Control.Feedback type="invalid">
+                {errors.password}
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formConfirmPassword">
+            <Form.Label>Confirm Password</Form.Label>
+            <InputGroup hasValidation>
+              <Form.Control
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formValues.confirmPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                isInvalid={touched.confirmPassword && !!errors.confirmPassword}
+                placeholder="Confirm password"
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={toggleConfirmPasswordVisibility}
+                aria-label={
+                  showConfirmPassword
+                    ? "Hide confirm password"
+                    : "Show confirm password"
+                }
+              >
+                {showConfirmPassword ? <EyeSlash /> : <Eye />}
+              </Button>
+              <Form.Control.Feedback type="invalid">
+                {errors.confirmPassword}
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
+
+          {/* Personal Info Fields */}
           <InputField
             label="Birthdate"
             type="date"
             name="birthdate"
             value={formValues.birthdate}
             onChange={handleChange}
-            isInvalid={Boolean(errors.birthdate)}
+            onBlur={handleBlur}
+            isInvalid={touched.birthdate && !!errors.birthdate}
             feedback={errors.birthdate}
+            feedbackType="invalid"
             max={maxBirthDate}
           />
           <InputField
@@ -268,59 +547,64 @@ const RegisterForm = () => {
             name="postalCode"
             value={formValues.postalCode}
             onChange={handleChange}
-            isInvalid={Boolean(errors.postalCode)}
+            onBlur={handleBlur}
+            isInvalid={touched.postalCode && !!errors.postalCode}
             feedback={errors.postalCode}
+            feedbackType="invalid"
           />
           <InputField
             label="Address"
             name="address"
             value={formValues.address}
             onChange={handleChange}
-            isInvalid={Boolean(errors.address)}
+            onBlur={handleBlur}
+            isInvalid={touched.address && !!errors.address}
             feedback={errors.address}
+            feedbackType="invalid"
           />
+
+          {/* Role Selection */}
           <InputField
             label="Role"
             as="select"
             name="role"
             value={formValues.role}
             onChange={handleChange}
-            isInvalid={Boolean(errors.role)}
+            onBlur={handleBlur}
+            isInvalid={touched.role && !!errors.role}
             feedback={errors.role}
-            required
+            feedbackType="invalid"
           >
-            <option value="">Select Role</option>
+            <option value="" disabled>
+              Select Role...
+            </option>
             <option value="client">Client</option>
             <option value="freelancer">Freelancer</option>
           </InputField>
-          {/* <InputField
-            label="Description"
-            as="textarea"
-            name="description"
-            value={formValues.description}
-            onChange={handleChange}
-            isInvalid={Boolean(errors.description)}
-            feedback={errors.description}
-            rows={4}
-          /> */}
-          <div className="d-flex justify-content-center mt-2">
+
+          {/* Submission Area */}
+          <div className="d-flex justify-content-center mt-4">
             {isLoading ? (
               <Spinner animation="border" variant="primary" />
             ) : (
               <Button
                 variant="primary"
                 type="submit"
-                className="w-75 mt-3"
-                disabled={!isFormValid}
+                className="w-75"
+                disabled={
+                  usernameCheck.loading || emailCheck.loading || isLoading
+                } // Simplified disabled logic, relies on isFormValid check within handleSubmit
               >
                 Register
               </Button>
             )}
           </div>
+
+          {/* Feedback Snackbar */}
           {showSnackbar && (
             <Alert
               variant={
-                snackbarMessage === "Registration successful!"
+                snackbarMessage.startsWith("Registration successful")
                   ? "success"
                   : "danger"
               }
@@ -331,8 +615,10 @@ const RegisterForm = () => {
               {snackbarMessage}
             </Alert>
           )}
-          <div>
-            <p className="mt-3 d-flex justify-content-center">
+
+          {/* Login Link */}
+          <div className="text-center mt-3">
+            <p>
               Already have an account?{" "}
               <Link to="/Freelancia-Front-End/login">Login</Link>
             </p>

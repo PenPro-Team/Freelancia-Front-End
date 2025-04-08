@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./ProjectCard.css";
-import axios from "axios";
-import RequiredSkills from "../RequiredSkills/RequiredSkills";
 import PaginationButton from "../Pagination/Pagination";
 import Placeholder from "react-bootstrap/Placeholder";
 import { Badge } from "react-bootstrap";
@@ -28,11 +26,13 @@ export default function ProjectCard({
         setTotalPages(response.data.total_pages);
         console.log("Data from API:", response.data.results);
       })
-      .catch((error) =>
-        console.error("There was an error fetching data", error)
-      );
+      .catch((error) => {
+        console.error("Error fetching projects:", error);
+        setErrorMessage("Failed to fetch projects.");
+      });
   }, [currentPage]);
 
+  // Apply filters based on skills, job states, and price range
   useEffect(() => {
     const filtered = data.filter((project) => {
       let skillsMatch = true;
@@ -40,8 +40,9 @@ export default function ProjectCard({
         const projectSkills = Array.isArray(project.required_skills)
           ? project.required_skills
           : typeof project.required_skills === "string"
-          ? project.required_skills.split(",").map((skill) => skill.trim())
-          : [];
+            ? project.required_skills.split(",").map((skill) => skill.trim())
+            : [];
+
         skillsMatch = projectSkills.some((skill) => skills.includes(skill));
       }
 
@@ -50,30 +51,25 @@ export default function ProjectCard({
         jobStateMatch = jobStates.includes(project.project_state);
       }
 
-      const price = project.suggested_budget || 0;
-
       let priceMatch = true;
+      const price = project.suggested_budget || 0;
       if (priceRange) {
         priceMatch = price >= priceRange.min && price <= priceRange.max;
       }
-      // console.log("Price:", price, "Range:", priceRange);
-      // console.log("Skills match:", skillsMatch, "Job state match:", jobStateMatch, "Price match:", priceMatch);
+
       return skillsMatch && jobStateMatch && priceMatch;
     });
 
-    if (isSortedByRecent) {
-      const sortedFiltered = [...filtered].sort(
-        (old, now) => new Date(now.creation_date) - new Date(old.creation_date)
-      );
-      setFilteredData(sortedFiltered);
-    } else {
-      setFilteredData(filtered);
-    }
+    setFilteredData(isSortedByRecent
+      ? [...filtered].sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date))
+      : filtered);
   }, [data, skills, jobStates, priceRange, isSortedByRecent]);
 
   return (
     <>
-      {filteredData.length > 0 && data.length > 0 ? (
+      {errorMessage ? (
+        <div className="text-danger text-center">{errorMessage}</div>
+      ) : filteredData.length > 0 ? (
         filteredData.map((project) => (
           <Link
             to={`/Freelancia-Front-End/job_details/${project.id}`}
@@ -86,8 +82,8 @@ export default function ProjectCard({
                   Price: {project.suggested_budget}$
                 </p>
                 <h5 className="card-title d-flex justify-content-between">
-                  {project.project_name}{" "}
-                  <span className="">
+                  {project.project_name}
+                  <span>
                     <p
                       className="mb-1 text-muted fw-light text-end d-inline"
                       style={{ fontSize: "12px" }}
@@ -96,11 +92,6 @@ export default function ProjectCard({
                     </p>
                   </span>
                 </h5>
-
-                {/* <RequiredSkills
-                  skills={project.required_skills}
-                  key={project.id}
-                /> */}
                 <DrawSkills required_skills={project.required_skills} />
                 <Badge
                   style={{
@@ -113,14 +104,15 @@ export default function ProjectCard({
                     project.project_state === "finished"
                       ? "dark"
                       : project.project_state === "open"
-                      ? "primary"
-                      : project.project_state === "ongoing"
-                      ? "success"
-                      : project.project_state === "canceled"
-                      ? "danger"
-                      : project.project_state === "contract canceled and reopened"
-                      ? "success"
-                      : "secondary"
+                        ? "primary"
+                        : project.project_state === "ongoing"
+                          ? "success"
+                          : project.project_state === "canceled"
+                            ? "danger"
+                            : project.project_state ===
+                              "contract canceled and reopened"
+                              ? "success"
+                              : "secondary"
                   }
                 >
                   {project.project_state}

@@ -7,8 +7,7 @@ export default function JobStateFilter({ cb }) {
   const [selectedJobStates, setSelectedJobStates] = useState([]);
 
   useEffect(() => {
-    AxiosProjectsInstance
-      .get(``)
+    AxiosProjectsInstance.get(``)
       .then((response) => {
         setData(response.data.results);
       })
@@ -25,7 +24,7 @@ export default function JobStateFilter({ cb }) {
 
   const handleChange = (e) => {
     console.log(e.target);
-    
+
     const jobState = e.target.id;
     const isChecked = e.target.checked;
 

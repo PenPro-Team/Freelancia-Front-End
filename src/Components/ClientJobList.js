@@ -1,47 +1,53 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Card from "react-bootstrap/Card";
-import Badge from "react-bootstrap/Badge";
-import axios from "axios";
 import JobDetailsCard from "./JobDetailsCard";
-import { useNavigate } from "react-router-dom"; // Updated to useNavigate
+import { useNavigate } from "react-router-dom";
 import { AxiosProjectsInstance } from "../network/API/AxiosInstance";
 import { Spinner } from "react-bootstrap";
 
 const ClientJobList = ({ userId }) => {
-  const navigate = useNavigate(); // Updated to use useNavigate
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [updataAPI, setUpdateAPI] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [updateAPI, setUpdateAPI] = useState(false);
 
   function toPostalJob() {
-    navigate("/Freelancia-Front-End/postjob"); // Updated to use navigate
+    navigate("/Freelancia-Front-End/postjob");
   }
 
   const toggleCallingAPI = () => {
-    console.log("Calling Toggle Updating");
-    setUpdateAPI(!updataAPI);
+    setUpdateAPI(!updateAPI);
   };
 
   useEffect(() => {
     setIsLoading(true);
+    setErrorMessage(null);
+
     const fetchProjects = async () => {
       try {
-        console.log("Calling API");
-        console.log("User ID: ", userId); 
-        const response = await AxiosProjectsInstance.get(`?owner_id=${userId}`);
-        setProjects(response.data);
+        console.log("Fetching projects for user ID:", userId);
+
+        // Ensure correct endpoint format
+        const response = await AxiosProjectsInstance.get(`/user/?owner_id=${userId}`);
+
+        // Validate data structure
+        if (Array.isArray(response.data.results)) {
+          setProjects(response.data.results);
+        } else {
+          console.error("Unexpected response format:", response.data);
+          setErrorMessage("Invalid response format from server.");
+        }
       } catch (error) {
-        console.error("Error:", error);
-        setError(true);
+        console.error("Error fetching projects:", error);
+        setErrorMessage(error.response?.data?.message || "Failed to fetch projects.");
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchProjects();
-  }, [userId, updataAPI]);
+  }, [userId, updateAPI]);
 
   return (
     <div>
@@ -49,11 +55,11 @@ const ClientJobList = ({ userId }) => {
         <div className="d-flex justify-content-center">
           <Spinner animation="border" variant="primary" />
         </div>
-      ) : error ? (
-        <div className="text-primary">No proposals found ...</div>
+      ) : errorMessage ? (
+        <div className="text-danger text-center">{errorMessage}</div>
       ) : (
         <div className="d-flex flex-column gap-3">
-          {projects.length >= 1 ? (
+          {projects.length > 0 ? (
             projects.map((project) => (
               <JobDetailsCard
                 key={project.id}

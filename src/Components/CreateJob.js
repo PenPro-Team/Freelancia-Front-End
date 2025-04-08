@@ -15,7 +15,7 @@ import {
   AxiosSkillsInstance,
 } from "../network/API/AxiosInstance";
 
-// Constants
+// Define initial form state and validation rules
 const INITIAL_FORM_STATE = {
   project_name: "",
   suggested_budget: "",
@@ -45,14 +45,16 @@ const VALIDATION_RULES = {
       : "",
 };
 
+// Component definition and state management hooks
 const ClientJobForm = () => {
-  // Hooks and State
   const navigate = useNavigate();
   const location = useLocation();
   const user = getFromLocalStorage("auth");
 
   const updateMode = location.state?.jobData ? true : false;
   const jobData = updateMode ? location.state.jobData : null;
+  const isOngoingAndUneditable =
+    updateMode && jobData?.project_state === "ongoing";
 
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [initialData, setInitialData] = useState(null);
@@ -63,7 +65,7 @@ const ClientJobForm = () => {
   const [selectedSkill, setSelectedSkill] = useState("");
   const [showCancelModal, setShowCancelModal] = useState(false);
 
-  // Validation Functions
+  // Functions for form validation
   const validateField = (name, value) => VALIDATION_RULES[name]?.(value) || "";
 
   const validate = () => {
@@ -83,7 +85,7 @@ const ClientJobForm = () => {
     return Object.values(tempErrors).every((err) => !err);
   };
 
-  // Data Handling Functions
+  // Functions for handling form data changes and preparing payload
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -110,10 +112,9 @@ const ClientJobForm = () => {
     skills_ids: skillsOptions
       .filter((skill) => formData.requiredSkills.includes(skill.skill))
       .map((skill) => skill.id),
-    project_state: "open",
   });
 
-  // API Handling Functions
+  // Functions for handling API interactions (submit, update, cancel)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -122,21 +123,20 @@ const ClientJobForm = () => {
     setMessage("");
 
     try {
-      await AxiosProjectsInstance.post("create/", createPayload(), {
+      const payload = { ...createPayload(), project_state: "open" };
+      await AxiosProjectsInstance.post("create/", payload, {
         headers: {
           Authorization: `Bearer ${user.user.access}`,
         },
       });
       setMessage("Job Created successfully");
-
       setTimeout(() => {
         navigate("/Freelancia-Front-End/clientjoblist");
       }, 1000);
-
       setFormData(INITIAL_FORM_STATE);
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
-      setMessage("Failed to post job.");
+      setMessage(error.response?.data?.error || "Failed to post job.");
     } finally {
       setSubmitting(false);
     }
@@ -160,36 +160,30 @@ const ClientJobForm = () => {
       });
       setMessage("Job Updated successfully");
       setInitialData({ ...formData });
-
       setTimeout(() => {
         navigate("/Freelancia-Front-End/clientjoblist");
       }, 1000);
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
-      setMessage("Failed to update job.");
+      setMessage(error.response?.data?.error || "Failed to update job.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleCancelJob = async (jobId, cancelType) => {
+  const handleCancelJob = async (jobId, cancelType = null) => {
     setSubmitting(true);
     setMessage("");
 
     try {
-      const newJobState =
-        jobData.project_state === "ongoing" && cancelType
-          ? cancelType === "contract"
-            ? "contract canceled and reopened"
-            : "canceled"
-          : "canceled";
+      let newJobState = "canceled";
+      if (jobData.project_state === "ongoing" && cancelType === "contract") {
+        newJobState = "contract canceled and reopened";
+      }
 
       await AxiosProjectsInstance.patch(
         `/${jobId}`,
-        {
-          project_state: newJobState,
-          owner_id: user.user.id,
-        },
+        { project_state: newJobState },
         {
           headers: {
             Authorization: `Bearer ${user.user.access}`,
@@ -203,19 +197,18 @@ const ClientJobForm = () => {
           : "Contract canceled successfully, job reopened"
       );
       setShowCancelModal(false);
-
       setTimeout(() => {
         navigate("/Freelancia-Front-End/clientjoblist");
       }, 1000);
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
-      setMessage("Failed to cancel job.");
+      setMessage(error.response?.data?.error || "Failed to cancel job.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  // Effects
+  // Effect hooks for fetching initial data and handling updates
   useEffect(() => {
     const fetchSkills = async () => {
       try {
@@ -225,47 +218,39 @@ const ClientJobForm = () => {
         console.error("Error fetching skills:", error);
       }
     };
-
     fetchSkills();
   }, []);
 
   useEffect(() => {
     if (updateMode && jobData) {
-      const processedSkills = Array.isArray(jobData.required_skills)
-        ? jobData.required_skills.map((skill) => skill.skill || skill)
-        : typeof jobData.required_skills === "string"
-          ? jobData.required_skills.split(", ").filter((skill) => skill)
-          : [];
-
+      const currentSkills = jobData.required_skills || [];
       const newFormData = {
         project_name: jobData.project_name || "",
         suggested_budget: jobData.suggested_budget || "",
         expected_deadline: jobData.expected_deadline || "",
         project_description: jobData.project_description || "",
-        requiredSkills: processedSkills,
+        requiredSkills: currentSkills,
       };
-
       setFormData(newFormData);
       setInitialData(newFormData);
+    } else {
+      setFormData(INITIAL_FORM_STATE);
+      setInitialData(null);
     }
   }, [updateMode, jobData]);
 
-  // Utility Functions
+  // Utility function to check if form data has changed from initial state
   const isDataChanged = () => {
-    if (!initialData) return true;
-    return Object.keys(INITIAL_FORM_STATE).some((key) =>
-      key === "requiredSkills"
-        ? formData[key].join(",") !== initialData[key].join(",")
-        : formData[key] !== initialData[key]
-    );
+    if (!initialData) return false;
+    return JSON.stringify(formData) !== JSON.stringify(initialData);
   };
 
-  // Auth Check
-  if (!user?.user) return <Navigate to="/Freelancia-Front-End/403" />;
+  // Authentication and authorization checks
+  if (!user?.user?.access) return <Navigate to="/Freelancia-Front-End/login" />;
   if (user.user.role !== "client")
     return <Navigate to="/Freelancia-Front-End/403" />;
 
-  // Render Components
+  // Function to render the skills selection section
   const renderSkillsSection = () => (
     <Form.Group controlId="requiredSkills" className="mb-3">
       <Form.Label>Required Skills</Form.Label>
@@ -276,59 +261,66 @@ const ClientJobForm = () => {
           value={selectedSkill}
           onChange={(e) => setSelectedSkill(e.target.value)}
           isInvalid={!!errors.requiredSkills}
+          disabled={isOngoingAndUneditable}
         >
           <option value="">Select a skill</option>
-          {skillsOptions.map((skill) => (
-            <option key={skill.id} value={skill.skill}>
-              {skill.skill}
-            </option>
-          ))}
+          {Array.isArray(skillsOptions) &&
+            skillsOptions.map((skill) => (
+              <option key={skill.id} value={skill.skill}>
+                {skill.skill}
+              </option>
+            ))}
         </Form.Control>
-        <Button variant="secondary" onClick={handleAddSkill}>
+        <Button
+          variant="secondary"
+          onClick={handleAddSkill}
+          disabled={isOngoingAndUneditable}
+        >
           Add
         </Button>
       </InputGroup>
-      <Form.Control.Feedback type="invalid">
-        {errors.requiredSkills}
-      </Form.Control.Feedback>
+      {errors.requiredSkills && (
+        <div className="invalid-feedback d-block">{errors.requiredSkills}</div>
+      )}
       <Form.Control
         type="text"
         readOnly
         value={formData.requiredSkills.join(", ")}
-        className="mt-2"
+        className="mt-2 bg-light"
       />
     </Form.Group>
   );
 
+  // Function to render the cancel confirmation modal
   const renderCancelModal = () => (
     <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)}>
       <Modal.Header closeButton>
         <Modal.Title>Confirm Cancelation</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {jobData?.job_state === "ongoing"
-          ? "Do you want to end the contract with the current client and reopen the job, or do you want to cancel the job entirely?"
+        {jobData?.project_state === "ongoing"
+          ? "Do you want to end the contract with the current freelancer and reopen the job, or do you want to cancel the job entirely?"
           : "Are you sure you want to cancel this job?"}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
           No
         </Button>
-        {jobData?.job_state === "ongoing" ? (
+        {jobData?.project_state === "ongoing" ? (
           <>
             <Button
               variant="warning"
               onClick={() => handleCancelJob(jobData.id, "contract")}
               disabled={submitting}
             >
-              {submitting ? "Processing..." : "End Contract & Reopen Job"}
+              {submitting ? "Processing..." : "End Contract & Reopen"}
             </Button>
             <Button
               variant="danger"
               onClick={() => handleCancelJob(jobData.id, "full")}
               disabled={submitting}
             >
-              {submitting ? "Processing..." : "Cancel Job"}
+              {submitting ? "Processing..." : "Cancel Job Entirely"}
             </Button>
           </>
         ) : (
@@ -344,11 +336,22 @@ const ClientJobForm = () => {
     </Modal>
   );
 
+  // Main component render method
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 mb-5">
       <h2>{updateMode ? "Update Your Job" : "Post a Job"}</h2>
+
+      {isOngoingAndUneditable && (
+        <Alert variant="info" className="mb-3">
+          This job is currently ongoing and cannot be edited or canceled.
+        </Alert>
+      )}
+
       {message && (
-        <Alert variant="success" className="mb-3">
+        <Alert
+          variant={message.includes("success") ? "success" : "danger"}
+          className="mb-3"
+        >
           {message}
         </Alert>
       )}
@@ -358,9 +361,9 @@ const ClientJobForm = () => {
         onSubmit={
           updateMode
             ? (e) => {
-              e.preventDefault();
-              handleUpdate(jobData.id);
-            }
+                e.preventDefault();
+                handleUpdate(jobData.id);
+              }
             : handleSubmit
         }
       >
@@ -371,62 +374,75 @@ const ClientJobForm = () => {
           value={formData.project_name}
           onChange={handleChange}
           error={errors.project_name}
+          disabled={isOngoingAndUneditable}
         />
         <InputFieldForJobCreate
-          label="Price"
+          label="Suggested Budget ($)"
           name="suggested_budget"
           type="number"
           value={formData.suggested_budget}
           onChange={handleChange}
           onKeyDown={(e) => {
-            if (["-", "e", "E"].includes(e.key)) e.preventDefault();
+            if (["-", "e", "E", "+"].includes(e.key)) e.preventDefault();
           }}
+          min="1"
           error={errors.suggested_budget}
+          disabled={isOngoingAndUneditable}
         />
         <InputFieldForJobCreate
-          label="Deadline"
+          label="Expected Deadline (Days)"
           name="expected_deadline"
           type="number"
           value={formData.expected_deadline}
           onChange={handleChange}
+          onKeyDown={(e) => {
+            if (["-", "e", "E", "+", "."].includes(e.key)) e.preventDefault();
+          }}
+          min="1"
+          max="100"
           error={errors.expected_deadline}
+          disabled={isOngoingAndUneditable}
         />
         <InputFieldForJobCreate
-          label="Description"
+          label="Project Description"
           name="project_description"
           type="text"
           value={formData.project_description}
           onChange={handleChange}
           error={errors.project_description}
           as="textarea"
-          rows={3}
+          rows={4}
+          disabled={isOngoingAndUneditable}
         />
 
         {renderSkillsSection()}
 
-        {updateMode ? (
-          <>
-            <Button
-              variant="primary"
-              type="submit"
-              disabled={submitting || !isDataChanged()}
-            >
-              {submitting ? "Updating..." : "Update"}
+        <div className="d-flex justify-content-start gap-2">
+          {updateMode ? (
+            <>
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={
+                  submitting || !isDataChanged() || isOngoingAndUneditable
+                }
+              >
+                {submitting ? "Updating..." : "Update Job"}
+              </Button>
+              <Button
+                variant="danger"
+                onClick={() => setShowCancelModal(true)}
+                disabled={submitting || isOngoingAndUneditable}
+              >
+                {submitting ? "Processing..." : "Cancel Job"}
+              </Button>
+            </>
+          ) : (
+            <Button variant="success" type="submit" disabled={submitting}>
+              {submitting ? "Submitting..." : "Post Job"}
             </Button>
-            <Button
-              variant="danger"
-              onClick={() => setShowCancelModal(true)}
-              disabled={submitting}
-              className="ml-2"
-            >
-              {submitting ? "Processing..." : "Cancel"}
-            </Button>
-          </>
-        ) : (
-          <Button variant="primary" type="submit" disabled={submitting}>
-            {submitting ? "Submitting..." : "Submit"}
-          </Button>
-        )}
+          )}
+        </div>
       </Form>
 
       {updateMode && jobData && renderCancelModal()}

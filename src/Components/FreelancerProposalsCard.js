@@ -2,6 +2,8 @@ import { Button, Card, Image } from "react-bootstrap";
 import RateStars from "./RateStars";
 import { useNavigate } from "react-router-dom"; // Corrected import path
 import { getFromLocalStorage } from "../network/local/LocalStorage";
+import personalImg from "../assets/default-user.png";
+
 function FreelancerProposalsCard(props) {
   const navigate = useNavigate(); // Correct usage of useNavigate
   const curenUser = getFromLocalStorage("auth");
@@ -10,10 +12,13 @@ function FreelancerProposalsCard(props) {
       <Card.Body style={{ position: "relative" }}>
         <Card.Title>
           <div className="d-flex justify-content-between">
-
             <div className="d-flex align-items-center">
               <Image
-                src={props.proposal.user.image}
+                src={
+                  props.proposal.user.image
+                    ? props.proposal.user.image
+                    : personalImg
+                }
                 roundedCircle
                 alt={props.proposal.user.name}
                 width={50}
@@ -28,20 +33,24 @@ function FreelancerProposalsCard(props) {
               </div>
             </div>
 
-            {
-              curenUser.user.role === "client" && props.proposal.project.project_state !="canceled"&& curenUser.user.user_id== props.proposal.project.owner_id.id &&(
+            {curenUser &&
+              curenUser.user &&
+              curenUser.user.role === "client" &&
+              (props.proposal.project.project_state != "canceled"   && props.proposal.project.project_state != "finished" ) &&
+              curenUser.user.user_id == props.proposal.project.owner_id.id && (
                 <div>
                   <Button
                     className="btn btn-primary"
                     onClick={() => {
-                      navigate( "/Freelancia-Front-End/contract",{  state: { proposal: props.proposal } });
+                      navigate("/Freelancia-Front-End/contract", {
+                        state: { proposal: props.proposal },
+                      });
                     }}
                   >
                     Contract
                   </Button>
                 </div>
-              )
-            }
+              )}
           </div>
         </Card.Title>
         <div className="mt-2">
