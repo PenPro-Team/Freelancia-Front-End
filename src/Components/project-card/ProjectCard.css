@@ -10,4 +10,18 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
+}
+
+[dir="rtl"] .card .badge {
+  left: 10px;
+  right: auto;
+}
+
+[dir="rtl"] .card .text-end {
+  text-align: left !important;
+}
+
+[dir="rtl"] .card .mb-1.text-muted {
+  margin-right: auto;
+  margin-left: 0;
+}

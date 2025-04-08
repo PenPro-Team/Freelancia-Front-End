@@ -1,0 +1,330 @@
+{
+  "wallet": {
+    "addBalance": "إضافة رصيد باستخدام PayPal",
+    "withdrawFunds": "سحب الأموال",
+    "availableBalance": "الرصيد المتاح",
+    "amount": "المبلغ (دولار أمريكي)",
+    "minAmount": "الحد الأدنى للمبلغ هو 1.00 دولار",
+    "paypalEmail": "البريد الإلكتروني PayPal",
+    "enterAmount": "أدخل المبلغ",
+    "enterWithdrawAmount": "أدخل مبلغ السحب",
+    "enterPaypalEmail": "أدخل بريدك الإلكتروني PayPal",
+    "payWithPaypal": "الدفع باستخدام PayPal",
+    "requestWithdrawal": "طلب السحب",
+    "processing": "جاري المعالجة...",
+    "withdrawalHistory": "سجل عمليات السحب",
+    "noHistory": "لم يتم العثور على سجل سحب",
+    "date": "التاريخ",
+    "status": "الحالة",
+    "notes": "ملاحظات",
+    "payment": {
+      "success": "تم الدفع بنجاح",
+      "completed": "اكتمل الدفع! رصيدك الجديد هو ${{balance}}",
+      "withdrawalSubmitted": "تم تقديم طلب السحب",
+      "withdrawalSuccess": "تم تقديم طلب السحب بمبلغ ${{amount}} بنجاح!"
+    },
+    "errors": {
+      "insufficientBalance": "رصيد غير كافٍ للسحب",
+      "authRequired": "مطلوب المصادقة"
+    }
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "about": "عن الموقع",
+    "contact": "اتصل بنا",
+    "projects": "المشاريع",
+    "login": "تسجيل الدخول",
+    "register": "حساب جديد",
+    "dashboard": "لوحة التحكم",
+    "logout": "تسجيل الخروج"
+  },
+  "home": {
+    "welcome": "مرحباً بك في فريلانسيا",
+    "subtitle": "حيث تبدأ في بناء حلم عملك..",
+    "search": {
+      "placeholder": "ابحث باسم المستخدم",
+      "button": "بحث",
+      "results": "نتائج البحث"
+    },
+    "searchResults": {
+      "title": "نتائج البحث",
+      "noResults": "لم يتم العثور على نتائج"
+    },
+    "description": "الوصف",
+    "noDescription": "لا يوجد وصف متاح",
+    "categories": {
+      "title": "الفئات الشائعة",
+      "items": [
+        {
+          "title": "تطوير الويب",
+          "description": "تصميم وتطوير واستضافة المواقع"
+        },
+        {
+          "title": "التصميم الجرافيكي",
+          "description": "تصميم الشعارات والهوية البصرية والرسوم التوضيحية"
+        },
+        {
+          "title": "الترجمة",
+          "description": "خدمات الترجمة والتعريب"
+        }
+      ]
+    },
+    "clients": {
+      "title": "العملاء المميزون",
+      "subtitle": "تواصل مع أفضل العملاء وابدأ رحلتك في العمل الحر",
+      "viewProjects": "عرض جميع المشاريع",
+      "noImage": "صورة العميل غير متوفرة"
+    },
+    "freelancers": {
+      "title": "أفضل المستقلين تقييماً",
+      "viewAll": "عرض الكل",
+      "category": "الفئة",
+      "rating": "التقييم"
+    },
+    "cta": {
+      "title": "مستعد لبدء رحلتك؟",
+      "subtitle": "انضم إلى آلاف المحترفين في فريلانسيا اليوم!",
+      "signup": "سجل الآن",
+      "browse": "تصفح المشاريع",
+      "loggedIn": {
+        "title": "اكتشف المزيد من الفرص",
+        "subtitle": "اعثر على التطابق المثالي لمهاراتك أو احتياجات مشروعك",
+        "dashboard": "الذهاب إلى لوحة التحكم"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "userInfo": "معلومات المستخدم",
+    "updateProfile": "تحديث الملف الشخصي",
+    "updateSecurity": "تحديث الأمان",
+    "wallet": "المحفظة",
+    "skills": "المهارات",
+    "certificates": "الشهادات",
+    "projects": "المشاريع",
+    "updateSkills": "تحديث المهارات",
+    "updateCertificate": "رفع شهادة",
+    "updateProjects": "رفع مشروع",
+    "skillsSection": "قسم المهارات",
+    "certificateSection": "قسم الشهادات",
+    "projectsSection": "قسم المشاريع",
+    "projects": {
+      "title": "مشاريع المستقل",
+      "mainImage": "الصورة الرئيسية",
+      "additionalImages": "صور إضافية",
+      "projectTitle": "عنوان المشروع",
+      "description": "الوصف",
+      "noProjects": "لا توجد مشاريع متاحة.",
+      "viewImage": "عرض الصورة",
+      "loadError": "فشل في جلب المشاريع. يرجى المحاولة مرة أخرى.",
+      "titlePlaceholder": "أدخل عنوان المشروع",
+      "descriptionPlaceholder": "أدخل وصف المشروع",
+      "uploadButton": "رفع المشروع",
+      "success": "تم رفع المشروع بنجاح!",
+      "error": "فشل في رفع المشروع. يرجى المحاولة مرة أخرى"
+    },
+    "skills": {
+      "title": "تحديث مهاراتك",
+      "availableSkills": "المهارات المتاحة",
+      "selectSkill": "اختر مهارة",
+      "add": "إضافة",
+      "update": "تحديث",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "updateSkills": "تحديث المهارات",
+      "success": "تم تحديث المهارات وحفظها!",
+      "noSkills": "لم تتم إضافة أي مهارات بعد.",
+      "skillAdded": "تمت إضافة المهارة بنجاح!",
+      "skillUpdated": "تم تحديث المهارة بنجاح!",
+      "skillDeleted": "تم حذف المهارة بنجاح!"
+    },
+    "certificates": {
+      "title": "رفع شهادة",
+      "image": "صورة الشهادة",
+      "certificateTitle": "العنوان",
+      "enterTitle": "أدخل عنوان الشهادة",
+      "description": "الوصف",
+      "enterDescription": "أدخل وصف الشهادة",
+      "issuedBy": "صادرة من",
+      "enterIssuer": "أدخل اسم المؤسسة المصدرة",
+      "issuedDate": "تاريخ الإصدار",
+      "upload": "رفع الشهادة",
+      "success": "تم رفع الشهادة بنجاح",
+      "error": "فشل في رفع الشهادة. يرجى المحاولة مرة أخرى.",
+      "displayTitle": "شهادات المستقل",
+      "noCertificates": "لا توجد شهادات متاحة."
+    }
+  },
+  "about": {
+    "title": "من نحن",
+    "mission": "مهمتنا",
+    "vision": "رؤيتنا",
+    "stats": {
+      "users": "مستخدم نشط",
+      "projects": "مشروع مكتمل",
+      "payments": "مدفوعات آمنة",
+      "support": "دعم فني"
+    }
+  },
+  "contact": {
+    "title": "اتصل بنا",
+    "form": {
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "subject": "الموضوع",
+      "message": "الرسالة",
+      "send": "إرسال"
+    }
+  },
+  "jobDetails": {
+    "title": "تفاصيل المشروع",
+    "notFound": "لم يتم العثور على هذا المشروع",
+    "loading": "جاري التحميل..."
+  },
+  "navbar": {
+    "brand": {
+      "free": "فري",
+      "lancia": "لانسيا"
+    },
+    "menu": {
+      "home": "الرئيسية",
+      "projects": "المشاريع",
+      "myProposals": "عروضي",
+      "yourProfile": "ملفك الشخصي",
+      "postJob": "نشر وظيفة",
+      "clientJobList": "قائمة وظائف العميل",
+      "yourContracts": "عقودك",
+      "chatRooms": "غرف الدردشة",
+      "adminPanel": "لوحة الإدارة"
+    },
+    "user": {
+      "balance": "الرصيد",
+      "profile": "الملف الشخصي",
+      "logout": "تسجيل الخروج"
+    },
+    "auth": {
+      "login": "تسجيل الدخول",
+      "register": "حساب جديد"
+    }
+  },
+  "footer": {
+    "headline": "لنرتقي",
+    "description": {
+      "part1": "بجميع مشاريعك إلى المستوى التالي مع المستقلين الموهوبين لدينا.",
+      "part2": "سواء كنت عميلاً تبحث عن أفضل المواهب أو مستقلاً",
+      "part3": "تبحث عن فرص مثيرة، نحن هنا لمساعدتك."
+    },
+    "buttons": {
+      "shareProject": "شارك مشروعك!",
+      "viewPortfolio": "عرض المحفظة",
+      "loginCta": "سجل دخولك لعرض مهاراتك!"
+    },
+    "resources": {
+      "title": "مصادرنا",
+      "projects": "المشاريع",
+      "home": "الرئيسية",
+      "portfolio": "المحفظة",
+      "aboutUs": "من نحن",
+      "contactUs": "اتصل بنا"
+    },
+    "search": {
+      "placeholder": "ابحث باسم المستخدم",
+      "button": "بحث"
+    },
+    "copyright": "© 2025، FreeLancia.com لفريق PenPro"
+  },
+  "languages": {
+    "en": "الإنجليزية",
+    "es": "الإسبانية",
+    "ar": "العربية",
+    "select": "اختر اللغة"
+  },
+  "formValidation": {
+    "required": "هذا الحقل مطلوب",
+    "lettersOnly": "يسمح فقط بالحروف",
+    "age18": "يجب أن يكون عمرك 18 عاماً على الأقل",
+    "numbersOnly": "يجب أن يحتوي على أرقام فقط",
+    "minLength5": "يجب أن يكون 5 أحرف على الأقل",
+    "minLength200": "يجب أن يكون 200 حرف على الأقل",
+    "errorUpdating": "خطأ في تحديث البيانات! يرجى المحاولة مرة أخرى."
+  },
+  "placeholders": {
+    "firstName": "الاسم الأول",
+    "lastName": "الاسم الأخير",
+    "address": "العنوان (مثال: 1234 شارع رئيسي)",
+    "postalCode": "الرمز البريدي (مثال: 62511)",
+    "password": "كلمة المرور",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "username": "اسم المستخدم",
+    "email": "البريد الإلكتروني"
+  },
+  "alerts": {
+    "updateSuccess": "تم تحديث بياناتك بنجاح!",
+    "updateError": "خطأ في تحديث البيانات! يرجى المحاولة مرة أخرى..",
+    "loginRequired": "يجب تسجيل الدخول أولاً",
+    "requiredFields": "جميع الحقول مطلوبة",
+    "invalidCredentials": "بيانات الاعتماد غير صحيحة"
+  },
+  "security": {
+    "validation": {
+      "usernameFormat": "اسم المستخدم يجب أن يكون على الأقل 3 أحرف ويتبع الصيغة الصحيحة",
+      "emailFormat": "صيغة البريد الإلكتروني غير صحيحة",
+      "usernameExists": "اسم المستخدم موجود بالفعل",
+      "emailExists": "البريد الإلكتروني موجود بالفعل",
+      "required": "هذا الحقل مطلوب"
+    }
+  },
+  "formLabels": {
+    "currentPassword": "كلمة المرور الحالية",
+    "submit": "حفظ التغييرات"
+  },
+  "errors": {
+    "userNotFound": "لم يتم العثور على المستخدم",
+    "serverError": "خطأ في الخادم. يرجى المحاولة مرة أخرى"
+  },
+  "validation": {
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "passwordRequirements": "يجب أن تحتوي كلمة المرور على حرف صغير وحرف كبير ورقم واحد على الأقل، وأن تكون 8 أحرف على الأقل، بدون مسافات"
+  },
+  "contracts": {
+    "status": {
+      "aproved": "مقبول",
+      "pending": "قيد الانتظار",
+      "finished": "مكتمل", 
+      "canceled": "ملغي",
+      "active": "نشط",
+      "paid": "مدفوع"
+    },
+    "title": "العقد",
+    "deadline": "المدة",
+    "days": "يوم",
+    "budget": "الميزانية",
+    "created": "تاريخ الإنشاء",
+    "client": "العميل",
+    "freelancer": "المستقل",
+    "viewDetails": "عرض التفاصيل"
+  },
+  "projects": {
+    "filter": {
+      "title": "تصفية المشاريع",
+      "sortBy": "ترتيب حسب",
+      "recent": "الأحدث",
+      "oldest": "الأقدم",
+      "priceRange": "نطاق السعر",
+      "minPrice": "السعر الأدنى",
+      "maxPrice": "السعر الأقصى",
+      "skills": "المهارات",
+      "selectSkills": "اختر المهارات",
+      "status": "الحالة",
+      "active": "نشط",
+      "completed": "مكتمل",
+      "pending": "قيد الانتظار",
+      "minPrice":"السعر الأدنى"
+    },
+    "search": {
+      "placeholder": "البحث عن المشاريع"
+    }
+  }
+}

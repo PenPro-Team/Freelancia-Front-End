@@ -19,7 +19,6 @@ export default function ProjectCard({
   const [totalPages, setTotalPages] = useState(0);
   const [searchResult, setSearchResult] = useState();
   const [errorMessage, setErrorMessage] = useState("");
-  
   useEffect(() => {
     AxiosProjectsInstance.get(`?page=${currentPage}`)
       .then((response) => {

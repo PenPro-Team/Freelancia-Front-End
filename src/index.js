@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import FrelanciaStore from "./Redux/Store";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
+import './i18n/config';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

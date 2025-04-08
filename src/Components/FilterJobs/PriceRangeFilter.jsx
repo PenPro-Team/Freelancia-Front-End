@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Alert, Form, InputGroup } from "react-bootstrap";
+import { useTranslation } from 'react-i18next';
 
 export default function PriceRangeFilter({ onChange }) {
+  const { t } = useTranslation();
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(10000);
   const [priceError, setPriceError] = useState()
@@ -30,30 +32,15 @@ export default function PriceRangeFilter({ onChange }) {
 
   return (
     <div>
-      {/* <input
-
-        type="number"
-        value={minPrice}
-        onChange={(e) => setMinPrice(Number(e.target.value))}
-        placeholder="Min Price"
-        style={{ marginRight: "0.5rem",marginBottom:"1rem" }}
-      />
-      <input
-        type="number"
-        value={maxPrice}
-        onChange={(e) => setMaxPrice(Number(e.target.value))}
-        placeholder="Max Price"
-      /> */}
       {minPrice > maxPrice ?
         <Alert key={"danger"} variant={"danger"}>
-          Min. must be less than Max.
+          {t('projects.filter.minPriceError')}
         </Alert> : ""
       }
       <InputGroup className="mb-3">
-        <InputGroup.Text>Min.</InputGroup.Text>
-        <InputGroup.Text>0.00</InputGroup.Text>
+        <InputGroup.Text>{t('projects.filter.minPrice')}</InputGroup.Text>
         <Form.Control
-          aria-label="Dollar amount (with dot and two decimal places)"
+          aria-label={t('projects.filter.minPrice')}
           value={minPrice}
           onChange={handleChange}
           name="minPrice"
@@ -61,17 +48,15 @@ export default function PriceRangeFilter({ onChange }) {
         />
       </InputGroup>
       <InputGroup className="mb-3">
-        <InputGroup.Text>Max.</InputGroup.Text>
-        <InputGroup.Text>10000</InputGroup.Text>
+        <InputGroup.Text>{t('projects.filter.maxPrice')}</InputGroup.Text>
         <Form.Control
-          aria-label="Dollar amount (with dot and two decimal places)"
+          aria-label={t('projects.filter.maxPrice')}
           value={maxPrice}
           name="maxPrice"
           id="maxPrice"
-        onChange={handleChange}
+          onChange={handleChange}
         />
       </InputGroup>
-
     </div>
   );
 }

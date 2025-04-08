@@ -24,8 +24,10 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import ReportUserModal from "../Admin-Panel/ReportUserModal";
 import { FaUserSlash, FaUserCheck } from "react-icons/fa";
 import BanUserModal from "../Admin-Panel/BanUserModal";
+import { useTranslation } from 'react-i18next';
 
 export default function ClientInfo(props) {
+  const { t } = useTranslation();
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
   const user = auth ? auth.user : null;
@@ -105,7 +107,7 @@ export default function ClientInfo(props) {
         <Col md={24}>
           <Card className="shadow-lg p-3 mb-5 bg-white rounded">
             <Card.Body>
-              <Card.Title className="text-center">User Information</Card.Title>
+              <Card.Title className="text-center">{t('profile.userInfo')}</Card.Title>
               <hr />
               {isLoading ? (
                 <div>
@@ -126,7 +128,7 @@ export default function ClientInfo(props) {
                             variant="danger"
                             onClick={() => setShowReportModal(true)}
                           >
-                            <FaExclamationTriangle /> Report User
+                            <FaExclamationTriangle /> {t('profile.reportUser')}
                           </Button>
                         </div>
                       )}
@@ -143,11 +145,11 @@ export default function ClientInfo(props) {
                           >
                             {userData.is_active ? (
                               <>
-                                <FaUserSlash /> Ban User
+                                <FaUserSlash /> {t('profile.banUser')}
                               </>
                             ) : (
                               <>
-                                <FaUserCheck /> Unban User
+                                <FaUserCheck /> {t('profile.unbanUser')}
                               </>
                             )}
                           </Button>
@@ -174,40 +176,40 @@ export default function ClientInfo(props) {
                           variant="primary"
                           onClick={() => handleSendMessage()}
                         >
-                          Message
+                          {t('profile.messageBtn')}
                         </Button>
                       </div>
                     )}
                   </div>
                   <p>
                     <strong className="me-2">
-                      <MdEmail color="blue" size="2rem" /> :
+                      <MdEmail color="blue" size="2rem" /> {t('profile.email')}:
                     </strong>
                     {userData.email}.
                   </p>
                   <p>
                     <strong className="me-2">
-                      <FaRegUserCircle color="blue" size="2rem" />:{" "}
+                      <FaRegUserCircle color="blue" size="2rem" /> {t('profile.username')}:
                     </strong>
                     {userData.username}.
                   </p>
                   {userData.id == user_id && (
                     <p>
                       <strong className="me-2">
-                        <FaMoneyBillWave color="blue" size="2rem" />:{" "}
+                        <FaMoneyBillWave color="blue" size="2rem" /> {t('profile.balance')}:
                       </strong>
                       {userData.user_balance}$.
                     </p>
                   )}
                   <p>
                     <strong className="me-2">
-                      <SlCalender color="blue" size="2rem" />:{" "}
+                      <SlCalender color="blue" size="2rem" /> {t('profile.birthDate')}:
                     </strong>
                     {userData.birth_date}.
                   </p>
                   <p>
                     <strong className="me-2">
-                      <FaAddressCard color="blue" size="2rem" />:
+                      <FaAddressCard color="blue" size="2rem" /> {t('profile.address')}:
                     </strong>
                     {userData.address + ", " + userData.postal_code}.
                   </p>
@@ -218,14 +220,14 @@ export default function ClientInfo(props) {
                           color="blue"
                           size="2rem"
                         />{" "}
-                        Description:
+                        {t('profile.description')}:
                       </strong>
                       {userData.description}.
                     </p>
                   )}
                   <p>
                     <strong className="me-2">
-                      <BsHexagon color="blue" size="2rem" /> Role:
+                      <BsHexagon color="blue" size="2rem" /> {t('profile.role')}:
                     </strong>
                     {userData.role}.
                   </p>

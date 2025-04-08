@@ -6,8 +6,10 @@ import HeaderColoredText from "./HeaderColoredText";
 import PersonalImg from "../assets/default-user.png";
 import { FaExclamationTriangle } from "react-icons/fa";
 import ReportContractModal from "./Admin-Panel/ReportContractModal";
+import { useTranslation } from 'react-i18next';
 
 const ContractDetails = () => {
+  const { t } = useTranslation();
   const params = useParams();
   const contract_id = params.contract_id;
   const [contract, setContract] = useState(null);
@@ -168,10 +170,10 @@ const ContractDetails = () => {
 
   return (
     <div className="container my-4">
-      <HeaderColoredText text="Contract Details" />
+      <HeaderColoredText text={t('contracts.details.title')} />
       <div className="card shadow ">
         <div className="card-header d-flex justify-content-between align-items-center">
-          <h3 className="mb-0">{contract.project_details.project_name}</h3>
+          <h3 className="mb-0">{t('contracts.details.title')}</h3>
           <span
             className={`badge ${
               contract.contract_state === "Accepted"
@@ -185,7 +187,7 @@ const ContractDetails = () => {
                 : "bg-secondary"
             }`}
           >
-            {contract.contract_state}
+            {t(`contracts.status.${contract.contract_state}`)}
           </span>
         </div>
 
@@ -196,17 +198,17 @@ const ContractDetails = () => {
                 onClick={() => setShowReportContractModal(true)}
                 className="btn btn-danger me-2"
               >
-                <FaExclamationTriangle /> Report Contract
+                <FaExclamationTriangle /> {t('report.contract')}
               </button>
             </div>
           }
           <div className="mb-4">
-            <h4 className="card-title">Parties</h4>
+            <h4 className="card-title">{t('contracts.details.parties')}</h4>
             <div className="row">
               <div className="col-md-6 mb-3">
                 <div className="card">
                   <div className="card-body">
-                    <h5 className="card-title">Client</h5>
+                    <h5 className="card-title">{t('contracts.details.client')}</h5>
                     <div className="text-center mb-3">
                       <img
                         src={
@@ -224,7 +226,7 @@ const ContractDetails = () => {
                       />
                     </div>
                     <p className="card-text mb-1">
-                      <strong>Name:</strong>{" "}
+                      <strong>{t('contracts.details.name')}:</strong>{" "}
                       {contract.client_details.first_name}{" "}
                       {contract.client_details.last_name}
                     </p>
@@ -234,7 +236,7 @@ const ContractDetails = () => {
               <div className="col-md-6 mb-3">
                 <div className="card">
                   <div className="card-body">
-                    <h5 className="card-title">Freelancer</h5>
+                    <h5 className="card-title">{t('contracts.details.freelancer')}</h5>
                     <div className="text-center mb-3">
                       <img
                         src={
@@ -254,7 +256,7 @@ const ContractDetails = () => {
                       />
                     </div>
                     <p className="card-text mb-1">
-                      <strong>Name:</strong>{" "}
+                      <strong>{t('contracts.details.name')}:</strong>{" "}
                       {contract.freelancer_details.first_name}{" "}
                       {contract.freelancer_details.last_name}
                     </p>
@@ -265,38 +267,38 @@ const ContractDetails = () => {
           </div>
 
           <div className="mb-4">
-            <h4 className="card-title">Project Details</h4>
+            <h4 className="card-title">{t('contracts.details.projectDetails')}</h4>
             <p>
-              <strong>Project State:</strong>{" "}
+              <strong>{t('contracts.details.projectState')}:</strong>{" "}
               {contract.project_details.project_state}
             </p>
             <p className="mb-1">
-              <strong>Description:</strong>{" "}
+              <strong>{t('contracts.details.description')}:</strong>{" "}
               {contract.project_details.project_description}
             </p>
           </div>
 
           <div className="mb-4">
-            <h4 className="card-title">Contract Details</h4>
+            <h4 className="card-title">{t('contracts.details.contractDetails')}</h4>
             <p className="mb-1">
-              <strong>Created At:</strong>{" "}
+              <strong>{t('contracts.details.createdAt')}:</strong>{" "}
               {new Date(contract.created_at).toLocaleDateString()}
             </p>
 
             <p className="mb-1">
-              <strong>Budget:</strong> {contract.budget} $
+              <strong>{t('contracts.details.budget')}:</strong> {contract.budget} $
             </p>
             <p className="mb-1">
-              <strong>Deadline:</strong> {contract.deadline} Days
+              <strong>{t('contracts.details.deadline')}:</strong> {contract.deadline} {t('contracts.details.days')}
             </p>
           </div>
 
           <div>
-            <h4 className="card-title">Terms and Conditions</h4>
+            <h4 className="card-title">{t('contracts.details.termsAndConditions')}</h4>
             <div className="card">
               <div className="card-body">
                 <p className="card-text">
-                  {contract.contract_terms || "No terms specified"}
+                  {contract.contract_terms || t('contracts.details.noTermsSpecified')}
                 </p>
               </div>
             </div>
@@ -307,7 +309,7 @@ const ContractDetails = () => {
             current_user.user.role === "freelancer" &&
             current_user.user.user_id === contract.freelancer_details.id && (
               <div className="mb-4 mt-5">
-                <h4 className="card-title">Submit Your Work</h4>
+                <h4 className="card-title">{t('contracts.details.submitYourWork')}</h4>
                 <div className="card">
                   <div className="card-body">
                     {validationError && (
@@ -321,20 +323,20 @@ const ContractDetails = () => {
                     >
                       <div className="mb-3">
                         <label htmlFor="workDescription" className="form-label">
-                          Description
+                          {t('contracts.details.description')}
                         </label>
                         <textarea
                           className="form-control"
                           id="workDescription"
                           name="workDescription"
                           rows="3"
-                          placeholder="Describe the work you're submitting"
+                          placeholder={t('contracts.details.describeWork')}
                         ></textarea>
                       </div>
 
                       <div className="mb-3">
                         <label htmlFor="workFiles" className="form-label">
-                          Upload Files
+                          {t('contracts.details.uploadFiles')}
                         </label>
                         <input
                           type="file"
@@ -344,13 +346,12 @@ const ContractDetails = () => {
                           multiple
                         />
                         <div className="form-text">
-                          You can select multiple files. Either description or
-                          files must be provided.
+                          {t('contracts.details.selectMultipleFiles')}
                         </div>
                       </div>
 
                       <button type="submit" className="btn btn-primary">
-                        Submit Work
+                        {t('contracts.details.submitWork')}
                       </button>
                     </form>
                   </div>
@@ -361,7 +362,7 @@ const ContractDetails = () => {
           {/* Work Submissions History */}
           {contract.contract_state === "Accepted" && (
             <div className="mb-4 mt-4">
-              <h4 className="card-title">Work Submissions</h4>
+              <h4 className="card-title">{t('contracts.details.workSubmissions')}</h4>
               <div className="card">
                 <div className="card-body">
                   {contract.attachments &&
@@ -369,7 +370,7 @@ const ContractDetails = () => {
                     <div className="list-group">
                       <div className="list-group-item">
                         <div className="d-flex w-100 justify-content-between">
-                          <h5 className="mb-1">Submission</h5>
+                          <h5 className="mb-1">{t('contracts.details.submission')}</h5>
                           <small className="text-muted">
                             {new Date(contract.created_at).toLocaleDateString()}
                           </small>
@@ -424,7 +425,7 @@ const ContractDetails = () => {
                     </div>
                   ) : (
                     <p className="text-muted">
-                      No work has been submitted yet.
+                      {t('contracts.details.noWorkSubmitted')}
                     </p>
                   )}
                 </div>
@@ -440,14 +441,14 @@ const ContractDetails = () => {
                   onClick={handleAcceptOrDeclineContract}
                   className="btn btn-success me-2"
                 >
-                  Accept Contract
+                  {t('contracts.details.actions.accept')}
                 </button>
                 <button
                   name="Decline"
                   onClick={handleAcceptOrDeclineContract}
                   className="btn btn-danger"
                 >
-                  Decline Contract
+                  {t('contracts.details.actions.decline')}
                 </button>
               </div>
             )}
@@ -459,7 +460,7 @@ const ContractDetails = () => {
                   onClick={handleAcceptOrDeclineContract}
                   className="btn btn-success me-2"
                 >
-                  Complete Contract
+                  {t('contracts.details.actions.complete')}
                 </button>
 
                 {/* Calculate if deadline has passed */}
@@ -479,11 +480,11 @@ const ContractDetails = () => {
                       disabled={current_user.user.role === "admin" ? false : !deadlinePassed}
                       title={
                         deadlinePassed
-                          ? "Cancel Contract"
-                          : "Cannot cancel until deadline passes"
+                          ? t('contracts.details.actions.cancel')
+                          : t('contracts.details.actions.cannotCancel')
                       }
                     >
-                      Cancel Contract
+                      {t('contracts.details.actions.cancel')}
                     </button>
                   );
                 })()}

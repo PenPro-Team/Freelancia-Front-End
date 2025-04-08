@@ -1,0 +1,249 @@
+{
+  "wallet": {
+    "addBalance": "Agregar saldo usando PayPal",
+    "withdrawFunds": "Retirar fondos",
+    "availableBalance": "Saldo disponible",
+    "amount": "Cantidad (USD)",
+    "minAmount": "La cantidad mínima es $1.00",
+    "paypalEmail": "Correo de PayPal",
+    "enterAmount": "Ingrese cantidad",
+    "enterWithdrawAmount": "Ingrese cantidad a retirar",
+    "enterPaypalEmail": "Ingrese su correo de PayPal",
+    "payWithPaypal": "Pagar con PayPal",
+    "requestWithdrawal": "Solicitar retiro",
+    "processing": "Procesando...",
+    "withdrawalHistory": "Historial de retiros",
+    "noHistory": "No hay historial de retiros",
+    "date": "Fecha",
+    "status": "Estado",
+    "notes": "Notas",
+    "payment": {
+      "success": "Pago exitoso",
+      "completed": "¡Pago completado! Tu nuevo saldo es ${{balance}}",
+      "withdrawalSubmitted": "Solicitud de retiro enviada",
+      "withdrawalSuccess": "¡Solicitud de retiro por ${{amount}} enviada exitosamente!"
+    },
+    "errors": {
+      "insufficientBalance": "Saldo insuficiente para el retiro",
+      "authRequired": "Autenticación requerida"
+    }
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "projects": "Proyectos",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "dashboard": "Panel de control",
+    "logout": "Cerrar sesión"
+  },
+  "home": {
+    "welcome": "Bienvenido a FreeLancia",
+    "subtitle": "donde empiezas a construir tu sueño empresarial..",
+    "search": {
+      "placeholder": "Buscar por nombre de usuario",
+      "button": "Buscar",
+      "results": "Resultados de búsqueda"
+    },
+    "searchResults": {
+      "title": "Resultados de búsqueda",
+      "noResults": "No se encontraron resultados"
+    },
+    "description": "Descripción",
+    "noDescription": "No hay descripción disponible",
+    "categories": {
+      "title": "Categorías populares",
+      "items": [
+        {
+          "title": "Desarrollo Web",
+          "description": "Diseño, desarrollo y alojamiento web"
+        },
+        {
+          "title": "Diseño Gráfico",
+          "description": "Diseño de logos, marca e ilustración"
+        },
+        {
+          "title": "Traducción",
+          "description": "Servicios de traducción y localización"
+        }
+      ]
+    },
+    "clients": {
+      "title": "Clientes destacados",
+      "subtitle": "Conéctate con los mejores clientes y comienza tu viaje freelance",
+      "viewProjects": "Ver todos los proyectos",
+      "noImage": "Imagen del cliente no disponible"
+    },
+    "freelancers": {
+      "title": "Freelancers mejor valorados",
+      "viewAll": "Ver todos",
+      "category": "Categoría",
+      "rating": "Valoración"
+    },
+    "cta": {
+      "title": "¿Listo para comenzar tu viaje?",
+      "subtitle": "¡Únete a miles de profesionales en FreeLancia hoy!",
+      "signup": "Regístrate ahora",
+      "browse": "Explorar proyectos",
+      "loggedIn": {
+        "title": "Explora más oportunidades",
+        "subtitle": "Encuentra la combinación perfecta para tus habilidades o necesidades de proyecto",
+        "dashboard": "Ir al panel de control"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Panel de control",
+    "userInfo": "Información del usuario",
+    "updateProfile": "Actualizar perfil",
+    "updateSecurity": "Actualizar seguridad",
+    "wallet": "Billetera",
+    "projects": {
+      "title": "Proyectos del freelancer",
+      "noProjects": "No hay proyectos disponibles.",
+      "description": "Descripción",
+      "additionalImages": "Imágenes adicionales",
+      "viewImage": "Ver imagen",
+      "loadError": "Error al cargar proyectos. Por favor, intente de nuevo.",
+      "titlePlaceholder": "Ingrese título del proyecto",
+      "descriptionPlaceholder": "Ingrese descripción del proyecto",
+      "uploadButton": "Subir proyecto"
+    },
+    "skills": {
+      "title": "Actualizar tus habilidades",
+      "availableSkills": "Habilidades disponibles",
+      "selectSkill": "Seleccionar habilidad",
+      "add": "Agregar",
+      "update": "Actualizar",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "updateSkills": "Actualizar habilidades",
+      "success": "¡Las habilidades han sido actualizadas y guardadas!",
+      "noSkills": "No se han agregado habilidades aún.",
+      "skillAdded": "¡Habilidad agregada exitosamente!",
+      "skillUpdated": "¡Habilidad actualizada exitosamente!",
+      "skillDeleted": "¡Habilidad eliminada exitosamente!"
+    },
+    "certificates": {
+      "title": "Subir certificado",
+      "image": "Imagen del certificado",
+      "certificateTitle": "Título",
+      "enterTitle": "Ingrese título del certificado",
+      "description": "Descripción",
+      "enterDescription": "Ingrese descripción del certificado",
+      "issuedBy": "Emitido por",
+      "enterIssuer": "Ingrese organización emisora",
+      "issuedDate": "Fecha de emisión",
+      "upload": "Subir certificado",
+      "success": "Certificado subido exitosamente",
+      "error": "Error al subir certificado. Por favor, intente de nuevo.",
+      "displayTitle": "Certificados del freelancer",
+      "noCertificates": "No hay certificados disponibles."
+    },
+    "skillsSection": "Sección de Habilidades",
+    "certificateSection": "Sección de Certificados",
+    "projectsSection": "Sección de Proyectos"
+  },
+  "profile": {
+    "userInfo": "Información del Usuario",
+    "updateSuccess": "¡Sus datos se actualizaron con éxito!",
+    "updateError": "¡Error al actualizar sus datos! Por favor, inténtelo de nuevo.",
+    "uploadImage": "Subir imagen",
+    "editImage": "Editar imagen",
+    "deleteImage": "Eliminar imagen",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "address": "Dirección",
+    "postalCode": "Código Postal",
+    "birthDate": "Fecha de Nacimiento",
+    "description": "Descripción",
+    "submit": "Enviar",
+    "role": "Rol",
+    "email": "Correo electrónico",
+    "username": "Nombre de usuario",
+    "balance": "Saldo",
+    "messageBtn": "Mensaje",
+    "reportUser": "Reportar Usuario",
+    "banUser": "Bloquear Usuario",
+    "unbanUser": "Desbloquear Usuario"
+  },
+  "security": {
+    "title": "Configuración de Seguridad",
+    "currentPassword": "Contraseña Actual",
+    "newPassword": "Nueva Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "updatePassword": "Actualizar Contraseña",
+    "incorrectPassword": "¡Contraseña Incorrecta! Por favor, inténtelo de nuevo.",
+    "passwordRequirements": "La contraseña debe contener al menos una letra minúscula, una mayúscula, un número y tener al menos 8 caracteres, sin espacios.",
+    "passwordMatch": "¡Las contraseñas no coinciden!",
+    "saveChanges": "Guardar Cambios",
+    "close": "Cerrar"
+  },
+  "about": {
+    "title": "Sobre nosotros",
+    "mission": "Nuestra misión",
+    "vision": "Nuestra visión",
+    "stats": {
+      "users": "Usuarios activos",
+      "projects": "Proyectos completados",
+      "payments": "Pagos seguros",
+      "support": "Soporte"
+    }
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "form": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "subject": "Asunto",
+      "message": "Mensaje",
+      "send": "Enviar mensaje"
+    }
+  },
+  "contracts": {
+    "title": "Contrato",
+    "deadline": "Duración",
+    "days": "días",
+    "budget": "Presupuesto",
+    "created": "Fecha de Creación",
+    "client": "Cliente",
+    "freelancer": "Freelancer",
+    "viewDetails": "Ver Detalles",
+    "status": {
+      "Accepted": "Aceptado",
+      "pending": "Pendiente",
+      "finished": "Completado",
+      "canceled": "Cancelado",
+      "active": "Activo",
+      "paid": "Pagado"
+    }
+  },
+  "projects": {
+    "filter": {
+      "minPrice": "el precio mínimo",
+      "maxPrice": "el precio máximo",
+      "minPriceError": "El precio mínimo debe ser menor que el precio máximo",
+      "sortByRecent": "Ordenar por trabajos recientes",
+      "resetOrder": "Restablecer orden",
+      "recommendedJobs": "Trabajos recomendados",
+      "errorFetchingSkills": "Hubo un error al obtener las habilidades.",
+      "title": "Filtrar Proyectos",
+      "sortBy": "Ordenar Por",
+      "recent": "Recientes",
+      "oldest": "Más antiguos",
+      "priceRange": "Rango de precios",
+      "minPrice": "Precio mínimo",
+      "maxPrice": "Precio máximo",
+      "skills": "Habilidades",
+      "selectSkills": "Seleccionar habilidades",
+      "status": "Estado",
+      "active": "Activo",
+      "completed": "Completado",
+      "pending": "Pendiente"
+    },
+    "search": {
+      "placeholder": "Buscar proyectos"
+    }
+  }
+}

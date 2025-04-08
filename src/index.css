@@ -22,3 +22,22 @@ code {
 .customBackground {
   background-color: #1a1a1a;
 }
+
+/* RTL Support */
+[dir="rtl"] .ml-auto {
+  margin-left: unset !important;
+  margin-right: auto !important;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: unset !important;
+  margin-left: auto !important;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right !important;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left !important;
+}

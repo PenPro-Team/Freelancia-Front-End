@@ -1,0 +1,318 @@
+{
+  "wallet": {
+    "addBalance": "Add Balance using PayPal",
+    "withdrawFunds": "Withdraw Funds",
+    "availableBalance": "Available Balance",
+    "amount": "Amount (USD)",
+    "minAmount": "Minimum amount is $1.00",
+    "paypalEmail": "PayPal Email",
+    "enterAmount": "Enter amount",
+    "enterWithdrawAmount": "Enter amount to withdraw",
+    "enterPaypalEmail": "Enter your PayPal email",
+    "payWithPaypal": "Pay with PayPal",
+    "requestWithdrawal": "Request Withdrawal",
+    "processing": "Processing...",
+    "withdrawalHistory": "Withdrawal History",
+    "noHistory": "No withdrawal history found",
+    "date": "Date",
+    "status": "Status",
+    "notes": "Notes",
+    "payment": {
+      "success": "Payment Successful",
+      "completed": "Payment completed! Your new balance is ${{balance}}",
+      "withdrawalSubmitted": "Withdrawal Request Submitted",
+      "withdrawalSuccess": "Withdrawal request for ${{amount}} submitted successfully!"
+    },
+    "errors": {
+      "insufficientBalance": "Insufficient balance for withdrawal",
+      "authRequired": "Authentication required"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "projects": "Projects",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "logout": "Logout"
+  },
+  "home": {
+    "welcome": "Welcome to FreeLancia",
+    "subtitle": "where start building your business dream..",
+    "search": {
+      "placeholder": "Search by username",
+      "button": "Search",
+      "results": "Search Results"
+    },
+    "searchResults": {
+      "title": "Search Results",
+      "noResults": "No results found"
+    },
+    "description": "Description",
+    "noDescription": "No description available",
+    "categories": {
+      "title": "Popular Categories",
+      "web": {
+        "title": "Web Development",
+        "desc": "Web design, development and hosting."
+      },
+      "graphic": {
+        "title": "Graphic Design",
+        "desc": "Logo design, branding and illustration."
+      },
+      "translation": {
+        "title": "Translation",
+        "desc": "Translation and localization services."
+      },
+      "items": [
+        {
+          "title": "Web Development",
+          "description": "Web design, development and hosting"
+        },
+        {
+          "title": "Graphic Design",
+          "description": "Logo design, branding and illustration"
+        },
+        {
+          "title": "Translation",
+          "description": "Translation and localization services"
+        }
+      ]
+    },
+    "clients": {
+      "title": "Featured Clients",
+      "subtitle": "Connect with top Clients and Start your Freelancing journey",
+      "viewProjects": "View all Projects",
+      "noImage": "Client image not available"
+    },
+    "freelancers": {
+      "title": "Top Rated Freelancers",
+      "viewAll": "View All",
+      "category": "Category",
+      "description": "Description",
+      "rating": "Rating"
+    },
+    "cta": {
+      "title": "Ready to Start Your Journey?",
+      "subtitle": "Join thousands of professionals on FreeLancia today!",
+      "signup": "Sign Up Now",
+      "browse": "Browse Projects",
+      "loggedIn": {
+        "title": "Explore More Opportunities",
+        "subtitle": "Find the perfect match for your skills or project needs.",
+        "dashboard": "Go to Dashboard"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "userInfo": "User Info",
+    "updateProfile": "Update Profile",
+    "updateSecurity": "Update Security",
+    "wallet": "Wallet",
+    "projects": {
+      "title": "Freelancer Projects",
+      "noProjects": "No projects available.",
+      "description": "Description",
+      "additionalImages": "Additional Images",
+      "viewImage": "View Image",
+      "loadError": "Failed to fetch projects. Please try again.",
+      "titlePlaceholder": "Enter project title",
+      "descriptionPlaceholder": "Enter project description",
+      "uploadButton": "Upload Project"
+    },
+    "skills": {
+      "title": "Update Your Skills",
+      "availableSkills": "Available Skills",
+      "selectSkill": "Select a skill",
+      "add": "Add",
+      "update": "Update",
+      "edit": "Edit",
+      "delete": "Delete",
+      "updateSkills": "Update Skills",
+      "success": "Skills have been updated and saved!",
+      "noSkills": "No skills have been added yet.",
+      "skillAdded": "Skill added successfully!",
+      "skillUpdated": "Skill updated successfully!",
+      "skillDeleted": "Skill deleted successfully!"
+    },
+    "certificates": {
+      "title": "Upload Certificate",
+      "image": "Certificate Image",
+      "certificateTitle": "Title",
+      "enterTitle": "Enter certificate title",
+      "description": "Description",
+      "enterDescription": "Enter certificate description",
+      "issuedBy": "Issued By",
+      "enterIssuer": "Enter issuing organization",
+      "issuedDate": "Issued Date",
+      "upload": "Upload Certificate",
+      "success": "Certificate uploaded successfully",
+      "error": "Failed to upload certificate. Please try again.",
+      "displayTitle": "Freelancer Certificates",
+      "noCertificates": "No certificates available."
+    },
+    "skillsSection": "Skills Section",
+    "certificateSection": "Certificates Section",
+    "projectsSection": "Projects Section"
+  },
+  "about": {
+    "title": "About Us",
+    "mission": "Our Mission",
+    "vision": "Our Vision",
+    "stats": {
+      "users": "Active Users",
+      "projects": "Completed Projects",
+      "payments": "Secure Payments",
+      "support": "Support"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "send": "Send Message"
+    }
+  },
+  "jobDetails": {
+    "title": "Project Details",
+    "notFound": "Can't Find This Project",
+    "loading": "Loading..."
+  },
+  "navbar": {
+    "brand": {
+      "free": "Free",
+      "lancia": "lancia"
+    },
+    "menu": {
+      "home": "Home",
+      "projects": "Projects",
+      "myProposals": "My Proposals",
+      "yourProfile": "Your Profile",
+      "postJob": "Post a Job",
+      "clientJobList": "Client Job List",
+      "yourContracts": "Your Contracts",
+      "chatRooms": "Chat Rooms",
+      "adminPanel": "Admin Panel"
+    },
+    "user": {
+      "balance": "Balance",
+      "profile": "Profile",
+      "logout": "Logout"
+    },
+    "auth": {
+      "login": "Login",
+      "register": "Register"
+    }
+  },
+  "footer": {
+    "headline": "Let's Take",
+    "description": {
+      "part1": "All your projects to the next level with our talented freelancers.",
+      "part2": "Whether you're a client looking for top-notch talent or a freelancer",
+      "part3": "seeking exciting opportunities, we've got you covered."
+    },
+    "buttons": {
+      "shareProject": "Share your project!",
+      "viewPortfolio": "View Portfolio",
+      "loginCta": "Login to show your skills!"
+    },
+    "resources": {
+      "title": "Our Resources",
+      "projects": "Projects",
+      "home": "Home",
+      "portfolio": "Portfolio",
+      "aboutUs": "About Us",
+      "contactUs": "Contact Us"
+    },
+    "search": {
+      "placeholder": "Search by username",
+      "button": "Search"
+    },
+    "copyright": "© 2025, FreeLancia.com for PenPro Team"
+  },
+  "profile": {
+    "userInfo": "User Information",
+    "updateSuccess": "Your data was updated successfully!",
+    "updateError": "Error updating your data! Please try again.",
+    "uploadImage": "Upload image",
+    "editImage": "Edit image",
+    "deleteImage": "Delete image",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "address": "Address",
+    "postalCode": "Postal Code",
+    "birthDate": "Birth Date",
+    "description": "Description",
+    "submit": "Submit",
+    "role": "Role",
+    "email": "Email",
+    "username": "Username",
+    "balance": "Balance",
+    "messageBtn": "Message",
+    "reportUser": "Report User",
+    "banUser": "Ban User",
+    "unbanUser": "Unban User"
+  },
+  "security": {
+    "title": "Security Settings",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "updatePassword": "Update Password",
+    "incorrectPassword": "Incorrect Password! Please Try Again.",
+    "passwordRequirements": "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long, with no spaces.",
+    "passwordMatch": "Passwords do not match!",
+    "saveChanges": "Save Changes",
+    "close": "Close"
+  },
+  "contracts": {
+    "title": "Contract",
+    "deadline": "Duration",
+    "days": "days",
+    "budget": "Budget",
+    "created": "Created Date",
+    "client": "Client",
+    "freelancer": "Freelancer",
+    "viewDetails": "View Details",
+    "status": {
+      "aproved": "Accepted",
+      "pending": "Pending",
+      "finished": "Completed",
+      "canceled": "Canceled",
+      "active": "Active", 
+      "paid": "Paid"
+    }
+  },
+  "projects": {
+    "filter": {
+      "minPrice": "Minimum Price",
+      "maxPrice": "Maximum Price",
+      "minPriceError": "Min price must be less than max price",
+      "maxPriceError": "Max price must be greater than min price",
+      "sortByRecent": "Sort by Recent Jobs",
+      "resetOrder": "Reset Order",
+      "recommendedJobs": "Recommended Jobs",
+      "errorFetchingSkills": "There was an error fetching skills.",
+      "title": "Filter Projects",
+      "sortBy": "Sort By",
+      "recent": "Recent",
+      "oldest": "Oldest",
+      "priceRange": "Price Range",
+      "skills": "Skills",
+      "selectSkills": "Select Skills",
+      "status": "Status",
+      "active": "Active",
+      "completed": "Completed",
+      "pending": "Pending"
+    },
+    "search": {
+      "placeholder": "Search for projects"
+    }
+  }
+}

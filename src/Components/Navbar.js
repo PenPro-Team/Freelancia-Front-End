@@ -9,6 +9,8 @@ import { logout as userLogout } from "../Redux/Actions/authAction";
 import { Axios } from "axios";
 import { AxiosUserInstance } from "../network/API/AxiosInstance";
 import { useEffect } from "react";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from 'react-i18next';
 
 function NavBar() {
   const dispatch = useDispatch();
@@ -16,7 +18,7 @@ function NavBar() {
   const user = auth ? auth.user : null;
   const isAuth = auth ? auth.isAuthenticated : null;
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!auth) return;
@@ -56,101 +58,89 @@ function NavBar() {
     <Navbar bg="dark" expand="lg" className="navbar-dark">
       <Container>
         <Navbar.Brand as={Link} to="/Freelancia-Front-End/">
-          <span className="text-primary">Free</span>Lanceia
+          <span className="text-primary">{t('navbar.brand.free')}</span>
+          {t('navbar.brand.lancia')}
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbar-nav" />
         <Navbar.Collapse id="navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/Freelancia-Front-End/">
-              Home
+              {t('navbar.menu.home')}
             </Nav.Link>
             <Nav.Link as={Link} to="/Freelancia-Front-End/Job_List">
-              Projects
+              {t('navbar.menu.projects')}
             </Nav.Link>
             {isAuth && user.role === "freelancer" && (
               <Nav.Link as={Link} to="/Freelancia-Front-End/proposals">
-                My Proposals
+                {t('navbar.menu.myProposals')}
               </Nav.Link>
             )}
             {isAuth && (
-              <Nav.Link
-                as={Link}
-                to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}
-              >
-                Your Profile
+              <Nav.Link as={Link} to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}>
+                {t('navbar.menu.yourProfile')}
               </Nav.Link>
             )}
             {isAuth && user.role === "client" && (
               <>
                 <Nav.Link as={Link} to="/Freelancia-Front-End/postjob">
-                  Post a Job
+                  {t('navbar.menu.postJob')}
                 </Nav.Link>
                 <Nav.Link as={Link} to="/Freelancia-Front-End/clientjoblist">
-                  Client Job List
+                  {t('navbar.menu.clientJobList')}
                 </Nav.Link>
               </>
             )}
             {isAuth && (
-              <Nav.Link
-                as={Link}
-                to={`/Freelancia-Front-End/clientContracts/${user.user_id}`}
-              >
-                Your Contracts
-              </Nav.Link>
-            )}
-            {isAuth && (
-              <Nav.Link as={Link} to={`/Freelancia-Front-End/chatrooms/`}>
-                Chat Rooms
-              </Nav.Link>
+              <>
+                <Nav.Link as={Link} to={`/Freelancia-Front-End/clientContracts/${user.user_id}`}>
+                  {t('navbar.menu.yourContracts')}
+                </Nav.Link>
+                <Nav.Link as={Link} to={`/Freelancia-Front-End/chatrooms/`}>
+                  {t('navbar.menu.chatRooms')}
+                </Nav.Link>
+              </>
             )}
             {isAuth && user && user.role === "admin" && (
               <Nav.Link as={Link} to={`/Freelancia-Front-End/admin/`}>
-                Admin Panel
+                {t('navbar.menu.adminPanel')}
               </Nav.Link>
             )}
           </Nav>
           {isAuth ? (
             <div className="text-light d-flex flex-row flex-wrap gap-2 align-items-center">
-              <Nav.Link
-                as={Link}
-                to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}
-              >
+              <Nav.Link as={Link} to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}>
                 <div className="d-flex flex-row gap-2 justify-content-center align-items-center">
                   <img
                     className="rounded-circle"
                     width={"48px"}
                     height={"48px"}
                     src={user.image ? user.image : personalImg}
+                    alt={user.name}
                   />
                   <span className="fs-5">{user.name}</span>
                   <div className="d-flex flex-row gap-2 justify-content-center align-items-center">
-                    <span className="fs-6 text-info">Balance:</span>
-                    <span className="fs-6">
-                      {user.user_balance ? user.user_balance : 0.0}$
-                    </span>
+                    <span className="fs-6 text-info">{t('navbar.user.balance')}:</span>
+                    <span className="fs-6">${user.user_balance || 0.0}</span>
                   </div>
                 </div>
               </Nav.Link>
-              <Nav.Link
-                as={Link}
-                to="/Freelancia-Front-End"
-                onClick={(e) => {
-                  handleLogout(e);
-                }}
-              >
-                <span className="text-danger ms-2">Logout</span>
+              <Nav.Link as={Link} to="/Freelancia-Front-End" onClick={handleLogout}>
+                <span className="text-danger ms-2">{t('navbar.user.logout')}</span>
               </Nav.Link>
             </div>
           ) : (
             <div className="text-light d-flex flex-row flex-wrap gap-2">
               <Nav.Link as={Link} to="/Freelancia-Front-End/login">
-                Login
+                {t('navbar.auth.login')}
               </Nav.Link>
               <Nav.Link as={Link} to="/Freelancia-Front-End/register">
-                Register
+                {t('navbar.auth.register')}
               </Nav.Link>
             </div>
           )}
+          <div className="d-flex align-items-center gap-3">
+            <LanguageSwitcher />
+          </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>

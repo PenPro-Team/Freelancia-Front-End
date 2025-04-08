@@ -1,7 +1,9 @@
 import { Alert, Badge, Card, Col, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 function DesplaySkills() {
+    const { t } = useTranslation();
     const [skills, setSkills] = useState([]); // Array of selected skills
 
     // Retrieve selected skills from localStorage
@@ -21,7 +23,7 @@ function DesplaySkills() {
             <Col md={24}>
                 <Card className="shadow-lg p-3 mb-5 bg-white rounded">
                     <Card.Body>
-                        <Card.Title className="text-center">Freelancer Skills</Card.Title>
+                        <Card.Title className="text-center">{t('dashboard.skills.title')}</Card.Title>
 
                         {skills && skills.length > 0 ? (
                             skills.map((skill, index) => (
@@ -30,7 +32,7 @@ function DesplaySkills() {
                                 </Badge>
                             ))
                         ) : (
-                            <Alert variant="info">No skills have been added yet.</Alert>
+                            <Alert variant="info">{t('dashboard.skills.noSkills')}</Alert>
                         )}
                     </Card.Body>
                 </Card>

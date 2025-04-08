@@ -1,0 +1,8 @@
+.language-switcher.rtl .dropdown-menu {
+  text-align: right;
+}
+
+.language-switcher.rtl .dropdown-toggle::after {
+  margin-right: 0.255em;
+  margin-left: 0;
+}

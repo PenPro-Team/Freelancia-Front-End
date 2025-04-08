@@ -2,8 +2,10 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Form, InputGroup, Placeholder } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 export default function FilterSkills(props) {
+    const { t } = useTranslation();
     const [data, setData] = useState([]);
     const navigate = useNavigate(); // Updated from useHistory to useNavigate
     const params = useParams();
@@ -16,7 +18,7 @@ export default function FilterSkills(props) {
                 setData(response.data);
             })
             .catch((error) =>
-                console.error("There was an error fetching data", error)
+                console.error(t('projects.filter.errorFetchingSkills'), error)
             );
     }, []);
 

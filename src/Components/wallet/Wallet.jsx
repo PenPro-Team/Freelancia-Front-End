@@ -3,8 +3,10 @@ import { Form, Button, Alert, Spinner, Card, Toast, Badge } from "react-bootstra
 import { PayPalService } from "./PaypalService";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getFromLocalStorage } from "../../network/local/LocalStorage";
+import { useTranslation } from 'react-i18next';
 
 const Wallet = () => {
+    const { t } = useTranslation();
     const [amount, setAmount] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -239,20 +241,20 @@ const Wallet = () => {
             >
                 <Toast.Header>
                     <strong className="me-auto">
-                        {withdrawalResponse ? 'Withdrawal Request Submitted' : 'Payment Successful'}
+                        {withdrawalResponse ? t('wallet.payment.withdrawalSubmitted') : t('wallet.payment.success')}
                     </strong>
                 </Toast.Header>
                 <Toast.Body>
                     {withdrawalResponse ? (
                         <>
-                            Withdrawal request for ${withdrawalResponse.amount} submitted successfully!
+                            {t('wallet.payment.withdrawalSuccess', { amount: withdrawalResponse.amount })}
                             <br />
-                            Status: {withdrawalResponse.status}
+                            {t('wallet.status')}: {withdrawalResponse.status}
                             <br />
-                            New balance: ${withdrawalResponse.new_balance.toFixed(2)}
+                            {t('wallet.payment.completed', { balance: withdrawalResponse.new_balance.toFixed(2) })}
                         </>
                     ) : (
-                        `Payment completed! Your new balance is $${newBalance?.toFixed(2) || '0.00'}`
+                        t('wallet.payment.completed', { balance: newBalance?.toFixed(2) || '0.00' })
                     )}
                 </Toast.Body>
             </Toast>
@@ -260,24 +262,24 @@ const Wallet = () => {
             <div className="row g-4">
                 <div className="col-md-6">
                     <Card className="p-4">
-                        <Card.Header as="h4">Add Balance using PayPal</Card.Header>
+                        <Card.Header as="h4">{t('wallet.addBalance')}</Card.Header>
                         <Card.Body>
                             {error && <Alert variant="danger">{error}</Alert>}
 
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Amount (USD)</Form.Label>
+                                    <Form.Label>{t('wallet.amountUSD')}</Form.Label>
                                     <Form.Control
                                         type="number"
                                         value={amount}
                                         onChange={(e) => setAmount(e.target.value)}
-                                        placeholder="Enter amount"
+                                        placeholder={t('wallet.enterAmount')}
                                         min="1"
                                         step="0.01"
                                         required
                                     />
                                     <Form.Text className="text-muted">
-                                        Minimum amount is $1.00
+                                        {t('wallet.minimumAmount')}
                                     </Form.Text>
                                 </Form.Group>
 
@@ -290,10 +292,10 @@ const Wallet = () => {
                                     {loading ? (
                                         <>
                                             <Spinner animation="border" size="sm" className="me-2" />
-                                            Processing...
+                                            {t('wallet.processing')}
                                         </>
                                     ) : (
-                                        'Pay with PayPal'
+                                        t('wallet.payWithPaypal')
                                     )}
                                 </Button>
                             </Form>
@@ -303,29 +305,29 @@ const Wallet = () => {
                 
                 <div className="col-md-6">
                     <Card className="p-4">
-                        <Card.Header as="h4">Withdraw Funds</Card.Header>
+                        <Card.Header as="h4">{t('wallet.withdrawFunds')}</Card.Header>
                         <Card.Body>
                             {withdrawalError && <Alert variant="danger">{withdrawalError}</Alert>}
                             {withdrawalStatus === 'success' && (
                                 <Alert variant="success">
-                                    Withdrawal request submitted successfully!
+                                    {t('wallet.withdrawalRequestSubmitted')}
                                     <br />
-                                    Status: {withdrawalResponse.status}
+                                    {t('wallet.status')}: {withdrawalResponse.status}
                                     <br />
-                                    Amount: ${withdrawalResponse.amount}
+                                    {t('wallet.amount')}: ${withdrawalResponse.amount}
                                     <br />
-                                    PayPal Email: {withdrawalResponse.paypal_email}
+                                    {t('wallet.paypalEmail')}: {withdrawalResponse.paypal_email}
                                 </Alert>
                             )}
                             
                             <Form onSubmit={handleWithdrawalSubmit}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Available Balance: ${currentUser.user_balance}</Form.Label>
+                                    <Form.Label>{t('wallet.availableBalance')}: ${currentUser.user_balance}</Form.Label>
                                     <Form.Control
                                         type="number"
                                         value={withdrawalAmount}
                                         onChange={(e) => setWithdrawalAmount(e.target.value)}
-                                        placeholder="Enter amount to withdraw"
+                                        placeholder={t('wallet.enterAmountToWithdraw')}
                                         min="1"
                                         step="0.01"
                                         required
@@ -333,12 +335,12 @@ const Wallet = () => {
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
-                                    <Form.Label>PayPal Email</Form.Label>
+                                    <Form.Label>{t('wallet.paypalEmail')}</Form.Label>
                                     <Form.Control
                                         type="email"
                                         value={paypalEmail}
                                         onChange={(e) => setPaypalEmail(e.target.value)}
-                                        placeholder="Enter your PayPal email"
+                                        placeholder={t('wallet.enterPaypalEmail')}
                                         required
                                     />
                                 </Form.Group>
@@ -352,10 +354,10 @@ const Wallet = () => {
                                     {withdrawalLoading ? (
                                         <>
                                             <Spinner animation="border" size="sm" className="me-2" />
-                                            Processing...
+                                            {t('wallet.processing')}
                                         </>
                                     ) : (
-                                        'Request Withdrawal'
+                                        t('wallet.requestWithdrawal')
                                     )}
                                 </Button>
                             </Form>
@@ -367,7 +369,7 @@ const Wallet = () => {
             <div className="row mt-4">
                 <div className="col-12">
                     <Card>
-                        <Card.Header as="h4">Withdrawal History</Card.Header>
+                        <Card.Header as="h4">{t('wallet.withdrawalHistory')}</Card.Header>
                         <Card.Body>
                             {logsError && <Alert variant="danger">{logsError}</Alert>}
                             {logsLoading ? (
@@ -379,11 +381,11 @@ const Wallet = () => {
                                     <table className="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Date</th>
-                                                <th>Amount</th>
-                                                <th>PayPal Email</th>
-                                                <th>Status</th>
-                                                <th>Notes</th>
+                                                <th>{t('wallet.date')}</th>
+                                                <th>{t('wallet.amount')}</th>
+                                                <th>{t('wallet.paypalEmail')}</th>
+                                                <th>{t('wallet.status')}</th>
+                                                <th>{t('wallet.notes')}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -408,7 +410,7 @@ const Wallet = () => {
                                     </table>
                                 </div>
                             ) : (
-                                <p className="text-muted text-center">No withdrawal history found</p>
+                                <p className="text-muted text-center">{t('wallet.noWithdrawalHistory')}</p>
                             )}
                         </Card.Body>
                     </Card>

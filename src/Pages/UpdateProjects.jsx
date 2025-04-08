@@ -3,10 +3,12 @@ import { Button, Card, Col, Form, Row, Alert } from "react-bootstrap";
 import { AxiosFreelancersPortfolios } from "../network/API/AxiosInstance";
 import { useParams } from "react-router-dom";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
+import { useTranslation } from 'react-i18next';
 
 function UpdateProjects() {
   const auth = getFromLocalStorage("auth");
   const { user_id } = useParams(); // Extract user ID from route params
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     main_image: null, // Single file for main image
     images: [], // Multiple files for additional images
@@ -67,11 +69,11 @@ function UpdateProjects() {
       <Col md={24}>
         <Card className="shadow-lg p-3 mb-5 bg-white rounded">
           <Card.Body>
-            <Card.Title className="text-center">Upload Project</Card.Title>
+            <Card.Title className="text-center">{t('dashboard.projects.title')}</Card.Title>
             <Form onSubmit={handleSubmit}>
               {/* Main Image Input */}
               <Form.Group controlId="main_image" className="mb-3">
-                <Form.Label>Main Image</Form.Label>
+                <Form.Label>{t('dashboard.projects.mainImage')}</Form.Label>
                 <Form.Control
                   type="file"
                   name="main_image"
@@ -83,7 +85,7 @@ function UpdateProjects() {
 
               {/* Additional Images Input */}
               <Form.Group controlId="images" className="mb-3">
-                <Form.Label>Additional Images</Form.Label>
+                <Form.Label>{t('dashboard.projects.additionalImages')}</Form.Label>
                 <Form.Control
                   type="file"
                   name="images"
@@ -96,35 +98,35 @@ function UpdateProjects() {
 
               {/* Title Input */}
               <Form.Group controlId="title" className="mb-3">
-                <Form.Label>Title</Form.Label>
+                <Form.Label>{t('dashboard.projects.projectTitle')}</Form.Label>
                 <Form.Control
                   type="text"
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  placeholder="Enter project title"
+                  placeholder={t('dashboard.projects.titlePlaceholder')}
                   required
                 />
               </Form.Group>
 
               {/* Description Input */}
               <Form.Group controlId="description" className="mb-3">
-                <Form.Label>Description</Form.Label>
+                <Form.Label>{t('dashboard.projects.description')}</Form.Label>
                 <Form.Control
                   as="textarea"
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  placeholder="Enter project description"
+                  placeholder={t('dashboard.projects.descriptionPlaceholder')}
                   required
                 />
               </Form.Group>
 
-              {message && <Alert variant="success">{message}</Alert>}
-              {error && <Alert variant="danger">{error}</Alert>}
+              {message && <Alert variant="success">{t('dashboard.projects.success')}</Alert>}
+              {error && <Alert variant="danger">{t('dashboard.projects.error')}</Alert>}
 
               <Button variant="primary" type="submit">
-                Upload Project
+                {t('dashboard.projects.uploadButton')}
               </Button>
             </Form>
           </Card.Body>

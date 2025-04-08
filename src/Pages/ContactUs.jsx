@@ -37,7 +37,7 @@ const ContactUs = () => {
                         <Card.Body className="text-center">
                             <FaEnvelope className="text-primary mb-3" size={30} />
                             <h5>Email</h5>
-                            <p>support@freelancia.com</p>
+                            <p>freelancia-team@freelancia.com</p>
                         </Card.Body>
                     </Card>
                 </Col>
