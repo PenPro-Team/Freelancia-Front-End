@@ -17,31 +17,14 @@ export default function ProjectCard({
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [searchResult, setSearchResult] = useState();
 
-  // Fetch total project count for pagination
   useEffect(() => {
-    AxiosProjectsInstance.get("/")
-      .then((response) => {
-        console.log("Total Projects Response:", response.data);
-        if (Array.isArray(response.data.results)) {
-          setTotalPages(Math.ceil(response.data.results.length / 10));
-        } else {
-          console.error("Unexpected response structure:", response.data);
-          setErrorMessage("Invalid response format received.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching total projects:", error);
-        setErrorMessage("Failed to fetch project count.");
-      });
-  }, []);
-
-  // Fetch paginated project list
-  useEffect(() => {
-    AxiosProjectsInstance.get("/", { params: { _page: currentPage, _limit: 10 } })
+    AxiosProjectsInstance.get(`?page=${currentPage}`)
       .then((response) => {
         setData(response.data.results);
+        setTotalPages(response.data.total_pages);
+        console.log("Data from API:", response.data.results);
       })
       .catch((error) => {
         console.error("Error fetching projects:", error);
