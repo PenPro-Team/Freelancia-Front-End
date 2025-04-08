@@ -139,7 +139,7 @@ function UserReportsTab() {
                   <td>{new Date(report.created_at).toLocaleString()}</td>
                   <td>
                     <Button
-                      variant="info"
+                      variant="success"
                       size="sm"
                       className="me-2"
                       onClick={() => handleResolveClick(report)}
