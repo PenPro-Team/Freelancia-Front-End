@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import proImage from "../assets/hero-image--popular-items-2963d5759f434e6691a0bb5363bf2d1707c8885ab10b6dba3b0648f8c5f94da5.webp";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Alert } from "react-bootstrap";
 import Cards from "../Components/Cards";
 import proImages from "../assets/hero-bg.jpg";
 import Card from "react-bootstrap/Card";
@@ -12,13 +12,15 @@ import { useNavigate } from "react-router-dom";
 import { AxiosFreelancersInstance, AxiosClientsInstance } from "../network/API/AxiosInstance";
 import RateStars from "../Components/RateStars";
 import { BASE_PATH } from "../network/API/AxiosInstance";
-
+import defaultUserImage from "../assets/IMG_20250226_141719.jpg";
 function Home() {
   const user = useSelector((state) => state.auth.user);
   const [freelancers, setFreelancers] = useState([]);
   const [clients, setClients] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [searchResults, setSearchResults] = useState([]); // State for search results
+  const [searchType, setSearchType] = useState("all"); // State to track search type: "all", "freelancers", or "clients"
+  const [hasSearched, setHasSearched] = useState(false); // Track if a search was performed
 
   const navigate = useNavigate(); // Hook for navigation
 
@@ -52,19 +54,119 @@ function Home() {
     fetchClients();
   }, []);
 
-  // Handle search for freelancers by username
+  // Handle search for both freelancers and clients by username
   const handleSearch = (e) => {
     e.preventDefault(); // Prevent form submission
+
     if (searchQuery.trim() === "") {
-      setSearchResults([]); // Clear search results if the query is empty
+      setSearchResults([]);
+      setHasSearched(false); // No search was performed
       return;
     }
 
-    // Filter freelancers by username
-    const results = freelancers.filter((freelancer) =>
-      freelancer.name?.toLowerCase().includes(searchQuery.toLowerCase())
+    let results = [];
+    const query = searchQuery.toLowerCase();
+
+    // Filter based on search type
+    if (searchType === "all" || searchType === "freelancers") {
+      const freelancerResults = freelancers.filter((freelancer) =>
+        freelancer.name?.toLowerCase().includes(query) ||
+        freelancer.username?.toLowerCase().includes(query)
+      );
+      // Mark results as freelancers
+      freelancerResults.forEach(item => {
+        results.push({ ...item, userType: 'freelancer' });
+      });
+    }
+
+    if (searchType === "all" || searchType === "clients") {
+      const clientResults = clients.filter((client) =>
+        client.name?.toLowerCase().includes(query) ||
+        client.username?.toLowerCase().includes(query)
+      );
+      // Mark results as clients
+      clientResults.forEach(item => {
+        results.push({ ...item, userType: 'client' });
+      });
+    }
+
+    setSearchResults(results);
+    setHasSearched(true); // Search was performed
+  };
+
+  // Render search result card based on user type
+  const renderSearchResultCard = (user, idx) => {
+    return (
+      <Col key={idx} xs={12} md={6} lg={4} className="mb-4">
+        <Card
+          className="h-100 shadow-sm border-light"
+          onClick={() => navigate(`${BASE_PATH}/Dashboard/${user.id}`)}
+          style={{
+            cursor: "pointer",
+            transition: "transform 0.2s, box-shadow 0.2s",
+            borderRadius: "8px",
+            overflow: "hidden"
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = "translateY(-5px)";
+            e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "0 .125rem .25rem rgba(0,0,0,.075)";
+          }}
+        >
+          <Card.Img
+            variant="top"
+            src={user.image || proImages}
+            alt={user.name || user.username}
+            style={{ height: "200px", objectFit: "cover" }}
+          />
+          <Card.Body className="d-flex flex-column">
+            <div className="d-flex justify-content-between align-items-center mb-2">
+              <Card.Title className="mb-0 fw-bold">{user.name || user.username}</Card.Title>
+              <div className={`badge ${user.userType === 'freelancer' ? 'bg-primary' : 'bg-success'} text-white`}>
+                {user.userType === 'freelancer' ? 'Freelancer' : 'Client'}
+              </div>
+            </div>
+            <div className="mb-2">
+              <RateStars rating={user.rate} />
+            </div>
+            <Card.Text className="text-secondary">
+              <strong>Description:</strong>{" "}
+              {user.description
+                ? (user.description.length > 100
+                  ? `${user.description.substring(0, 100)}...`
+                  : user.description)
+                : "No description available."}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
     );
-    setSearchResults(results); // Update search results
+  };
+
+  // Function to render search results section with message if no results found
+  const renderSearchResults = () => {
+    if (!hasSearched) return null;
+
+    return (
+      <div className="mb-5">
+        <h3 className="fw-bold mb-4 border-bottom pb-2">Search Results</h3>
+
+        {searchResults.length > 0 ? (
+          <Row>
+            {searchResults.map((result, idx) => renderSearchResultCard(result, idx))}
+          </Row>
+        ) : (
+          <Alert variant="danger" className="text-center">
+            <i className="bi bi-search me-2"></i>
+            No users found matching "{searchQuery}" in {searchType === "all" ? "freelancers or clients" : searchType}.
+            <p className="mt-2 mb-0">Try a different search term or category.</p>
+          </Alert>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -82,7 +184,7 @@ function Home() {
 
           <Form onSubmit={handleSearch} className="mb-4">
             <Row className="g-2">
-              <Col xs={8} md={8}>
+              <Col xs={12} md={8}>
                 <Form.Control
                   type="text"
                   placeholder="Search by username"
@@ -91,7 +193,18 @@ function Home() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </Col>
-              <Col xs={4} md={4}>
+              <Col xs={6} md={2}>
+                <Form.Select
+                  className="border-primary"
+                  value={searchType}
+                  onChange={(e) => setSearchType(e.target.value)}
+                >
+                  <option value="all">All</option>
+                  <option value="freelancers">Freelancers</option>
+                  <option value="clients">Clients</option>
+                </Form.Select>
+              </Col>
+              <Col xs={6} md={2}>
                 <Button type="submit" variant="primary" className="w-100" onClick={handleSearch}>
                   Search
                 </Button>
@@ -109,57 +222,8 @@ function Home() {
         </Col>
       </Row>
 
-      {/* Enhanced Search Results Section */}
-      {searchResults.length > 0 && (
-        <div className="mb-5">
-          <h3 className="fw-bold mb-4 border-bottom pb-2">Search Results</h3>
-          <Row>
-            {searchResults.map((freelancer, idx) => (
-              <Col key={idx} xs={12} md={6} lg={4} className="mb-4">
-                <Card
-                  className="h-100 shadow-sm border-light"
-                  onClick={() => navigate(`${BASE_PATH}/Dashboard/${freelancer.id}`)}
-                  style={{
-                    cursor: "pointer",
-                    transition: "transform 0.2s, box-shadow 0.2s",
-                    borderRadius: "8px",
-                    overflow: "hidden"
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = "translateY(-5px)";
-                    e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 .125rem .25rem rgba(0,0,0,.075)";
-                  }}
-                >
-                  <Card.Img
-                    variant="top"
-                    src={freelancer.image || proImages}
-                    alt={freelancer.name}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="mb-2 fw-bold">{freelancer.name}</Card.Title>
-                    <div className="mb-2">
-                      <RateStars rating={freelancer.rate} />
-                    </div>
-                    <Card.Text className="text-secondary">
-                      <strong>Description:</strong>{" "}
-                      {freelancer.description
-                        ? (freelancer.description.length > 100
-                          ? `${freelancer.description.substring(0, 100)}...`
-                          : freelancer.description)
-                        : "No description available."}
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </div>
-      )}
+      {/* Search Results Section with potential "No results" message */}
+      {renderSearchResults()}
 
       {/* Enhanced Category Cards Section */}
       <div className="mb-5">
