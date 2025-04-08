@@ -4,12 +4,15 @@ import Col from "react-bootstrap/Col";
 import { Link } from "react-router-dom"; // Fixed Import Path
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { getFromLocalStorage } from "../network/local/LocalStorage";
 
 const Footer = () => {
   const [freelancers, setFreelancers] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [searchResults, setSearchResults] = useState([]); // State for search results
-
+  const auth = getFromLocalStorage("auth")
+  const user = auth ? auth.user : null;
+  const userRole = user ? user.role : null;
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim() === "") {
@@ -36,9 +39,17 @@ const Footer = () => {
               conversations and will be happy to discuss your project. He will
               also pull in the right people from the team when needed.
             </p>
-            <button className="btn btn-primary w-100 w-lg-50">
-              Tell Us About Your Project
-            </button>
+            {userRole === "client" ? 
+              <Link to={`/Freelancia-Front-End/postjob`}>
+                <Button className="btn btn-primary">Share your project!</Button>
+              </Link>
+              : userRole == "freelancer"? <Link to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}>
+                <Button className="btn btn-primary">View Portfolio</Button>
+              </Link>
+              : <Link to={`/Freelancia-Front-End/login`}>
+                <Button className="btn btn-primary">Login to show your skills!</Button>
+              </Link>
+            }
           </Col>
 
           {/* Links Section */}
