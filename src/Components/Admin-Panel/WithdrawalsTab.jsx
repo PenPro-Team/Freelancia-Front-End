@@ -25,6 +25,8 @@ function WithdrawalsTab() {
             Authorization: `Bearer ${user.access}`,
           },
         });
+        console.log("Withdrawals data from API:", res.data.results);
+        
         setWithdrawals(res.data.results || []);
       } catch (err) {
         console.error("Error fetching withdrawals:", err);
@@ -83,13 +85,14 @@ function WithdrawalsTab() {
                 <th>PayPal Email</th>
                 <th>Status</th>
                 <th>Created At</th>
+                <th>Notes</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {withdrawals.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center">
+                  <td colSpan="8" className="text-center">
                     No withdrawal requests found
                   </td>
                 </tr>
@@ -116,6 +119,7 @@ function WithdrawalsTab() {
                     <td>{withdrawal.paypal_email || "N/A"}</td>
                     <td>{getStatusBadge(withdrawal.status)}</td>
                     <td>{new Date(withdrawal.created_at).toLocaleString()}</td>
+                    <td>{withdrawal.notes || '-'}</td>
                     <td>
                       <Button
                         variant={
