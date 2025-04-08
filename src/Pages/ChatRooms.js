@@ -8,7 +8,7 @@ import Tab from "react-bootstrap/Tab";
 import Spinner from "react-bootstrap/Spinner";
 import Chat from "./chat";
 import HeaderColoredText from "../Components/HeaderColoredText";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 const ChatRooms = (props) => {
   const auth = getFromLocalStorage("auth");
@@ -20,10 +20,14 @@ const ChatRooms = (props) => {
   const [activeKey, setActiveKey] = useState("first");
 
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const urlChatRoom = searchParams.get("chat_room");
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      navigate("/Freelancia-Front-End/login");
+      return;
+    }
 
     setLoading(true);
     AxiosChatInstance.get("userchatrooms", {
@@ -74,6 +78,12 @@ const ChatRooms = (props) => {
 
   const handleTabSelect = (selectedKey) => {
     setActiveKey(selectedKey);
+    const selectedRoom = chatRooms.find(
+      (room) => room.id.toString() === selectedKey
+    );
+    if (selectedRoom) {
+      navigate(`?chat_room=${selectedRoom.name}`);
+    }
   };
 
   return (
@@ -82,7 +92,7 @@ const ChatRooms = (props) => {
       <Tab.Container
         id="chat-rooms-tabs"
         activeKey={activeKey}
-        onSelect={setActiveKey}
+        onSelect={handleTabSelect}
       >
         <Row>
           <Col sm={3}>
@@ -114,6 +124,7 @@ const ChatRooms = (props) => {
                   <Chat
                     chat_room={chatRoom.name}
                     participants={chatRoom.participants || []}
+                    key={chatRoom.id}
                   />
                 </Tab.Pane>
               ))}

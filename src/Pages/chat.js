@@ -8,7 +8,7 @@ import Card from "react-bootstrap/Card";
 import { WebSocketChatInstance } from "../network/API/WebSocketInstance";
 import personalImg from "../assets/default-user.png";
 import { BASE_PATH } from "../network/API/AxiosInstance";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 const Chat = (props) => {
   const [messages, setMessages] = useState([]);
@@ -27,8 +27,16 @@ const Chat = (props) => {
 
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+
+  const urlChatRoom = searchParams.get("chat_room");
+
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      navigate("/Freelancia-Front-End/login");
+      return;
+    }
+
     if (isFetchingRef.current) return;
 
     isFetchingRef.current = true;
@@ -109,7 +117,7 @@ const Chat = (props) => {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, urlChatRoom]);
 
   const handleSendMessage = () => {
     if (
@@ -167,7 +175,7 @@ const Chat = (props) => {
           <div
             ref={messagesContainerRef}
             className="chat-messages p-2 overflow-auto"
-            style={{ height: "80vh" }}
+            style={{ height: "80vh", backgroundColor: "#000B58" }}
           >
             <div className="d-flex flex-column gap-2">
               {messages.map((msg, index) => {
