@@ -20,20 +20,13 @@ export default function ProjectCard({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchResult, setSearchResult] = useState();
+
   useEffect(() => {
-    AxiosProjectsInstance.get(``)
+    AxiosProjectsInstance.get(`?page=${currentPage}`)
       .then((response) => {
-        const totalCount = response.data.length;
-        setTotalPages(Math.ceil(totalCount / 10 + 1));
-      })
-      .catch((error) =>
-        console.error("There was an error fetching data", error)
-      );
-  }, []);
-  useEffect(() => {
-    AxiosProjectsInstance.get(`?_page=${currentPage}&_limit=10`)
-      .then((response) => {
-        setData(response.data);
+        setData(response.data.results);
+        setTotalPages(response.data.total_pages);
+        console.log("Data from API:", response.data.results);
       })
       .catch((error) =>
         console.error("There was an error fetching data", error)

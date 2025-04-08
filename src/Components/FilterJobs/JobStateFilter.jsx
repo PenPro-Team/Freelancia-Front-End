@@ -10,7 +10,7 @@ export default function JobStateFilter({ cb }) {
     AxiosProjectsInstance
       .get(``)
       .then((response) => {
-        setData(response.data);
+        setData(response.data.results);
       })
       .catch((error) =>
         console.error("There was an error fetching data", error)
