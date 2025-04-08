@@ -39,6 +39,12 @@ export const AxiosPayPalInstance = axios.create({
   },
 });
 
+
+// this is an api call to confirm Auth
+export const AxiosConfirmAuthInstance = axios.create({
+  baseURL: `${url}/api/token/`,
+});
+
 // this is an api for withdrawals
 export const AxiosWithdrawalsInstance = axios.create({
   baseURL: `${url}/api/payments/withdrawals/`,

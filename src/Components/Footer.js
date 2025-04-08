@@ -4,12 +4,15 @@ import Col from "react-bootstrap/Col";
 import { Link } from "react-router-dom"; // Fixed Import Path
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { getFromLocalStorage } from "../network/local/LocalStorage";
 
 const Footer = () => {
   const [freelancers, setFreelancers] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [searchResults, setSearchResults] = useState([]); // State for search results
-
+  const auth = getFromLocalStorage("auth")
+  const user = auth ? auth.user : null;
+  const userRole = user ? user.role : null;
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim() === "") {
@@ -32,26 +35,42 @@ const Footer = () => {
           <Col xs={12} lg={6} className="text-center text-lg-start">
             <h2>Let's Take</h2>
             <p>
-              Every project starts with a chat. Joven leads our client
-              conversations and will be happy to discuss your project. He will
-              also pull in the right people from the team when needed.
+              All your projects to the next level with our talented freelancers.
+              <br/>
+              Whether you're a client looking for top-notch talent or a freelancer
+              <br/>
+              seeking exciting opportunities, we've got you covered.
             </p>
-            <button className="btn btn-primary w-100 w-lg-50">
-              Tell Us About Your Project
-            </button>
+            {userRole === "client" ? 
+              <Link to={`/Freelancia-Front-End/postjob`}>
+                <Button className="btn btn-primary">Share your project!</Button>
+              </Link>
+              : userRole == "freelancer"? <Link to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}>
+                <Button className="btn btn-primary">View Portfolio</Button>
+              </Link>
+              : <Link to={`/Freelancia-Front-End/login`}>
+                <Button className="btn btn-primary">Login to show your skills!</Button>
+              </Link>
+            }
           </Col>
 
           {/* Links Section */}
           <Col xs={6} lg={3} className="text-center text-lg-start">
             <h5>Our Resources</h5>
-            <Link className="text-decoration-none text-primary d-block" to="/links">
-              Links
+            <Link className="text-decoration-none text-primary d-block" to="/Freelancia-Front-End/Job_list">
+              Projects
             </Link>
             <Link className="text-decoration-none text-primary d-block" to="/home">
               Home
             </Link>
             <Link className="text-decoration-none text-primary d-block" to="/portfolio">
               Portfolio
+            </Link>
+            <Link className="text-decoration-none text-primary d-block" to="/Freelancia-Front-End/about">
+              About Us
+            </Link>
+            <Link className="text-decoration-none text-primary d-block" to="/Freelancia-Front-End/contact">
+              Contact Us
             </Link>
           </Col>
 

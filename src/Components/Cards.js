@@ -13,10 +13,6 @@ const Cards = ({ title, pragraph }) => {
           <div className="card-body text-center">
             <h4 className="card-title">{title}</h4>
             <p>{pragraph}</p>
-            <div>
-              <a className="me-1">Newest</a>
-              <a className="">Bestsellers</a>
-            </div>
           </div>
           {/* <img className="" src={img1} alt="" /> */}
         </div>

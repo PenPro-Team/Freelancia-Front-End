@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Table, Button, Badge } from "react-bootstrap";
 import { AxiosWithdrawalsInstance } from "../../network/API/AxiosInstance";
 import UpdateWithdrawalModal from "./UpdateWithdrawalModal";
+import WithdrawalDetailsModal from "./WithdrawalDetailsModal";
 import { FaCheck, FaTimes, FaEye } from "react-icons/fa";
 import { getFromLocalStorage } from "../../network/local/LocalStorage";
 import { BASE_PATH } from "../../network/API/AxiosInstance";
@@ -12,6 +13,7 @@ function WithdrawalsTab() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedWithdrawal, setSelectedWithdrawal] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const auth = getFromLocalStorage("auth");
   const user = auth ? auth.user : null;
   const navigate = useNavigate();
@@ -47,7 +49,11 @@ function WithdrawalsTab() {
 
   const handleUpdateClick = (withdrawal) => {
     setSelectedWithdrawal(withdrawal);
-    setShowUpdateModal(true);
+    if (withdrawal.status === "pending") {
+      setShowUpdateModal(true);
+    } else {
+      setShowDetailsModal(true);
+    }
   };
 
   const handleUpdateSuccess = (updatedWithdrawal) => {
@@ -83,13 +89,14 @@ function WithdrawalsTab() {
                 <th>PayPal Email</th>
                 <th>Status</th>
                 <th>Created At</th>
+                <th>Notes</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {withdrawals.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center">
+                  <td colSpan="9" className="text-center">
                     No withdrawal requests found
                   </td>
                 </tr>
@@ -112,21 +119,21 @@ function WithdrawalsTab() {
                       </small>
                     </td>
                     <td>${withdrawal.amount}</td>
-                    <td>${withdrawal.user_data.user_balance}</td>
+                    <td>${withdrawal.user_data?.user_balance}</td>
                     <td>{withdrawal.paypal_email || "N/A"}</td>
                     <td>{getStatusBadge(withdrawal.status)}</td>
                     <td>{new Date(withdrawal.created_at).toLocaleString()}</td>
+                    <td>{withdrawal.notes || "-"}</td>
                     <td>
                       <Button
                         variant={
                           withdrawal.status === "pending"
-                            ? "primary"
-                            : "secondary"
+                            ? "success"
+                            : "primary"
                         }
                         size="sm"
                         className="me-2"
                         onClick={() => handleUpdateClick(withdrawal)}
-                        disabled={withdrawal.status !== "pending"}
                       >
                         {withdrawal.status === "pending" ? (
                           <FaCheck />
@@ -145,12 +152,19 @@ function WithdrawalsTab() {
       )}
 
       {selectedWithdrawal && (
-        <UpdateWithdrawalModal
-          show={showUpdateModal}
-          onHide={() => setShowUpdateModal(false)}
-          withdrawal={selectedWithdrawal}
-          onSuccess={handleUpdateSuccess}
-        />
+        <>
+          <UpdateWithdrawalModal
+            show={showUpdateModal}
+            onHide={() => setShowUpdateModal(false)}
+            withdrawal={selectedWithdrawal}
+            onSuccess={handleUpdateSuccess}
+          />
+          <WithdrawalDetailsModal
+            show={showDetailsModal}
+            onHide={() => setShowDetailsModal(false)}
+            withdrawal={selectedWithdrawal}
+          />
+        </>
       )}
     </>
   );

@@ -15,12 +15,12 @@ import {
   InputGroup,
   Modal,
 } from "react-bootstrap";
-import { AxiosUserInstance } from "../../network/API/AxiosInstance";
+import { AxiosConfirmAuthInstance, AxiosUserInstance } from "../../network/API/AxiosInstance";
 
 export default function EditSecurity() {
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
-  const user = auth ? (auth.user ? auth.user.id : null) : null;
+  const user = auth ? (auth.user ? auth.user : null) : null;
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const params = useParams();
@@ -141,31 +141,58 @@ export default function EditSecurity() {
     e.preventDefault();
     setShowSuccess(false);
     setShowError(false);
-
+    
     const updatedFormValues = {
       ...formValues,
       password: newPassword.newPassword || userData.password,
     };
 
-    if (userData.password === newPassword.password) {
-      if (isFormValid) {
-        try {
-          const response = await AxiosUserInstance.patch(
-            `${params.user_id}`,
-            updatedFormValues
-          );
-          setShowSuccess(true);
-          setUserData(response.data);
-          setShowModal(false);
-        } catch (error) {
-          setShowError(true);
-          console.error("Error updating security details:", error);
+    AxiosConfirmAuthInstance.post("", {
+      username: userData.username,
+      password: newPassword.password,
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          AxiosUserInstance.patch(`${params.user_id}`, updatedFormValues,{
+            headers: { Authorization: `Bearer ${user.access}` },
+          })
+            .then((response) => {
+              setShowSuccess(true);
+              setUserData(response.data);
+              setShowModal(false);
+            })
+            .catch((error) => {
+              setShowError(true);
+              console.error("Error updating security details:", error);
+            });
         }
-      }
-    } else {
-      setPwdError("Incorrect Password! Please Try Again.");
-    }
+      })
+      .catch((error) => {
+        setPwdError("Incorrect Password! Please Try Again.");
+        console.error("Error confirming password:", error);
+      });
   };
+
+
+  //   if (userData.password === newPassword.password) {
+  //     if (isFormValid) {
+  //       try {
+  //         const response = await AxiosUserInstance.patch(
+  //           `${params.user_id}`,
+  //           updatedFormValues
+  //         );
+  //         setShowSuccess(true);
+  //         setUserData(response.data);
+  //         setShowModal(false);
+  //       } catch (error) {
+  //         setShowError(true);
+  //         console.error("Error updating security details:", error);
+  //       }
+  //     }
+  //   } else {
+  //     setPwdError("Incorrect Password! Please Try Again.");
+  //   }
+  // };
 
   const [showModal, setShowModal] = useState(false);
   const handleClose = () => {

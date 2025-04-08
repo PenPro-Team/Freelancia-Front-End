@@ -383,6 +383,7 @@ const Wallet = () => {
                                                 <th>Amount</th>
                                                 <th>PayPal Email</th>
                                                 <th>Status</th>
+                                                <th>Notes</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -393,13 +394,14 @@ const Wallet = () => {
                                                     <td>{log.paypal_email}</td>
                                                     <td>
                                                         <Badge bg={
-                                                            log.status === 'completed' ? 'success' :
+                                                            log.status === 'approved' ? 'success' :
                                                             log.status === 'pending' ? 'warning' :
-                                                            log.status === 'failed' ? 'danger' : 'secondary'
+                                                            log.status === 'rejected' ? 'danger' : 'secondary'
                                                         }>
                                                             {log.status}
                                                         </Badge>
                                                     </td>
+                                                    <td>{log.notes || '-'}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
