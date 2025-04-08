@@ -35,9 +35,11 @@ const Footer = () => {
           <Col xs={12} lg={6} className="text-center text-lg-start">
             <h2>Let's Take</h2>
             <p>
-              Every project starts with a chat. Joven leads our client
-              conversations and will be happy to discuss your project. He will
-              also pull in the right people from the team when needed.
+              All your projects to the next level with our talented freelancers.
+              <br/>
+              Whether you're a client looking for top-notch talent or a freelancer
+              <br/>
+              seeking exciting opportunities, we've got you covered.
             </p>
             {userRole === "client" ? 
               <Link to={`/Freelancia-Front-End/postjob`}>
@@ -55,8 +57,8 @@ const Footer = () => {
           {/* Links Section */}
           <Col xs={6} lg={3} className="text-center text-lg-start">
             <h5>Our Resources</h5>
-            <Link className="text-decoration-none text-primary d-block" to="/links">
-              Links
+            <Link className="text-decoration-none text-primary d-block" to="/Job_list">
+              Projects
             </Link>
             <Link className="text-decoration-none text-primary d-block" to="/home">
               Home
