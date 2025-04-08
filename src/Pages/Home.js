@@ -94,6 +94,20 @@ function Home() {
     setHasSearched(true); // Search was performed
   };
 
+  // Defult Image Function
+  const getUserImage = (user) => {
+    // First try to use user.image if available
+    if (user.image && user.image !== 'null' && user.image !== 'undefined') {
+      return user.image;
+    }
+    // Then try proImages if available
+    if (proImages) {
+      return proImages;
+    }
+    // Finally fall back to default user image
+    return defaultUserImage;
+  };
+
   // Render search result card based on user type
   const renderSearchResultCard = (user, idx) => {
     return (
@@ -118,7 +132,7 @@ function Home() {
         >
           <Card.Img
             variant="top"
-            src={user.image || proImages}
+            src={getUserImage(user)}
             alt={user.name || user.username}
             style={{ height: "200px", objectFit: "cover" }}
           />
@@ -279,10 +293,10 @@ function Home() {
                   >
                     <img
                       className="img-fluid w-100"
-                      src={client.image || proImages}
+                      src={getUserImage(client)}
                       alt={`Client ${idx + 1}`}
-                      style={{aspectRatio: "7/8", objectFit: "cover"}}
-                      />
+                      style={{ aspectRatio: "7/8", objectFit: "cover" }}
+                    />
                   </div>
                 </Col>
               ))}
@@ -290,7 +304,7 @@ function Home() {
           </Col>
           <Col xs={12} md={5} className="text-center text-md-start px-4">
             <h4 className="fw-bold mb-3">
-              Connect with top Clients and Start your Freelancing journey 
+              Connect with top Clients and Start your Freelancing journey
             </h4>
             <Button
               onClick={() => navigate(`${BASE_PATH}/Job_List`)}
@@ -338,10 +352,10 @@ function Home() {
               >
                 <Card.Img
                   variant="top"
-                  src={freelancer.image || proImages}
+                  src={getUserImage(freelancer)}
                   alt={freelancer.username}
                   // style={{ height: "100%",width:"60%", objectFit: "fit" }}
-                  style={{aspectRatio: "1/1", objectFit: "cover"}}
+                  style={{ aspectRatio: "1/1", objectFit: "cover" }}
                 />
                 <Card.Body>
                   <div className="d-flex justify-content-between align-items-center mb-2">
