@@ -57,7 +57,7 @@ const Footer = () => {
           {/* Links Section */}
           <Col xs={6} lg={3} className="text-center text-lg-start">
             <h5>Our Resources</h5>
-            <Link className="text-decoration-none text-primary d-block" to="/Job_list">
+            <Link className="text-decoration-none text-primary d-block" to="/Freelancia-Front-End/Job_list">
               Projects
             </Link>
             <Link className="text-decoration-none text-primary d-block" to="/home">
@@ -65,6 +65,12 @@ const Footer = () => {
             </Link>
             <Link className="text-decoration-none text-primary d-block" to="/portfolio">
               Portfolio
+            </Link>
+            <Link className="text-decoration-none text-primary d-block" to="/Freelancia-Front-End/about">
+              About Us
+            </Link>
+            <Link className="text-decoration-none text-primary d-block" to="/Freelancia-Front-End/contact">
+              Contact Us
             </Link>
           </Col>
 
