@@ -21,6 +21,8 @@ import ContractDetails from "./Components/ContractDetails";
 import ChatRooms from "./Pages/ChatRooms";
 import Chatbot from "./Components/Chatbot/Chatbot";
 import AdminPanelLayout from "./Pages/AdminPanelLayout";
+import AboutUs from "./Pages/AboutUs";
+import ContactUs from "./Pages/ContactUs";
 function App() {
   return (
     <div className="bgControl">
@@ -36,6 +38,8 @@ function App() {
             path="/Freelancia-Front-End/register"
             element={<RegisterForm />}
           />
+          <Route path="/Freelancia-Front-End/about" element={<AboutUs />} />
+          <Route path="/Freelancia-Front-End/contact" element={<ContactUs />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/Freelancia-Front-End/job_list" element={<JobList />} />
           <Route path="/job_list" element={<JobList />} />

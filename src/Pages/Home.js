@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import proImage from "../assets/hero-image--popular-items-2963d5759f434e6691a0bb5363bf2d1707c8885ab10b6dba3b0648f8c5f94da5.webp";
 import { Button, Form } from "react-bootstrap";
 import Cards from "../Components/Cards";
-import proImages from "../assets/hero-bg.jpg";
+import proImages from "../assets/default-user.png";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import { useSelector } from "react-redux";
@@ -74,10 +74,10 @@ function Home() {
         <Col xs={12} md={7} className="p-4">
           <h2 className="fw-bold mb-3">
             Welcome to <span className="text-primary">FreeLancia</span> where
-            your Business Dream Can Be Real
+            start building your business dream..
           </h2>
           <p className="fs-5 text-secondary mb-4">
-            Discover the world of Freelance and Make Your Dreams Real
+            Connect to the world of Freelancing and make your business idea a reality.
           </p>
 
           <Form onSubmit={handleSearch} className="mb-4">
@@ -167,22 +167,22 @@ function Home() {
         <Row className="g-4 justify-content-center">
           <Col xs={12} md={4}>
             <Cards
-              title={"WordPress Themes"}
-              pragraph={"Email, newsletter and landing page."}
+              title={"Web Development"}
+              pragraph={"Web design, development and hosting."}
               customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
             />
           </Col>
           <Col xs={12} md={4}>
             <Cards
-              title={"eCommerce Templates"}
-              pragraph={"Over 1,700 CMS website templates"}
+              title={"Graphic Design"}
+              pragraph={"Logo design, branding and illustration."}
               customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
             />
           </Col>
           <Col xs={12} md={4}>
             <Cards
-              title={"Website Templates"}
-              pragraph={"Blogger templates and themes"}
+              title={"Translation"}
+              pragraph={"Translation and localization services."}
               customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
             />
           </Col>
@@ -217,8 +217,8 @@ function Home() {
                       className="img-fluid w-100"
                       src={client.image || proImages}
                       alt={`Client ${idx + 1}`}
-                      style={{ height: "150px", objectFit: "cover" }}
-                    />
+                      style={{aspectRatio: "7/8", objectFit: "cover"}}
+                      />
                   </div>
                 </Col>
               ))}
@@ -226,7 +226,7 @@ function Home() {
           </Col>
           <Col xs={12} md={5} className="text-center text-md-start px-4">
             <h4 className="fw-bold mb-3">
-              Unique themes and templates for every budget and every project.
+              Connect with top Clients and Start your Freelancing journey 
             </h4>
             <Button
               onClick={() => navigate(`${BASE_PATH}/Job_List`)}
@@ -276,7 +276,8 @@ function Home() {
                   variant="top"
                   src={freelancer.image || proImages}
                   alt={freelancer.username}
-                  style={{ height: "200px", objectFit: "cover" }}
+                  // style={{ height: "100%",width:"60%", objectFit: "fit" }}
+                  style={{aspectRatio: "1/1", objectFit: "cover"}}
                 />
                 <Card.Body>
                   <div className="d-flex justify-content-between align-items-center mb-2">
