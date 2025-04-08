@@ -10,7 +10,7 @@ function UpdateWithdrawalModal({ show, onHide, withdrawal, onSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [updateData, setUpdateData] = useState({
     status: "approved",
-    admin_notes: "",
+    notes: "",
   });
 
   const handleSubmit = async () => {
@@ -59,9 +59,9 @@ function UpdateWithdrawalModal({ show, onHide, withdrawal, onSuccess }) {
             <Form.Control
               as="textarea"
               rows={3}
-              value={updateData.admin_notes}
+              value={updateData.notes}
               onChange={(e) =>
-                setUpdateData({ ...updateData, admin_notes: e.target.value })
+                setUpdateData({ ...updateData, notes: e.target.value })
               }
               placeholder="Enter notes about this withdrawal (optional)"
             />
