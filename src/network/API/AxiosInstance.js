@@ -39,7 +39,6 @@ export const AxiosPayPalInstance = axios.create({
   },
 });
 
-
 // this is an api call to confirm Auth
 export const AxiosConfirmAuthInstance = axios.create({
   baseURL: `${url}/api/token/`,
@@ -90,6 +89,10 @@ export const AxiosContractsInstance = axios.create({
 
 export const AxiosReportInstance = axios.create({
   baseURL: `${url}/reports/`,
+});
+
+export const AxiosContactInstance = axios.create({
+  baseURL: `${url}/contactus/`,
 });
 
 export const AxiosWSAuthInstance = axios.create({
