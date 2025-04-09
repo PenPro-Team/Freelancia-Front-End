@@ -1,6 +1,6 @@
 # Freelancia Front-End
 
-![Freelancia Logo](src/assets/logo.svg)
+![Freelancia Logo](https://github.com/PenPro-Team/Freelancia-Front-End/blob/updatecontract/freelancia%20logo.jpg)
 
 ## Overview
 
