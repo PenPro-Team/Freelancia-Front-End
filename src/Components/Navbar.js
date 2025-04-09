@@ -42,7 +42,13 @@ function NavBar() {
         });
         localStorage.setItem("auth", JSON.stringify({ ...auth, user: updatedUser }));
       }
-    });
+    })
+    .catch((err) => {
+      console.error("Error fetching user data:", err);
+      // Handle error (e.g., show a notification)
+      logout();
+    }
+    );
 
   }, [user, dispatch, auth]);
 
@@ -138,7 +144,7 @@ function NavBar() {
               </Nav.Link>
             </div>
           )}
-          <div className="d-flex align-items-center gap-3">
+          <div className="d-flex align-items-center gap-3 mx-2">
             <LanguageSwitcher />
           </div>
         </Navbar.Collapse>

@@ -54,6 +54,10 @@ export const PayPalService = {
             );
             // Log the response for debugging
             console.log('Payment verification response:', response.data);
+            // If the response is "success", close the PayPal window
+            if (response.data.status === 'success' && window.opener) {
+                window.close();
+            }
             return {
                 status: response.data.status,
                 message: response.data.message,

@@ -42,6 +42,7 @@ const Wallet = () => {
 
     const handleCloseWindow = useCallback(() => {
         console.log("Attempting to close PayPal window");
+        
         console.log("PayPal window state:", {
             paypalVarWindow: paypalVarWindow?.closed,
             paypalWindowRef: paypalWindow.current?.closed

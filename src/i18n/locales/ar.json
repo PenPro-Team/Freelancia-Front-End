@@ -10,6 +10,7 @@
     "enterWithdrawAmount": "أدخل مبلغ السحب",
     "enterPaypalEmail": "أدخل بريدك الإلكتروني PayPal",
     "payWithPaypal": "الدفع باستخدام PayPal",
+    "noWithdrawalHistory": "لا توجد سجلات سحب",
     "requestWithdrawal": "طلب السحب",
     "processing": "جاري المعالجة...",
     "withdrawalHistory": "سجل عمليات السحب",
@@ -378,6 +379,7 @@
   "projects": {
     "required_skills": "المهارات المطلوبة",
     "filter": {
+      "errorFetchingProjects": "فشل في جلب المشاريع. يرجى المحاولة مرة أخرى.",
       "title": "تصفية المشاريع",
       "sortBy": "ترتيب حسب",
       "recent": "الأحدث",

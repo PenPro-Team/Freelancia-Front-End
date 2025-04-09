@@ -10,6 +10,7 @@
     "enterWithdrawAmount": "Ingrese cantidad a retirar",
     "enterPaypalEmail": "Ingrese su correo de PayPal",
     "payWithPaypal": "Pagar con PayPal",
+    "noWithdrawalHistory": "No hay historial de retiros",
     "requestWithdrawal": "Solicitar retiro",
     "processing": "Procesando...",
     "withdrawalHistory": "Historial de retiros",
@@ -28,15 +29,31 @@
       "authRequired": "Autenticación requerida"
     }
   },
-  "nav": {
-    "home": "Inicio",
-    "about": "Acerca de",
-    "contact": "Contacto",
-    "projects": "Proyectos",
-    "login": "Iniciar sesión",
-    "register": "Registrarse",
-    "dashboard": "Panel de control",
-    "logout": "Cerrar sesión"
+  "navbar": {
+    "brand": {
+      "free": "Free",
+      "lancia": "lancia"
+    },
+    "menu": {
+      "home": "Home",
+      "projects": "proyectos",
+      "myProposals": "mis propuestas",
+      "yourProfile": "tu perfil",
+      "postJob": "publicar trabajo",
+      "clientJobList": "lista de trabajos",
+      "yourContracts": "tus contratos",
+      "chatRooms": "salas de chat",
+      "adminPanel": "panel de administración"
+    },
+    "user": {
+      "balance": "saldo",
+      "profile": "perfil",
+      "logout": "cerrar sesión"
+    },
+    "auth": {
+      "login": "iniciar sesión",
+      "register": "registrarse"
+    }
   },
   "home": {
     "welcome": "Bienvenido a FreeLancia",
@@ -251,6 +268,7 @@
   "projects": {
     "required_skills": "Habilidades requeridas",
     "filter": {
+      "errorFetchingProjects": "Hubo un error al obtener los proyectos.",
       "minPrice": "el precio mínimo",
       "maxPrice": "el precio máximo",
       "minPriceError": "El precio mínimo debe ser menor que el precio máximo",

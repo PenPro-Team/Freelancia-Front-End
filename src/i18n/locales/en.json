@@ -12,6 +12,7 @@
     "payWithPaypal": "Pay with PayPal",
     "requestWithdrawal": "Request Withdrawal",
     "processing": "Processing...",
+    "noWithdrawalHistory": "No withdrawal history available.",
     "withdrawalHistory": "Withdrawal History",
     "noHistory": "No withdrawal history found",
     "date": "Date",
@@ -321,6 +322,7 @@
   "projects": {
     "required_skills": "Required Skills",
     "filter": {
+      "errorFetchingProjects": "There was an error fetching projects.",
       "minPrice": "Minimum Price",
       "maxPrice": "Maximum Price",
       "minPriceError": "Min price must be less than max price",
