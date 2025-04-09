@@ -6,10 +6,10 @@ import HeaderColoredText from "./HeaderColoredText";
 import PersonalImg from "../assets/default-user.png";
 import { FaExclamationTriangle } from "react-icons/fa";
 import ReportContractModal from "./Admin-Panel/ReportContractModal";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const ContractDetails = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const params = useParams();
   const contract_id = params.contract_id;
   const [contract, setContract] = useState(null);
@@ -112,7 +112,7 @@ const ContractDetails = () => {
     // Validate that at least one field has a value
     if (description === "" && files.length === 0) {
       setValidationError(
-        "Please provide either a description or upload files (or both)."
+        t("contracts.details.validationError")
       );
       return;
     }
@@ -151,7 +151,7 @@ const ContractDetails = () => {
     return (
       <div className="d-flex justify-content-center my-5">
         <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
+          <span className="visually-hidden">{t("jobDetails.loading")}</span>
         </div>
       </div>
     );
@@ -164,7 +164,7 @@ const ContractDetails = () => {
   if (!contract)
     return (
       <div className="alert alert-warning m-3" role="alert">
-        Contract not found
+        {t("contracts.details.notFound")}
       </div>
     );
 
@@ -413,7 +413,10 @@ const ContractDetails = () => {
                                 rel="noopener noreferrer"
                                 className="text-decoration-none"
                               >
-                                <span className="badge bg-light text-dark me-2 p-2 mb-2 d-inline-block">
+                                <span className="badge bg-light text-dark me-2 p-2 mb-2 d-inline-block" style={{
+                                    position: "absolute",
+                                    [i18n.language === "ar" ? "left" : "right"]: "5px",
+                                  }}>
                                   <i className={`bi ${iconClass} me-1`}></i>{" "}
                                   {fileName}
                                 </span>

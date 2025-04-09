@@ -202,6 +202,35 @@
     }
   },
   "contracts": {
+    "details":{
+      "title": "Detalles del contrato",
+      "parties": "Partes",
+      "name": "Nombre",
+      "projectState": "Estado del proyecto",
+      "createdAt": "Creado el",
+      "deadline": "Duración",
+      "termsAndConditions": "Términos y condiciones",
+      "days":"Días",
+      "contractDetails": "Detalles del contrato", 
+      "projectDetails": "Detalles del proyecto",
+      "description": "Descripción",
+      "status": "Estado",
+      "terms": "Términos",
+      "budget": "Presupuesto",
+      "createdDate": "Fecha de creación",
+      "client": "Cliente",
+      "freelancer": "Freelancer",
+      "viewProject": "Ver el proyecto"
+    },
+    "report": {
+      "title": "Reportar contrato",
+      "reason": "Razón",
+      "message": "Mensaje",
+      "submit": "Enviar reporte",
+      "success": "¡Reporte enviado exitosamente!",
+      "error": "Error al enviar el reporte. Por favor, inténtelo de nuevo.",
+      "contract": "Reportar contrato"
+    },
     "title": "Contrato",
     "deadline": "Duración",
     "days": "días",
@@ -220,6 +249,7 @@
     }
   },
   "projects": {
+    "required_skills": "Habilidades requeridas",
     "filter": {
       "minPrice": "el precio mínimo",
       "maxPrice": "el precio máximo",
@@ -233,17 +263,54 @@
       "recent": "Recientes",
       "oldest": "Más antiguos",
       "priceRange": "Rango de precios",
-      "minPrice": "Precio mínimo",
-      "maxPrice": "Precio máximo",
       "skills": "Habilidades",
       "selectSkills": "Seleccionar habilidades",
       "status": "Estado",
       "active": "Activo",
       "completed": "Completado",
-      "pending": "Pendiente"
+      "pending": "Pendiente",
+      "price": "Precio"
     },
     "search": {
-      "placeholder": "Buscar proyectos"
+      "placeholder": "Buscar proyectos",
+      "results": "Resultados de búsqueda"
+    },
+    "status": {
+      "finished": "Terminado",
+      "open": "abierto",
+      "ongoing": "en curso",
+      "canceled": "cancelado",
+      "contract canceled and reopened": "contrato cancelado y reabierto"
     }
+  },
+  "proposals": {
+    "header": "Mis Propuestas",
+    "noProposals": "No hay propuestas para que veas.",
+    "makeNewOne": "Haz una nueva",
+    "viewJobs": "Ver Trabajos",
+    "contract": "Contrato",
+    "deadline": "Fecha límite",
+    "days": "Días",
+    "price": "Precio",
+    "proposeMessage": "Mensaje de propuesta",
+    "viewProject": "Ver el proyecto"
+  },
+  "projectContract": {
+    "header": "Crear Contrato",
+    "terms": "Términos",
+    "termsPlaceholder": "Ingrese los términos y condiciones del contrato",
+    "termsError": "Por favor, proporcione los términos del contrato.",
+    "deadline": "Plazo (días)",
+    "deadlinePlaceholder": "Ingrese el número de días",
+    "deadlineError": "Por favor, especifique un plazo válido.",
+    "budget": "Presupuesto",
+    "budgetPlaceholder": "Ingrese el monto del presupuesto",
+    "budgetError": "El presupuesto excede su saldo disponible",
+    "availableBalance": "Su saldo disponible",
+    "freelancer": "Freelancer",
+    "createButton": "Crear Contrato",
+    "noProposalError": "Error: No hay datos de propuesta disponibles",
+    "noProposalMessage": "Por favor, regrese a la página de propuestas y seleccione una propuesta válida.",
+    "success": "¡Contrato creado con éxito!"
   }
 }

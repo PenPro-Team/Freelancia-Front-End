@@ -93,6 +93,38 @@
       }
     }
   },
+  "profile": {
+    "userInfo": "معلومات المستخدم",
+    "updateSuccess": "تم تحديث بياناتك بنجاح!",
+    "updateError": " خطأ في تحديث البيانات! يرجى المحاولة مرة أخرى.",
+    "uploadImage": "رفع صورة",
+    "editImage": "تعديل الصورة",
+    "deleteImage": "حذف الصورة",
+    "firstName":"الاسم الأول",
+    "lastName":"الاسم الأخير",
+    "address":"العنوان",
+    "postalCode":"الرمز البريدي",
+    "birthDate":"تاريخ الميلاد",
+    "description":"الوصف",
+    "submit":"حفظ التغييرات",
+    "role":"الدور",
+    "email":"البريد الإلكتروني",
+    "username":"اسم المستخدم",
+    "balance": "الرصيد",
+    "messageBtn":"تواصل",
+    "reportUser": "الإبلاغ عن المستخدم",
+    "banUser": "حظر المستخدم",
+    "unbanUser": "إلغاء حظر المستخدم"
+  },
+  "report": {
+    "title": "الإبلاغ عن مستخدم",
+    "reason": "سبب الإبلاغ",
+    "description": "الوصف",
+    "submit": "إرسال",
+    "success": "تم إرسال تقريرك بنجاح!",
+    "error": "حدث خطأ أثناء إرسال التقرير. يرجى المحاولة مرة أخرى.",
+    "contract": "الإبلاغ عن عقد"
+  },
   "dashboard": {
     "title": "لوحة التحكم",
     "userInfo": "معلومات المستخدم",
@@ -101,7 +133,6 @@
     "wallet": "المحفظة",
     "skills": "المهارات",
     "certificates": "الشهادات",
-    "projects": "المشاريع",
     "updateSkills": "تحديث المهارات",
     "updateCertificate": "رفع شهادة",
     "updateProjects": "رفع مشروع",
@@ -121,7 +152,14 @@
       "descriptionPlaceholder": "أدخل وصف المشروع",
       "uploadButton": "رفع المشروع",
       "success": "تم رفع المشروع بنجاح!",
-      "error": "فشل في رفع المشروع. يرجى المحاولة مرة أخرى"
+      "error": "فشل في رفع المشروع. يرجى المحاولة مرة أخرى",
+      "status":{
+        "finished": "مكتمل",
+        "ongoing": "قيد التنفيذ",
+        "canceled":"ملغي",
+        "open":"مفتوح",
+        "contract canceled and reopened": "تم إلغاء العقد وإعادة فتحه"
+      }
     },
     "skills": {
       "title": "تحديث مهاراتك",
@@ -266,14 +304,25 @@
     "requiredFields": "جميع الحقول مطلوبة",
     "invalidCredentials": "بيانات الاعتماد غير صحيحة"
   },
+
   "security": {
-    "validation": {
       "usernameFormat": "اسم المستخدم يجب أن يكون على الأقل 3 أحرف ويتبع الصيغة الصحيحة",
       "emailFormat": "صيغة البريد الإلكتروني غير صحيحة",
       "usernameExists": "اسم المستخدم موجود بالفعل",
       "emailExists": "البريد الإلكتروني موجود بالفعل",
-      "required": "هذا الحقل مطلوب"
-    }
+      "required": "هذا الحقل مطلوب",
+      "title": "الأمان",  
+      "currentPassword": "كلمة المرور الحالية" ,
+      "newPassword": "كلمة المرور الجديدة" ,
+      "confirmPassword": "تأكيد كلمة المرور" ,
+      "updatePassword": "تحديث كلمة المرور" ,
+      "incorrectPassword": "كلمة المرور غير صحيحة! يرجى المحاولة مرة أخرى." ,
+      "passwordRequirements": "يجب أن تحتوي كلمة المرور على حرف صغير وحرف كبير ورقم واحد على الأقل، وأن تكون 8 أحرف على الأقل، بدون مسافات" ,
+      "passwordMatch": "كلمات المرور غير متطابقة!" ,
+      "passwordUpdated": "تم تحديث كلمة المرور بنجاح!" ,
+      "passwordError": "خطأ في تحديث كلمة المرور! يرجى المحاولة مرة أخرى." ,
+      "saveChanges": "حفظ التغييرات" ,
+      "close": "إغلاق"
   },
   "formLabels": {
     "currentPassword": "كلمة المرور الحالية",
@@ -289,6 +338,26 @@
     "passwordRequirements": "يجب أن تحتوي كلمة المرور على حرف صغير وحرف كبير ورقم واحد على الأقل، وأن تكون 8 أحرف على الأقل، بدون مسافات"
   },
   "contracts": {
+    "details":{
+      "title": "تفاصيل العقد",
+      "parties": "الأطراف",
+      "name": "الاسم",
+      "projectState": "حالة المشروع",
+      "createdAt": "تاريخ الإنشاء",
+      "deadline": "الموعد النهائي (أيام)",
+      "termsAndConditions": "الشروط والأحكام",
+      "contractDetails": "تفاصيل العقد",
+      "days": "أيام",
+      "projectDetails": "تفاصيل المشروع",
+      "description": "الوصف",
+      "status": "الحالة",
+      "terms": "الشروط",
+      "budget": "الميزانية",
+      "createdDate": "تاريخ الإنشاء",
+      "client": "العميل",
+      "freelancer": "المستقل",
+      "viewProject": "عرض المشروع"
+    },
     "status": {
       "aproved": "مقبول",
       "pending": "قيد الانتظار",
@@ -307,6 +376,7 @@
     "viewDetails": "عرض التفاصيل"
   },
   "projects": {
+    "required_skills": "المهارات المطلوبة",
     "filter": {
       "title": "تصفية المشاريع",
       "sortBy": "ترتيب حسب",
@@ -320,11 +390,49 @@
       "status": "الحالة",
       "active": "نشط",
       "completed": "مكتمل",
-      "pending": "قيد الانتظار",
-      "minPrice":"السعر الأدنى"
+      "pending": "قيد الانتظار"
+      
     },
     "search": {
-      "placeholder": "البحث عن المشاريع"
+      "placeholder": "البحث عن المشاريع",
+      "results": "نتائج البحث"
+    },
+    "status": {
+      "finished": "مكتمل",
+      "open": "مفتوح",
+      "ongoing": "قيد التنفيذ",
+      "canceled": "ملغي",
+      "contract canceled and reopened": "تم إلغاء العقد وإعادة فتحه"
     }
+  },
+  "proposals": {
+    "header": "عروضي",
+    "noProposals": "لا توجد عروض لعرضها.",
+    "makeNewOne": "قم بإنشاء عرض جديد",
+    "viewJobs": "عرض الوظائف",
+    "contract": "عقد",
+    "deadline": "الموعد النهائي",
+    "days": "أيام",
+    "price": "السعر",
+    "proposeMessage": "رسالة العرض",
+    "viewProject": "عرض المشروع"
+  },
+  "projectContract": {
+    "header": "إنشاء عقد",
+    "terms": "الشروط",
+    "termsPlaceholder": "أدخل شروط وأحكام العقد",
+    "termsError": "يرجى تقديم شروط العقد.",
+    "deadline": "الموعد النهائي (أيام)",
+    "deadlinePlaceholder": "أدخل عدد الأيام",
+    "deadlineError": "يرجى تحديد موعد نهائي صالح.",
+    "budget": "الميزانية",
+    "budgetPlaceholder": "أدخل مبلغ الميزانية",
+    "budgetError": "الميزانية تتجاوز رصيدك المتاح",
+    "availableBalance": "رصيدك المتاح",
+    "freelancer": "المستقل",
+    "createButton": "إنشاء عقد",
+    "noProposalError": "خطأ: لا توجد بيانات عرض متاحة",
+    "noProposalMessage": "يرجى العودة إلى صفحة العروض وتحديد عرض صالح.",
+    "success": "تم إنشاء العقد بنجاح!"
   }
 }

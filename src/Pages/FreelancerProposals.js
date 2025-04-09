@@ -6,13 +6,14 @@ import { AxiosProposalsInstance } from "../network/API/AxiosInstance";
 import { Button, Spinner } from "react-bootstrap";
 import FreelancerProposalsCard from "../Components/FreelancerProposalsCard";
 import HeaderColoredText from "../Components/HeaderColoredText";
-
+import { useTranslation } from "react-i18next";
 function FreelancerProposals() {
   const auth = getFromLocalStorage("auth");
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const [proposals, setProposals] = useState([]);
   const navigate = useNavigate();
+  const { t } = useTranslation();
   useEffect(() => {
     console.log("Here");
     console.log(auth);
@@ -59,7 +60,7 @@ function FreelancerProposals() {
     <div className="container">
       <div className="row">
         <div className="col-md-12">
-          <HeaderColoredText text="My Proposals" />
+          <HeaderColoredText text= {t('proposals.header')}/>
           <div>
             {isLoading ? (
               <div className="d-flex justify-content-center">
@@ -77,7 +78,7 @@ function FreelancerProposals() {
               </div>
             ) : (
               <div className="text-center">
-                <div>There're no proposals for you to view </div>
+                <div>{t('proposals.header')} </div>
                 <div>
                   {" "}
                   Make A New One {""}

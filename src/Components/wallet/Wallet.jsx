@@ -268,7 +268,7 @@ const Wallet = () => {
 
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>{t('wallet.amountUSD')}</Form.Label>
+                                    <Form.Label>{t('wallet.amount')}</Form.Label>
                                     <Form.Control
                                         type="number"
                                         value={amount}
@@ -279,7 +279,7 @@ const Wallet = () => {
                                         required
                                     />
                                     <Form.Text className="text-muted">
-                                        {t('wallet.minimumAmount')}
+                                        {t('wallet.minAmount')}
                                     </Form.Text>
                                 </Form.Group>
 
@@ -327,7 +327,7 @@ const Wallet = () => {
                                         type="number"
                                         value={withdrawalAmount}
                                         onChange={(e) => setWithdrawalAmount(e.target.value)}
-                                        placeholder={t('wallet.enterAmountToWithdraw')}
+                                        placeholder={t('wallet.enterWithdrawAmount')}
                                         min="1"
                                         step="0.01"
                                         required

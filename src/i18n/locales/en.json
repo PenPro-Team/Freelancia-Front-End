@@ -40,7 +40,7 @@
   },
   "home": {
     "welcome": "Welcome to FreeLancia",
-    "subtitle": "where start building your business dream..",
+    "subtitle": "where you start building your business dream..",
     "search": {
       "placeholder": "Search by username",
       "button": "Search",
@@ -259,6 +259,15 @@
     "banUser": "Ban User",
     "unbanUser": "Unban User"
   },
+  "report": {
+    "reportUser": "Report User",
+    "reason": "Reason for Reporting",
+    "description": "Description",
+    "submit": "Submit Report",
+    "success": "Report submitted successfully!",
+    "error": "Error submitting report. Please try again.",
+    "contract": "Report contract"
+  },
   "security": {
     "title": "Security Settings",
     "currentPassword": "Current Password",
@@ -272,6 +281,26 @@
     "close": "Close"
   },
   "contracts": {
+    "details":{
+      "title": "Contract Details",
+      "parties": "Parties",
+      "name": "Name",
+      "projectState": "Project State",
+      "createdAt": "Created At",
+      "deadline": "Deadline",
+      "termsAndConditions": "Terms and Conditions",
+      "days":"Days",
+      "contractDetails": "Contract Details",
+      "projectDetails": "Project Details",
+      "description": "Description",
+      "status": "Status",
+      "terms": "Terms",
+      "budget": "Budget",
+      "createdDate": "Created Date",
+      "client": "Client",
+      "freelancer": "Freelancer",
+      "viewProject": "View Project"
+    },
     "title": "Contract",
     "deadline": "Duration",
     "days": "days",
@@ -290,6 +319,7 @@
     }
   },
   "projects": {
+    "required_skills": "Required Skills",
     "filter": {
       "minPrice": "Minimum Price",
       "maxPrice": "Maximum Price",
@@ -309,10 +339,49 @@
       "status": "Status",
       "active": "Active",
       "completed": "Completed",
-      "pending": "Pending"
+      "pending": "Pending",
+      "price": "Price"
     },
     "search": {
-      "placeholder": "Search for projects"
+      "placeholder": "Search for projects",
+      "results": "Search Results"
+    },
+    "status": {
+      "finished": "Finished",
+      "open": "open",
+      "ongoing": "ongoing",
+      "canceled": "canceled",
+      "contract canceled and reopened": "contract canceled and reopened"
     }
+  },
+  "proposals": {
+    "header": "My Proposals",
+    "noProposals": "There are no proposals for you to view.",
+    "makeNewOne": "Make a new one",
+    "viewJobs": "View Jobs",
+    "contract": "Contract",
+    "deadline": "Deadline",
+    "days": "Days",
+    "price": "Price",
+    "proposeMessage": "Propose Message",
+    "viewProject": "View The Project"
+  },
+  "projectContract": {
+    "header": "Create Contract",
+    "terms": "Terms",
+    "termsPlaceholder": "Enter contract terms and conditions",
+    "termsError": "Please provide contract terms.",
+    "deadline": "Deadline (days)",
+    "deadlinePlaceholder": "Enter number of days",
+    "deadlineError": "Please specify a valid deadline.",
+    "budget": "Budget",
+    "budgetPlaceholder": "Enter budget amount",
+    "budgetError": "Budget exceeds your available balance",
+    "availableBalance": "Your available balance",
+    "freelancer": "Freelancer",
+    "createButton": "Create Contract",
+    "noProposalError": "Error: No proposal data available",
+    "noProposalMessage": "Please return to the proposals page and select a valid proposal.",
+    "success": "Contract created successfully!"
   }
 }
