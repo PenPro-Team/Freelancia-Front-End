@@ -437,7 +437,9 @@ const ContractDetails = () => {
           )}
 
           {/* Contract Actions Section */}
-          {contract.contract_state === 'pending' && ((current_user.user.role === "freelancer" && current_user.user.user_id === contract.client_details.id)||(current_user.user.role === "admin"))&& (
+          {contract.contract_state === 'pending' && 
+            ((current_user.user.role === "freelancer" && current_user.user.user_id === contract.freelancer_details.id) || 
+             current_user.user.role === "admin") && (
               <div className="d-flex justify-content-end mt-4">
                 <button
                   name="Accept"
@@ -454,8 +456,10 @@ const ContractDetails = () => {
                   {t('contracts.details.actions.decline')}
                 </button>
               </div>
-            )}
-          {contract.contract_state === 'Accepted' && ((current_user.user.role === "client" && current_user.user.user_id === contract.client_details.id)||(current_user.user.role === "admin")) && (
+          )}
+          {contract.contract_state === 'Accepted' && 
+            ((current_user.user.role === "client" && current_user.user.user_id === contract.client_details.id) || 
+             (current_user.user.role === "admin")) && (
               <div className="d-flex justify-content-end mt-4">
                 {/* Complete button always available for client */}
                 <button
