@@ -359,7 +359,7 @@ const RegisterForm = () => {
     if (!isFormValid()) {
       // isFormValid already updates the errors state if needed
       console.log("Form is invalid. Errors:", errors);
-      setSnackbarMessage("Please fix the errors in the form.");
+      setSnackbarMessage("Form Inputs Not Valid.");
       setShowSnackbar(true);
       return;
     }
