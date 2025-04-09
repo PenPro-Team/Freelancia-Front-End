@@ -16,8 +16,10 @@ import {
   Modal,
 } from "react-bootstrap";
 import { AxiosConfirmAuthInstance, AxiosUserInstance } from "../../network/API/AxiosInstance";
+import { useTranslation } from 'react-i18next';
 
 export default function EditSecurity() {
+  const { t } = useTranslation();
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
   const user = auth ? (auth.user ? auth.user : null) : null;
@@ -213,7 +215,7 @@ export default function EditSecurity() {
       <Col md={24}>
         <Card className="shadow-lg p-3 mb-5 bg-white rounded">
           <Card.Body>
-            <Card.Title className="text-center">User Information</Card.Title>
+            <Card.Title className="text-center">{t('security.title')}</Card.Title>
             {isLoading ? (
               <div>
                 <Placeholder xs={6} />
@@ -229,12 +231,12 @@ export default function EditSecurity() {
                 )}
                 {showError && (
                   <Alert variant="danger" dismissible>
-                    Error updating your data! Please try again.
+                    {t('profile.updateError')}
                   </Alert>
                 )}
                 <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-3" controlId="formUsername">
-                    <Form.Label>Username</Form.Label>
+                    <Form.Label>{t('profile.username')}</Form.Label>
                     <Form.Control
                       name="username"
                       value={formValues.username}
@@ -248,7 +250,7 @@ export default function EditSecurity() {
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="formEmail">
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>{t('profile.email')}</Form.Label>
                     <Form.Control
                       name="email"
                       value={formValues.email}
@@ -262,9 +264,9 @@ export default function EditSecurity() {
                   </Form.Group>
 
                   <Row className="mb-3 border border-2 rounded-3 p-3">
-                    <h3>Update Password</h3>
+                    <h3>{t('security.updatePassword')}</h3>
                     <Form.Group className="w-100">
-                      <Form.Label>New Password</Form.Label>
+                      <Form.Label>{t('security.newPassword')}</Form.Label>
                       <InputGroup className="mb-3">
                         <Form.Control
                           name="newPassword"
@@ -282,7 +284,7 @@ export default function EditSecurity() {
                           {errors.newPassword}
                         </Form.Control.Feedback>
                       </InputGroup>
-                      <Form.Label>Confirm Password</Form.Label>
+                      <Form.Label>{t('security.confirmPassword')}</Form.Label>
                       <InputGroup className="mb-3">
                         <Form.Control
                           name="confirmPassword"
@@ -307,11 +309,11 @@ export default function EditSecurity() {
                     onClick={handleShow}
                     disabled={isSubmitDisabled()}
                   >
-                    Submit
+                    {t('profile.submit')}
                   </Button>
                   <Modal show={showModal} onHide={handleClose}>
                     <Modal.Header closeButton>
-                      <Modal.Title>Confirm Your Password</Modal.Title>
+                      <Modal.Title>{t('security.currentPassword')}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                       <Form.Group controlId="formCurrentPassword">
@@ -339,13 +341,10 @@ export default function EditSecurity() {
                     </Modal.Body>
                     <Modal.Footer>
                       <Button variant="secondary" onClick={handleClose}>
-                        Close
+                        {t('security.close')}
                       </Button>
-                      <Button
-                        variant="primary"
-                        onClick={(e) => handleSubmit(e)}
-                      >
-                        Save Changes
+                      <Button variant="primary" onClick={handleSubmit}>
+                        {t('security.saveChanges')}
                       </Button>
                     </Modal.Footer>
                   </Modal>

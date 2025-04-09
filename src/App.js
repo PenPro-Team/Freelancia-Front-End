@@ -23,6 +23,8 @@ import Chatbot from "./Components/Chatbot/Chatbot";
 import AdminPanelLayout from "./Pages/AdminPanelLayout";
 import AboutUs from "./Pages/AboutUs";
 import ContactUs from "./Pages/ContactUs";
+import PaymentSuccess from "./Components/wallet/PaymentSuccess";
+import PaymentFailed from "./Components/wallet/PaymentFailed";
 function App() {
   return (
     <div className="bgControl">
@@ -38,6 +40,8 @@ function App() {
             path="/Freelancia-Front-End/register"
             element={<RegisterForm />}
           />
+          <Route path="/paypal/success" element={<PaymentSuccess />} />
+          <Route path="/paypal/cancel" element={<PaymentFailed />} />
           <Route path="/Freelancia-Front-End/about" element={<AboutUs />} />
           <Route path="/Freelancia-Front-End/contact" element={<ContactUs />} />
           <Route path="/register" element={<RegisterForm />} />

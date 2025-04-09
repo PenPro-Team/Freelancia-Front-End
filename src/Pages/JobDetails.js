@@ -8,8 +8,10 @@ import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { AxiosProjectsInstance } from "../network/API/AxiosInstance";
 import { Placeholder } from "react-bootstrap";
 import HeaderColoredText from "../Components/HeaderColoredText";
+import { useTranslation } from 'react-i18next';
 
 function JobDetails() {
+  const { t } = useTranslation();
   const [project, setProject] = useState({});
 
   const auth = getFromLocalStorage("auth");
@@ -48,16 +50,18 @@ function JobDetails() {
     <>
       {isLoading ? (
         <div className="d-flex flex-row flex-wrap justify-content-evenly align-items-center">
-          <Placeholder xs={3} size="lg" className="m-2" />
+          <Placeholder xs={3} size="lg" className="m-2">
+            {t('jobDetails.loading')}
+          </Placeholder>
         </div>
       ) : isEmpty ? (
         <div>
           <p className="text-center text-danger m-5 fs-1 fw-bold">
-            Can't Find This Project
+            {t('jobDetails.notFound')}
           </p>
         </div>
       ) : (
-        <HeaderColoredText text={project.project_name} />
+        <HeaderColoredText text={t('jobDetails.title')} />
       )}
       <div className="" style={{ minHeight: "48vh" }}>
         <div className="d-flex flex-row flex-wrap gap-3 justify-content-center m-2 mb-5">

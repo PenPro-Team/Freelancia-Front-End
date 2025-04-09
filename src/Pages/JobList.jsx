@@ -4,8 +4,10 @@ import "react-bootstrap";
 import "react-popper";
 import Sidebar from "../Components/sidebar/Sidebar";
 import PriceRangeFilter from "../Components/FilterJobs/PriceRangeFilter";
+import { useTranslation } from 'react-i18next';
 
 export default function JobList(props) {
+  const { t } = useTranslation();
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedJobStates, setSelectedJobStates] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 9999 });

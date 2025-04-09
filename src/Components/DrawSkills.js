@@ -1,11 +1,12 @@
 import { Badge } from "react-bootstrap";
-
+import { useTranslation } from "react-i18next";
 function DrawSkills(props) {
   //   const required_skills = props.required_skills;
+  const { t,i18n } = useTranslation();
   return (
     <>
       {!props.notShowingTitle && (
-        <span className="fw-bold">Required Skills: </span>
+        <span className="fw-bold">{t('projects.required_skills')} :</span>
       )}
       {(Array.isArray(props.required_skills)
         ? props.required_skills

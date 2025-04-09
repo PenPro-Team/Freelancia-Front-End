@@ -3,8 +3,10 @@ import { Form, Button, Alert, Spinner, Card, Toast, Badge } from "react-bootstra
 import { PayPalService } from "./PaypalService";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getFromLocalStorage } from "../../network/local/LocalStorage";
+import { useTranslation } from 'react-i18next';
 
 const Wallet = () => {
+    const { t } = useTranslation();
     const [amount, setAmount] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -26,6 +28,7 @@ const Wallet = () => {
     const [logsLoading, setLogsLoading] = useState(false);
     const [logsError, setLogsError] = useState(null);
     const [withdrawalFlag, setWithdrawalFlag] = useState(false);
+    const newWindowRef = useRef(null); // Use useRef to store the newWindow reference
 
     useEffect(() => {
         const paymentId = searchParams.get('paymentId');
@@ -38,49 +41,6 @@ const Wallet = () => {
         }
     }, [searchParams,withdrawalFlag]);
 
-    const handleCloseWindow = useCallback(() => {
-        console.log("Attempting to close PayPal window");
-        console.log("PayPal window state:", {
-            paypalVarWindow: paypalVarWindow?.closed,
-            paypalWindowRef: paypalWindow.current?.closed
-        });
-
-        let windowClosed = false;
-
-        // Try closing with paypalVarWindow first
-        if (paypalVarWindow && !paypalVarWindow.closed) {
-            try {
-                console.log("Attempting to close paypalVarWindow");
-                paypalVarWindow.close();
-                windowClosed = true;
-                console.log("Successfully closed paypalVarWindow");
-            } catch (e) {
-                console.error('Error closing paypalVarWindow:', e);
-            }
-        }
-
-        // Try closing with ref if first attempt failed
-        if (!windowClosed && paypalWindow.current && !paypalWindow.current.closed) {
-            try {
-                console.log("Attempting to close paypalWindow.current");
-                paypalWindow.current.close();
-                windowClosed = true;
-                console.log("Successfully closed paypalWindow.current");
-            } catch (e) {
-                console.error('Error closing paypalWindow.current:', e);
-            }
-        }
-
-        // Clear references only if we successfully closed the window
-        if (windowClosed) {
-            console.log("Clearing window references");
-            setPaypalVarWindow(null);
-            paypalWindow.current = null;
-        } else {
-            console.warn("Failed to close PayPal window");
-        }
-    }, [paypalVarWindow]);
-
     useEffect(() => {
         if (paypalWindow?.current) {
             const intervalId = setInterval(async () => {
@@ -89,7 +49,6 @@ const Wallet = () => {
                     
                     if (result.status === 'closed') {
                         clearInterval(intervalId);
-                        handleCloseWindow();
                         
                         // Get payment details from URL
                         const urlParams = new URLSearchParams(window.location.search);
@@ -107,15 +66,17 @@ const Wallet = () => {
 
             return () => clearInterval(intervalId);
         }
-    }, [paypalWindow, navigate, handleCloseWindow]);
+    }, [paypalWindow, navigate]);
 
     const handlePaymentVerification = async (paymentId, PayerID) => {
         setLoading(true);
         try {
+            console.log(window);
             const response = await PayPalService.verifyPayment(paymentId, PayerID);
             if (response.status === 'success') {
                 console.log('New balance:', response.new_balance); // Debug log
                 setNewBalance(response.new_balance);
+                
                 setShowToast(true);
                 
                 setTimeout(() => {
@@ -149,10 +110,11 @@ const Wallet = () => {
                     'PayPalWindow',
                     'width=800,height=600,toolbar=0,menubar=0,location=0,status=1'
                 );
-                
+
                 if (newWindow) {
                     console.log("PayPal window opened successfully");
-                    // Store reference before React state updates
+                    // Store reference in useRef
+                    newWindowRef.current = newWindow;
                     paypalWindow.current = newWindow;
                     setPaypalVarWindow(newWindow);
                     
@@ -239,20 +201,20 @@ const Wallet = () => {
             >
                 <Toast.Header>
                     <strong className="me-auto">
-                        {withdrawalResponse ? 'Withdrawal Request Submitted' : 'Payment Successful'}
+                        {withdrawalResponse ? t('wallet.payment.withdrawalSubmitted') : t('wallet.payment.success')}
                     </strong>
                 </Toast.Header>
                 <Toast.Body>
                     {withdrawalResponse ? (
                         <>
-                            Withdrawal request for ${withdrawalResponse.amount} submitted successfully!
+                            {t('wallet.payment.withdrawalSuccess', { amount: withdrawalResponse.amount })}
                             <br />
-                            Status: {withdrawalResponse.status}
+                            {t('wallet.status')}: {withdrawalResponse.status}
                             <br />
-                            New balance: ${withdrawalResponse.new_balance.toFixed(2)}
+                            {t('wallet.payment.completed', { balance: withdrawalResponse.new_balance.toFixed(2) })}
                         </>
                     ) : (
-                        `Payment completed! Your new balance is $${newBalance?.toFixed(2) || '0.00'}`
+                        t('wallet.payment.completed', { balance: newBalance?.toFixed(2) || '0.00' })
                     )}
                 </Toast.Body>
             </Toast>
@@ -260,24 +222,24 @@ const Wallet = () => {
             <div className="row g-4">
                 <div className="col-md-6">
                     <Card className="p-4">
-                        <Card.Header as="h4">Add Balance using PayPal</Card.Header>
+                        <Card.Header as="h4">{t('wallet.addBalance')}</Card.Header>
                         <Card.Body>
                             {error && <Alert variant="danger">{error}</Alert>}
 
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Amount (USD)</Form.Label>
+                                    <Form.Label>{t('wallet.amount')}</Form.Label>
                                     <Form.Control
                                         type="number"
                                         value={amount}
                                         onChange={(e) => setAmount(e.target.value)}
-                                        placeholder="Enter amount"
+                                        placeholder={t('wallet.enterAmount')}
                                         min="1"
                                         step="0.01"
                                         required
                                     />
                                     <Form.Text className="text-muted">
-                                        Minimum amount is $1.00
+                                        {t('wallet.minAmount')}
                                     </Form.Text>
                                 </Form.Group>
 
@@ -290,10 +252,10 @@ const Wallet = () => {
                                     {loading ? (
                                         <>
                                             <Spinner animation="border" size="sm" className="me-2" />
-                                            Processing...
+                                            {t('wallet.processing')}
                                         </>
                                     ) : (
-                                        'Pay with PayPal'
+                                        t('wallet.payWithPaypal')
                                     )}
                                 </Button>
                             </Form>
@@ -303,29 +265,29 @@ const Wallet = () => {
                 
                 <div className="col-md-6">
                     <Card className="p-4">
-                        <Card.Header as="h4">Withdraw Funds</Card.Header>
+                        <Card.Header as="h4">{t('wallet.withdrawFunds')}</Card.Header>
                         <Card.Body>
                             {withdrawalError && <Alert variant="danger">{withdrawalError}</Alert>}
                             {withdrawalStatus === 'success' && (
                                 <Alert variant="success">
-                                    Withdrawal request submitted successfully!
+                                    {t('wallet.withdrawalRequestSubmitted')}
                                     <br />
-                                    Status: {withdrawalResponse.status}
+                                    {t('wallet.status')}: {withdrawalResponse.status}
                                     <br />
-                                    Amount: ${withdrawalResponse.amount}
+                                    {t('wallet.amount')}: ${withdrawalResponse.amount}
                                     <br />
-                                    PayPal Email: {withdrawalResponse.paypal_email}
+                                    {t('wallet.paypalEmail')}: {withdrawalResponse.paypal_email}
                                 </Alert>
                             )}
                             
                             <Form onSubmit={handleWithdrawalSubmit}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Available Balance: ${currentUser.user_balance}</Form.Label>
+                                    <Form.Label>{t('wallet.availableBalance')}: ${currentUser.user_balance}</Form.Label>
                                     <Form.Control
                                         type="number"
                                         value={withdrawalAmount}
                                         onChange={(e) => setWithdrawalAmount(e.target.value)}
-                                        placeholder="Enter amount to withdraw"
+                                        placeholder={t('wallet.enterWithdrawAmount')}
                                         min="1"
                                         step="0.01"
                                         required
@@ -333,12 +295,12 @@ const Wallet = () => {
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
-                                    <Form.Label>PayPal Email</Form.Label>
+                                    <Form.Label>{t('wallet.paypalEmail')}</Form.Label>
                                     <Form.Control
                                         type="email"
                                         value={paypalEmail}
                                         onChange={(e) => setPaypalEmail(e.target.value)}
-                                        placeholder="Enter your PayPal email"
+                                        placeholder={t('wallet.enterPaypalEmail')}
                                         required
                                     />
                                 </Form.Group>
@@ -352,10 +314,10 @@ const Wallet = () => {
                                     {withdrawalLoading ? (
                                         <>
                                             <Spinner animation="border" size="sm" className="me-2" />
-                                            Processing...
+                                            {t('wallet.processing')}
                                         </>
                                     ) : (
-                                        'Request Withdrawal'
+                                        t('wallet.requestWithdrawal')
                                     )}
                                 </Button>
                             </Form>
@@ -367,7 +329,7 @@ const Wallet = () => {
             <div className="row mt-4">
                 <div className="col-12">
                     <Card>
-                        <Card.Header as="h4">Withdrawal History</Card.Header>
+                        <Card.Header as="h4">{t('wallet.withdrawalHistory')}</Card.Header>
                         <Card.Body>
                             {logsError && <Alert variant="danger">{logsError}</Alert>}
                             {logsLoading ? (
@@ -379,11 +341,11 @@ const Wallet = () => {
                                     <table className="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Date</th>
-                                                <th>Amount</th>
-                                                <th>PayPal Email</th>
-                                                <th>Status</th>
-                                                <th>Notes</th>
+                                                <th>{t('wallet.date')}</th>
+                                                <th>{t('wallet.amount')}</th>
+                                                <th>{t('wallet.paypalEmail')}</th>
+                                                <th>{t('wallet.status')}</th>
+                                                <th>{t('wallet.notes')}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -408,7 +370,7 @@ const Wallet = () => {
                                     </table>
                                 </div>
                             ) : (
-                                <p className="text-muted text-center">No withdrawal history found</p>
+                                <p className="text-muted text-center">{t('wallet.noWithdrawalHistory')}</p>
                             )}
                         </Card.Body>
                     </Card>

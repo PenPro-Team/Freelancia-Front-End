@@ -5,6 +5,7 @@ import proImage from "../assets/hero-image--popular-items-2963d5759f434e6691a0bb
 import { Button, Form, Alert } from "react-bootstrap";
 import Cards from "../Components/Cards";
 import proImages from "../assets/default-user.png";
+import defaultUserImage from "../assets/default-user.png";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import { useSelector } from "react-redux";
@@ -12,7 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { AxiosFreelancersInstance, AxiosClientsInstance } from "../network/API/AxiosInstance";
 import RateStars from "../Components/RateStars";
 import { BASE_PATH } from "../network/API/AxiosInstance";
-import defaultUserImage from "../assets/IMG_20250226_141719.jpg";
+import { useTranslation } from 'react-i18next';
+
 function Home() {
   const user = useSelector((state) => state.auth.user);
   const [freelancers, setFreelancers] = useState([]);
@@ -23,6 +25,7 @@ function Home() {
   const [hasSearched, setHasSearched] = useState(false); // Track if a search was performed
 
   const navigate = useNavigate(); // Hook for navigation
+  const { t } = useTranslation();
 
   console.log("Logged in User:", user);
 
@@ -50,7 +53,6 @@ function Home() {
         console.error("Error fetching clients:", error);
       }
     };
-
     fetchClients();
   }, []);
 
@@ -166,7 +168,7 @@ function Home() {
 
     return (
       <div className="mb-5">
-        <h3 className="fw-bold mb-4 border-bottom pb-2">Search Results</h3>
+        <h3 className="fw-bold mb-4 border-bottom pb-2">{t('home.search.button')}</h3>
 
         {searchResults.length > 0 ? (
           <Row>
@@ -182,26 +184,20 @@ function Home() {
       </div>
     );
   };
-
+  
   return (
     <Container className="py-4">
-      {/* Enhanced Header Section */}
       <Row className="mb-5 py-3 bg-light rounded shadow-sm align-items-center">
         <Col xs={12} md={7} className="p-4">
-          <h2 className="fw-bold mb-3">
-            Welcome to <span className="text-primary">FreeLancia</span> where
-            start building your business dream..
-          </h2>
-          <p className="fs-5 text-secondary mb-4">
-            Connect to the world of Freelancing and make your business idea a reality.
-          </p>
+          <h2 className="fw-bold mb-3">{t('home.welcome')}</h2>
+          <p className="fs-5 text-secondary mb-4">{t('home.subtitle')}</p>
 
           <Form onSubmit={handleSearch} className="mb-4">
             <Row className="g-2">
               <Col xs={12} md={8}>
                 <Form.Control
                   type="text"
-                  placeholder="Search by username"
+                  placeholder={t('home.search.placeholder')}
                   className="border-primary"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -220,7 +216,7 @@ function Home() {
               </Col>
               <Col xs={6} md={2}>
                 <Button type="submit" variant="primary" className="w-100" onClick={handleSearch}>
-                  Search
+                  {t('home.search.button')}
                 </Button>
               </Col>
             </Row>
@@ -236,40 +232,79 @@ function Home() {
         </Col>
       </Row>
 
+      {/* Search Results Section */}
+      {searchResults.length > 0 && (
+        <div className="mb-5">
+          <h3 className="fw-bold mb-4 border-bottom pb-2">{t('home.searchResults.title')}</h3>
+          <Row>
+            {searchResults.map((freelancer, idx) => (
+              <Col key={idx} xs={12} md={6} lg={4} className="mb-4">
+                <Card
+                  className="h-100 shadow-sm border-light"
+                  onClick={() => navigate(`${BASE_PATH}/Dashboard/${freelancer.id}`)}
+                  style={{
+                    cursor: "pointer",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    borderRadius: "8px",
+                    overflow: "hidden"
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = "translateY(-5px)";
+                    e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 .125rem .25rem rgba(0,0,0,.075)";
+                  }}
+                >
+                  <Card.Img
+                    variant="top"
+                    src={freelancer.image || proImages}
+                    alt={freelancer.name}
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
+                  <Card.Body className="d-flex flex-column">
+                    <Card.Title className="mb-2 fw-bold">{freelancer.name}</Card.Title>
+                    <div className="mb-2">
+                      <RateStars rating={freelancer.rate} />
+                    </div>
+                    <Card.Text className="text-secondary">
+                      <strong>{t('home.description')}:</strong>{" "}
+                      {freelancer.description
+                        ? (freelancer.description.length > 100
+                          ? `${freelancer.description.substring(0, 100)}...`
+                          : freelancer.description)
+                        : t('home.noDescription')}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>absolute
+        </div>
+      )}
       {/* Search Results Section with potential "No results" message */}
       {renderSearchResults()}
 
-      {/* Enhanced Category Cards Section */}
+      {/* Categories Section */}
       <div className="mb-5">
-        <h3 className="fw-bold mb-4 border-bottom pb-2">Popular Categories</h3>
+        <h3 className="fw-bold mb-4 border-bottom pb-2">{t('home.categories.title')}</h3>
         <Row className="g-4 justify-content-center">
-          <Col xs={12} md={4}>
-            <Cards
-              title={"Web Development"}
-              pragraph={"Web design, development and hosting."}
-              customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
-            />
-          </Col>
-          <Col xs={12} md={4}>
-            <Cards
-              title={"Graphic Design"}
-              pragraph={"Logo design, branding and illustration."}
-              customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
-            />
-          </Col>
-          <Col xs={12} md={4}>
-            <Cards
-              title={"Translation"}
-              pragraph={"Translation and localization services."}
-              customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
-            />
-          </Col>
+          {t('home.categories.items', { returnObjects: true }).map((category, index) => (
+            <Col xs={12} md={4} key={index}>
+              <Cards
+                title={category.title}
+                pragraph={category.description}
+                customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
+              />
+            </Col>
+          ))}
         </Row>
       </div>
 
-      {/* Enhanced Clients Section */}
+      {/* Clients Section */}
       <div className="mb-5 py-4 bg-light rounded shadow-sm">
-        <h3 className="fw-bold mb-4 text-center">Featured Clients</h3>
+        <h3 className="fw-bold mb-4 text-center">{t('home.clients.title')}</h3>
         <Row className="align-items-center">
           <Col xs={12} md={7} className="mb-4 mb-md-0">
             <Row className="g-3">
@@ -304,29 +339,29 @@ function Home() {
           </Col>
           <Col xs={12} md={5} className="text-center text-md-start px-4">
             <h4 className="fw-bold mb-3">
-              Connect with top Clients and Start your Freelancing journey
+              {t('home.clients.subtitle')}
             </h4>
             <Button
               onClick={() => navigate(`${BASE_PATH}/Job_List`)}
               variant="info"
               className="text-white fw-semibold"
             >
-              View all Projects
+              {t('home.clients.viewProjects')}
             </Button>
           </Col>
         </Row>
       </div>
 
-      {/* Enhanced Top Rated Freelancers Section */}
+      {/* Freelancers Section */}
       <div className="mb-4">
         <div className="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-          <h3 className="fw-bold mb-0">Top Rated Freelancers</h3>
+          <h3 className="fw-bold mb-0">{t('home.freelancers.title')}</h3>
           <Button
             variant="outline-primary"
             size="sm"
             onClick={() => navigate(`${BASE_PATH}/freelancers`)}
           >
-            View All
+            {t('home.freelancers.viewAll')}
           </Button>
         </div>
         <Row className="g-4">
@@ -382,32 +417,29 @@ function Home() {
         </Row>
       </div>
 
-      {/* Conditional Call to Action Section - Only shown to non logged in users */}
-      {!user && (
+      {/* CTA Sections */}
+      {!user ? (
         <div className="text-center py-4 my-5 bg-primary text-white rounded shadow">
-          <h3 className="fw-bold mb-3">Ready to Start Your Journey?</h3>
-          <p className="mb-4">Join thousands of professionals on FreeLancia today!</p>
+          <h3 className="fw-bold mb-3">{t('home.cta.title')}</h3>
+          <p className="mb-4">{t('home.cta.subtitle')}</p>
           <Button
             variant="light"
             className="fw-semibold me-2"
             onClick={() => navigate(`${BASE_PATH}/register`)}
           >
-            Sign Up Now
+            {t('home.cta.signup')}
           </Button>
           <Button
             variant="outline-light"
             onClick={() => navigate(`${BASE_PATH}/Job_List`)}
           >
-            Browse Projects
+            {t('home.cta.browse')}
           </Button>
         </div>
-      )}
-
-      {/* Alternative CTA for logged-in users */}
-      {user && (
+      ) : (
         <div className="text-center py-4 my-5 bg-light rounded shadow">
-          <h3 className="fw-bold mb-3">Explore More Opportunities</h3>
-          <p className="mb-4">Find the perfect match for your skills or project needs.</p>
+          <h3 className="fw-bold mb-3">{t('home.cta.loggedIn.title')}</h3>
+          <p className="mb-4">{t('home.cta.loggedIn.subtitle')}</p>
           <Button
             variant="primary"
             className="fw-semibold me-2"
@@ -423,7 +455,6 @@ function Home() {
           </Button>
         </div>
       )}
-
     </Container>
   );
 }

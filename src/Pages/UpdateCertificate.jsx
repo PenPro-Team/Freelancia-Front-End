@@ -3,9 +3,11 @@ import { Button, Card, Col, Form, Row, Alert } from "react-bootstrap";
 import { AxiosFreelancersCertificate } from "../network/API/AxiosInstance";
 import { useParams } from "react-router-dom";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
+import { useTranslation } from 'react-i18next';
+
 function UpdateCertificate() {
   const auth = getFromLocalStorage("auth");
-  // localStorage.setItem("authToken", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0MDU5NzEzLCJpYXQiOjE3NDI3NjM3MTMsImp0aSI6ImMyNjU3ZGE0ZjJhZTRlZGU4ZjhhNmQ0ZjEwYmJhYzAzIiwidXNlcl9pZCI6M30.Zxs6yYW6JR0oKGSzImEe9AgR4Qo6K83UmavC49Jtl8Q");
+  const { t } = useTranslation();
   const { user_id } = useParams(); // Extract user ID from route params
   const [formData, setFormData] = useState({
     image: null, // File input for image
@@ -69,11 +71,11 @@ function UpdateCertificate() {
       <Col md={24}>
         <Card className="shadow-lg p-3 mb-5 bg-white rounded">
           <Card.Body>
-            <Card.Title className="text-center">Upload Certificate</Card.Title>
+            <Card.Title className="text-center">{t('dashboard.certificates.title')}</Card.Title>
             <Form onSubmit={handleSubmit}>
               {/* Image Input */}
               <Form.Group controlId="image" className="mb-3">
-                <Form.Label>Certificate Image</Form.Label>
+                <Form.Label>{t('dashboard.certificates.image')}</Form.Label>
                 <Form.Control
                   type="file"
                   name="image"
@@ -85,7 +87,7 @@ function UpdateCertificate() {
 
               {/* Title Input */}
               <Form.Group controlId="title" className="mb-3">
-                <Form.Label>Title</Form.Label>
+                <Form.Label>{t('dashboard.certificates.title')}</Form.Label>
                 <Form.Control
                   type="text"
                   name="title"
@@ -98,7 +100,7 @@ function UpdateCertificate() {
 
               {/* Description Input */}
               <Form.Group controlId="description" className="mb-3">
-                <Form.Label>Description</Form.Label>
+                <Form.Label>{t('dashboard.certificates.description')}</Form.Label>
                 <Form.Control
                   as="textarea"
                   name="description"
@@ -111,7 +113,7 @@ function UpdateCertificate() {
 
               {/* Issued By Input */}
               <Form.Group controlId="issued_by" className="mb-3">
-                <Form.Label>Issued By</Form.Label>
+                <Form.Label>{t('dashboard.certificates.issued_by')}</Form.Label>
                 <Form.Control
                   type="text"
                   name="issued_by"
@@ -124,7 +126,7 @@ function UpdateCertificate() {
 
               {/* Issued Date Input */}
               <Form.Group controlId="issued_date" className="mb-3">
-                <Form.Label>Issued Date</Form.Label>
+                <Form.Label>{t('dashboard.certificates.issued_date')}</Form.Label>
                 <Form.Control
                   type="date"
                   name="issued_date"
@@ -142,7 +144,7 @@ function UpdateCertificate() {
                 type="submit"
                 disabled={!isDateValid()} // Disable if the date is invalid
               >
-                Upload Certificate
+                {t('dashboard.certificates.upload')}
               </Button>
             </Form>
           </Card.Body>

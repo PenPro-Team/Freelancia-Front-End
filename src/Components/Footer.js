@@ -5,8 +5,10 @@ import { Link } from "react-router-dom"; // Fixed Import Path
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const [freelancers, setFreelancers] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [searchResults, setSearchResults] = useState([]); // State for search results
@@ -31,69 +33,63 @@ const Footer = () => {
     <footer className="container-fluid blackBack mt-5 py-5">
       <Container className="text-light">
         <Row className="gy-4">
-          {/* Contact Section */}
           <Col xs={12} lg={6} className="text-center text-lg-start">
-            <h2>Let's Take</h2>
+            <h2>{t('footer.headline')}</h2>
             <p>
-              All your projects to the next level with our talented freelancers.
-              <br/>
-              Whether you're a client looking for top-notch talent or a freelancer
-              <br/>
-              seeking exciting opportunities, we've got you covered.
+              {t('footer.description.part1')}<br/>
+              {t('footer.description.part2')}<br/>
+              {t('footer.description.part3')}
             </p>
             {userRole === "client" ? 
               <Link to={`/Freelancia-Front-End/postjob`}>
-                <Button className="btn btn-primary">Share your project!</Button>
+                <Button className="btn btn-primary">{t('footer.buttons.shareProject')}</Button>
               </Link>
-              : userRole == "freelancer"? <Link to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}>
-                <Button className="btn btn-primary">View Portfolio</Button>
+              : userRole === "freelancer" ? 
+              <Link to={`/Freelancia-Front-End/Dashboard/${user.user_id}`}>
+                <Button className="btn btn-primary">{t('footer.buttons.viewPortfolio')}</Button>
               </Link>
               : <Link to={`/Freelancia-Front-End/login`}>
-                <Button className="btn btn-primary">Login to show your skills!</Button>
+                <Button className="btn btn-primary">{t('footer.buttons.loginCta')}</Button>
               </Link>
             }
           </Col>
 
-          {/* Links Section */}
           <Col xs={6} lg={3} className="text-center text-lg-start">
-            <h5>Our Resources</h5>
+            <h5>{t('footer.resources.title')}</h5>
             <Link className="text-decoration-none text-primary d-block" to="/Freelancia-Front-End/Job_list">
-              Projects
+              {t('footer.resources.projects')}
             </Link>
             <Link className="text-decoration-none text-primary d-block" to="/home">
-              Home
+              {t('footer.resources.home')}
             </Link>
             <Link className="text-decoration-none text-primary d-block" to="/portfolio">
-              Portfolio
+              {t('footer.resources.portfolio')}
             </Link>
             <Link className="text-decoration-none text-primary d-block" to="/Freelancia-Front-End/about">
-              About Us
+              {t('footer.resources.aboutUs')}
             </Link>
             <Link className="text-decoration-none text-primary d-block" to="/Freelancia-Front-End/contact">
-              Contact Us
+              {t('footer.resources.contactUs')}
             </Link>
           </Col>
 
-          {/* Search Section */}
           <Col xs={12} lg={3}>
             <div className="d-flex flex-column">
-              {/* Search Input */}
               <Form onSubmit={handleSearch} className="d-flex mb-3">
                 <Form.Control
                   type="text"
-                  placeholder="Search by username"
+                  placeholder={t('footer.search.placeholder')}
                   className="me-2"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <Button type="submit" className="btn-primary">
-                  Search
+                  {t('footer.search.button')}
                 </Button>
               </Form>
 
-              {/* Copyright */}
               <div className="mt-4 text-center text-lg-start">
-                © 2025, FreeLancia.com for PenPro Team
+                {t('footer.copyright')}
               </div>
             </div>
           </Col>

@@ -95,7 +95,7 @@ const ContactUs = () => {
             <Card.Body className="text-center">
               <FaEnvelope className="text-primary mb-3" size={30} />
               <h5>Email</h5>
-              <p>support@freelancia.com</p>
+              <p>freelancia-team@freelancia.site</p>
             </Card.Body>
           </Card>
         </Col>
@@ -104,7 +104,7 @@ const ContactUs = () => {
             <Card.Body className="text-center">
               <FaPhone className="text-primary mb-3" size={30} />
               <h5>Phone</h5>
-              <p>+1 234 567 8900</p>
+              <p>+20 1013662329</p>
             </Card.Body>
           </Card>
         </Col>
@@ -113,7 +113,7 @@ const ContactUs = () => {
             <Card.Body className="text-center">
               <FaMapMarkerAlt className="text-primary mb-3" size={30} />
               <h5>Location</h5>
-              <p>Cairo, Egypt</p>
+              <p>Egypt</p>
             </Card.Body>
           </Card>
         </Col>

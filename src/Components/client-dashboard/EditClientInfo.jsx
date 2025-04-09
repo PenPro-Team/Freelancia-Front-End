@@ -17,7 +17,10 @@ import personalImg from "../../assets/hero-bg.jpg";
 import { AxiosUserInstance } from "../../network/API/AxiosInstance";
 import defaultImage from "../../assets/default-user.png";
 import { setToLocalStorage } from "../../network/local/LocalStorage";
+import { useTranslation } from 'react-i18next';
+
 export default function EditClientInfo(props) {
+  const { t } = useTranslation();
   const [userData, setUserData] = useState({});
   const auth = getFromLocalStorage("auth");
   const user = auth ? auth.user : null;
@@ -60,54 +63,41 @@ export default function EditClientInfo(props) {
     console.log(name);
 
     if (newValue.trim() === "") {
-      errorMessage = "This field is required";
+      errorMessage = t('formValidation.required');
     } else {
       switch (name) {
         case "firstName":
-
         case "lastName":
           if (!userRegex.test(newValue)) {
-            errorMessage = "Only letters are allowed";
+            errorMessage = t('formValidation.lettersOnly');
           }
-
           break;
 
         case "birthdate":
-          // التحقق من أن المستخدم أكبر من 18 سنة
-
           const selectedDate = new Date(newValue);
-
           const currentDate = new Date();
-
           const ageDifMs = currentDate - selectedDate;
-
           const ageDate = new Date(ageDifMs);
-
           const age = ageDate.getUTCFullYear() - 1970;
-
-          console.log(age);
-
           if (age < 18) {
-            errorMessage = "You must be at least 18 years old";
+            errorMessage = t('formValidation.age18');
           }
-
           break;
 
         case "postalCode":
           if (!/^\d+$/.test(newValue)) {
-            errorMessage = "Postal code must contain only numbers";
+            errorMessage = t('formValidation.numbersOnly');
           }
           break;
 
         case "address":
           if (newValue.trim().length < 5) {
-            errorMessage = "Address must be at least 5 characters long";
+            errorMessage = t('formValidation.minLength5');
           }
-
           break;
         case "description":
           if (newValue.length < 200) {
-            errorMessage = "Must be at least 200 characters";
+            errorMessage = t('formValidation.minLength200');
           }
           break;
         default:
@@ -253,7 +243,7 @@ export default function EditClientInfo(props) {
         <Col md={24}>
           <Card className="shadow-lg p-3 mb-5 bg-white rounded">
             <Card.Body>
-              <Card.Title className="text-center">User Information</Card.Title>
+              <Card.Title className="text-center">{t('profile.userInfo')}</Card.Title>
 
               {isLoading ? (
                 <div>
@@ -275,7 +265,7 @@ export default function EditClientInfo(props) {
                       onClose={() => setShow(false)}
                       dismissible
                     >
-                      Your Data was Updated Successfully!
+                      {t('profile.updateSuccess')}
                     </Alert>
                   ) : (
                     ""
@@ -287,11 +277,9 @@ export default function EditClientInfo(props) {
                       dismissible
                       onClose={() => setShow(false)}
                     >
-                      Error Updating your data!, please try again..
+                      {t('alerts.updateError')}
                     </Alert>
-                  ) : (
-                    ""
-                  )}
+                  ) : null}
 
                   <Form onSubmit={handleSubmit} encType="multipart/form-data">
                     <Row className="mb-3 ">
@@ -315,7 +303,7 @@ export default function EditClientInfo(props) {
                                   variant="outline-danger mx-2"
                                   onClick={(e) => handleDeleteImage(e)}
                                 >
-                                  Delete image
+                                  {t('profile.deleteImage')}
                                 </Button>
 
                                 <Button
@@ -324,7 +312,7 @@ export default function EditClientInfo(props) {
                                     uploadBtn()
                                   }
                                 >
-                                  Edit image
+                                  {t('profile.editImage')}
                                 </Button>
                               </div>
                             </div>
@@ -343,7 +331,7 @@ export default function EditClientInfo(props) {
                                 onClick={() =>
                                   uploadBtn()
                                 }>
-                                Upload image
+                                {t('profile.uploadImage')}
                               </Button>
                             </div>
                           </div>
@@ -360,12 +348,12 @@ export default function EditClientInfo(props) {
                       </Form.Group>
 
                       <Form.Group as={Col} controlId="formGridEmail">
-                        <Form.Label>First Name</Form.Label>
+                        <Form.Label>{t('profile.firstName')}</Form.Label>
 
                         <Form.Control
                           name="first_name"
                           type="text"
-                          placeholder="First Name"
+                          placeholder={t('placeholders.firstName')}
                           value={formValues.first_name}
                           onChange={handleChange}
                           isInvalid={Boolean(errors.first_name)}
@@ -378,12 +366,12 @@ export default function EditClientInfo(props) {
                       </Form.Group>
 
                       <Form.Group as={Col} controlId="formGridPassword">
-                        <Form.Label>Last Name</Form.Label>
+                        <Form.Label>{t('profile.lastName')}</Form.Label>
 
                         <Form.Control
                           name="last_name"
                           type="text"
-                          placeholder="Last Name"
+                          placeholder={t('placeholders.lastName')}
                           value={formValues.last_name}
                           onChange={handleChange}
                           isInvalid={Boolean(errors.last_name)}
@@ -397,11 +385,11 @@ export default function EditClientInfo(props) {
                     </Row>
 
                     <Form.Group className="mb-3" controlId="formGridAddress1">
-                      <Form.Label>Address</Form.Label>
+                      <Form.Label>{t('profile.address')}</Form.Label>
 
                       <Form.Control
                         name="address"
-                        placeholder="1234 Main St"
+                        placeholder={t('placeholders.address')}
                         value={formValues.address}
                         onChange={handleChange}
                         isInvalid={Boolean(errors.address)}
@@ -414,11 +402,11 @@ export default function EditClientInfo(props) {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formGridAddress2">
-                      <Form.Label>Postal Code</Form.Label>
+                      <Form.Label>{t('profile.postalCode')}</Form.Label>
 
                       <Form.Control
                         name="postal_code"
-                        placeholder="62511 i.e"
+                        placeholder={t('placeholders.postalCode')}
                         value={formValues.postal_code}
                         onChange={handleChange}
                         isInvalid={Boolean(errors.postal_code)}
@@ -432,7 +420,7 @@ export default function EditClientInfo(props) {
 
                     <Row className="mb-3">
                       <Form.Group as={Col} controlId="formGridCity">
-                        <Form.Label>Birth Date</Form.Label>
+                        <Form.Label>{t('profile.birthDate')}</Form.Label>
 
                         <Form.Control
                           name="birth_date"
@@ -454,7 +442,7 @@ export default function EditClientInfo(props) {
                       className="mb-3"
                       controlId="exampleForm.ControlTextarea1"
                     >
-                      <Form.Label>Description</Form.Label>
+                      <Form.Label>{t('profile.description')}</Form.Label>
 
                       <Form.Control
                         as="textarea"
@@ -485,7 +473,7 @@ export default function EditClientInfo(props) {
                           !formValues.image)
                       }
                     >
-                      Submit
+                      {t('profile.submit')}
                     </Button>
                   </Form>
                 </>

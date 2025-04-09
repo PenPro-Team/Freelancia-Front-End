@@ -8,7 +8,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { Placeholder } from 'react-bootstrap';
 import { AxiosProjectsInstance } from '../../network/API/AxiosInstance';
-
+import { useTranslation } from 'react-i18next';
 
 
 export default function Search() {
@@ -17,7 +17,7 @@ export default function Search() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [showResult, setShowResult] = useState(false)
-
+  const { t,i18n } = useTranslation();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -91,7 +91,7 @@ export default function Search() {
             </InputGroup.Text>
             <Form.Control
               type="search"
-              placeholder="Search Jobs"
+              placeholder={t('projects.search.placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -107,7 +107,7 @@ export default function Search() {
       {searched && searchResults.length > 0 ? (
         <div id='searchedResult' className={`border-2 border rounded-3 p-4 mb-4 position-relative ${showResult ? "d-block" : "d-none"}`}>
           <Button variant="dark" className='position-absolute top-0 end-0' onClick={(e) => CloseSearch(e)}>X</Button>
-          <h4>Search Results:</h4>
+          <h4>{t('projects.search.results')}</h4>
           {searchResults.map((project) => (
             <Link
               to={`/Freelancia-Front-End/job_details/${project.id}`}

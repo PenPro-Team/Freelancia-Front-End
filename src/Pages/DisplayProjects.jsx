@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import { AxiosFreelancersGetPortfolios } from "../network/API/AxiosInstance";
 import { useParams } from "react-router-dom";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
+import { useTranslation } from 'react-i18next';
 
 function DisplayProjects() {
     const { user_id } = useParams();
     const [projects, setProjects] = useState([]); // Store fetched projects
     const [error, setError] = useState(""); // Handle errors
     const BASE_URL = "http://127.0.0.1:8000/";
+    const { t } = useTranslation();
     // Fetch projects for the freelancer
     useEffect(() => {
         // Fetch projects for the freelancer
@@ -29,11 +31,11 @@ function DisplayProjects() {
                 <Col md={24}>
                     <Card className="shadow-lg p-3 mb-5 bg-white rounded">
                         <Card.Body>
-                            <Card.Title className="text-center">Freelancer Projects</Card.Title>
+                            <Card.Title className="text-center">{t('dashboard.projects.title')}</Card.Title>
 
-                            {error && <Alert variant="danger">{error}</Alert>}
+                            {error && <Alert variant="danger">{t('dashboard.projects.loadError')}</Alert>}
                             {!error && projects.length === 0 && (
-                                <Alert variant="info">No projects available.</Alert>
+                                <Alert variant="info">{t('dashboard.projects.noProjects')}</Alert>
                             )}
 
                             {/* Display projects */}
@@ -51,10 +53,10 @@ function DisplayProjects() {
                                                 <Card.Body>
                                                     <Card.Title>{project.title}</Card.Title>
                                                     <Card.Text>
-                                                        <strong>Description:</strong> {project.description} <br />
+                                                        <strong>{t('dashboard.projects.description')}:</strong> {project.description} <br />
                                                         {project.images && project.images.length > 0 && (
                                                             <>
-                                                                <strong>Additional Images:</strong>
+                                                                <strong>{t('dashboard.projects.additionalImages')}:</strong>
                                                                 <ul>
                                                                     {project.images.map((image, imgIndex) => (
                                                                         <li key={imgIndex}>
@@ -63,7 +65,7 @@ function DisplayProjects() {
                                                                                 target="_blank"
                                                                                 rel="noopener noreferrer"
                                                                             >
-                                                                                View Image {imgIndex + 1}
+                                                                                {t('dashboard.projects.viewImage')} {imgIndex + 1}
                                                                             </a>
                                                                         </li>
                                                                     ))}

@@ -6,6 +6,7 @@ import Placeholder from "react-bootstrap/Placeholder";
 import { Badge } from "react-bootstrap";
 import { AxiosProjectsInstance } from "../../network/API/AxiosInstance";
 import DrawSkills from "../DrawSkills";
+import { useTranslation } from "react-i18next";
 
 export default function ProjectCard({
   skills,
@@ -17,9 +18,9 @@ export default function ProjectCard({
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [searchResult, setSearchResult] = useState();
   const [errorMessage, setErrorMessage] = useState("");
-  
+  const { t, i18n } = useTranslation();
+
   useEffect(() => {
     AxiosProjectsInstance.get(`?page=${currentPage}`)
       .then((response) => {
@@ -29,11 +30,10 @@ export default function ProjectCard({
       })
       .catch((error) => {
         console.error("Error fetching projects:", error);
-        setErrorMessage("Failed to fetch projects.");
+        setErrorMessage(t("projects.filter.errorFetchingProjects"));
       });
-  }, [currentPage]);
+  }, [currentPage, t]);
 
-  // Apply filters based on skills, job states, and price range
   useEffect(() => {
     const filtered = data.filter((project) => {
       let skillsMatch = true;
@@ -41,8 +41,8 @@ export default function ProjectCard({
         const projectSkills = Array.isArray(project.required_skills)
           ? project.required_skills
           : typeof project.required_skills === "string"
-            ? project.required_skills.split(",").map((skill) => skill.trim())
-            : [];
+          ? project.required_skills.split(",").map((skill) => skill.trim())
+          : [];
 
         skillsMatch = projectSkills.some((skill) => skills.includes(skill));
       }
@@ -61,9 +61,13 @@ export default function ProjectCard({
       return skillsMatch && jobStateMatch && priceMatch;
     });
 
-    setFilteredData(isSortedByRecent
-      ? [...filtered].sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date))
-      : filtered);
+    setFilteredData(
+      isSortedByRecent
+        ? [...filtered].sort(
+            (a, b) => new Date(b.creation_date) - new Date(a.creation_date)
+          )
+        : filtered
+    );
   }, [data, skills, jobStates, priceRange, isSortedByRecent]);
 
   return (
@@ -80,7 +84,7 @@ export default function ProjectCard({
             <div className="card mb-3">
               <div className="card-body">
                 <p className="mb-1 text-muted" style={{ fontSize: "14px" }}>
-                  Price: {project.suggested_budget}$
+                  {t("projects.filter.price")}: {project.suggested_budget}$
                 </p>
                 <h5 className="card-title d-flex justify-content-between">
                   {project.project_name}
@@ -98,25 +102,25 @@ export default function ProjectCard({
                   style={{
                     position: "absolute",
                     top: "10px",
-                    right: "10px",
+                    [i18n.language === "ar" ? "left" : "right"]: "10px",
                     opacity: "75%",
                   }}
                   bg={
                     project.project_state === "finished"
                       ? "dark"
                       : project.project_state === "open"
-                        ? "primary"
-                        : project.project_state === "ongoing"
-                          ? "success"
-                          : project.project_state === "canceled"
-                            ? "danger"
-                            : project.project_state ===
-                              "contract canceled and reopened"
-                              ? "success"
-                              : "secondary"
+                      ? "primary"
+                      : project.project_state === "ongoing"
+                      ? "success"
+                      : project.project_state === "canceled"
+                      ? "danger"
+                      : project.project_state ===
+                        "contract canceled and reopened"
+                      ? "success"
+                      : "secondary"
                   }
                 >
-                  {project.project_state}
+                  {t(`projects.status.${project.project_state}`)}
                 </Badge>
                 <p className="card-text truncate">
                   {project.project_description}

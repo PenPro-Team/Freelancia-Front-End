@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import { AxiosFreelancersCertificate } from "../network/API/AxiosInstance";
 import { useParams } from "react-router-dom";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
+import { useTranslation } from 'react-i18next';
 
 function DisplayCertificate() {
   const { user_id } = useParams(); // Extract user ID from the route params
   const [certificates, setCertificates] = useState([]); // Store fetched certificates
   const [error, setError] = useState(""); // Handle errors
+  const { t } = useTranslation();
 
   // Fetch certificates for the freelancer
   useEffect(() => {
@@ -29,12 +31,12 @@ function DisplayCertificate() {
           <Card className="shadow-lg p-3 mb-5 bg-white rounded">
             <Card.Body>
               <Card.Title className="text-center">
-                Freelancer Certificates
+                {t('dashboard.certificates.displayTitle')}
               </Card.Title>
 
-              {error && <Alert variant="danger">{error}</Alert>}
+              {error && <Alert variant="danger">{t('dashboard.certificates.error')}</Alert>}
               {!error && certificates.length === 0 && (
-                <Alert variant="info">No certificates available.</Alert>
+                <Alert variant="info">{t('dashboard.certificates.noCertificates')}</Alert>
               )}
 
               {/* Display certificates */}

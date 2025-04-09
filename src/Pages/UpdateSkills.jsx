@@ -1,8 +1,10 @@
 import { Alert, Button, Card, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { AxiosSkillsInstance } from "../network/API/AxiosInstance";
+import { useTranslation } from 'react-i18next';
 
 function UpdateSkills() {
+    const { t } = useTranslation();
     const [skillsOptions, setSkillsOptions] = useState([]);
     const [selectedSkill, setSelectedSkill] = useState("");
     const [selectedSkills, setSelectedSkills] = useState([]);
@@ -70,17 +72,17 @@ function UpdateSkills() {
             <Col md={24}>
                 <Card className="shadow-lg p-3 mb-5 bg-white rounded">
                     <Card.Body>
-                        <Card.Title className="text-center">Update Your Skills</Card.Title>
+                        <Card.Title className="text-center">{t('dashboard.skills.title')}</Card.Title>
 
                         <Form.Group controlId="skill" className="mb-3">
-                            <Form.Label>Available Skills</Form.Label>
+                            <Form.Label>{t('dashboard.skills.availableSkills')}</Form.Label>
                             <InputGroup>
                                 <Form.Control
                                     as="select"
                                     value={selectedSkill}
                                     onChange={(e) => setSelectedSkill(e.target.value)}
                                 >
-                                    <option value="">Select a skill</option>
+                                    <option value="">{t('dashboard.skills.selectSkill')}</option>
                                     {skillsOptions.map((skill) => (
                                         <option key={skill.id} value={skill.skill}>
                                             {skill.skill}
@@ -88,7 +90,7 @@ function UpdateSkills() {
                                     ))}
                                 </Form.Control>
                                 <Button variant="secondary" onClick={handleAddSkill}>
-                                    {editMode ? 'Update' : 'Add'}
+                                    {editMode ? t('dashboard.skills.update') : t('dashboard.skills.add')}
                                 </Button>
                             </InputGroup>
 

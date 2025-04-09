@@ -54,11 +54,13 @@ export const PayPalService = {
             );
             // Log the response for debugging
             console.log('Payment verification response:', response.data);
-            return {
-                status: response.data.status,
-                message: response.data.message,
-                new_balance: response.data.new_balance // Ensure this matches the backend response
-            };
+            if (response.data.status == 'success') {
+                return {
+                    status: response.data.status,
+                    message: response.data.message,
+                    new_balance: response.data.new_balance // Ensure this matches the backend response
+                };
+            }
         } catch (error) {
             const errorDetails = {
                 status: error.response?.status,
