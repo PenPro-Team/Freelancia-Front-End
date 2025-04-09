@@ -25,6 +25,7 @@ import AboutUs from "./Pages/AboutUs";
 import ContactUs from "./Pages/ContactUs";
 import PaymentSuccess from "./Components/wallet/PaymentSuccess";
 import PaymentFailed from "./Components/wallet/PaymentFailed";
+import NotFound from "./Pages/page404";
 function App() {
   return (
     <div className="bgControl">
@@ -99,7 +100,7 @@ function App() {
             element={<unauthrizedpage />}
           />
           <Route path="/404" element={<page404 />} />
-          <Route path="/Freelancia-Front-End/404" element={<page404 />} />
+          <Route path="/Freelancia-Front-End/404" element={<NotFound />} />
 
           {/* Catch-All Route */}
           <Route path="*" element={<Home />} />

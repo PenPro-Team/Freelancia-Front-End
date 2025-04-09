@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { useTranslation } from 'react-i18next';
-
+import logo from "../assets/penproLogo.png"; // Adjust the path as necessary
 const Footer = () => {
   const { t } = useTranslation();
   const [freelancers, setFreelancers] = useState([]);
@@ -75,7 +75,8 @@ const Footer = () => {
 
           <Col xs={12} lg={3}>
             <div className="d-flex flex-column">
-              <Form onSubmit={handleSearch} className="d-flex mb-3">
+              <img src={logo} alt="Logo" className="mb-3" style={{ aspectRatio: 16/9 ,}} />
+              {/* <Form onSubmit={handleSearch} className="d-flex mb-3">
                 <Form.Control
                   type="text"
                   placeholder={t('footer.search.placeholder')}
@@ -90,7 +91,7 @@ const Footer = () => {
 
               <div className="mt-4 text-center text-lg-start">
                 {t('footer.copyright')}
-              </div>
+              </div> */}
             </div>
           </Col>
         </Row>

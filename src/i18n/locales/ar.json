@@ -357,7 +357,21 @@
       "createdDate": "تاريخ الإنشاء",
       "client": "العميل",
       "freelancer": "المستقل",
-      "viewProject": "عرض المشروع"
+      "viewProject": "عرض المشروع",
+      "submitWork": "تقديم العمل",
+      "workSubmissions": " الاعمال المقدمة",
+      "selectMultipleFiles": "اختر ملفات متعددة",
+      "uploadFiles": "رفع الملفات",
+      "describeWork": "وصف العمل",
+      "submitYourWork": "تسليم عملك",
+      "submission": "الاعمال",
+      "actions":{
+        "accept": "قبول",
+        "decline": "رفض",
+        "complete": "إكمال",
+        "cancel": "إلغاء",
+        "cannotCancel": "لا يمكن إلغاء العقد "
+      }
     },
     "status": {
       "Accepted": "مقبول",

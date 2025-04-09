@@ -15,13 +15,13 @@ export default function Projects(props) {
           <h2>{t('projects.filter.title')}</h2>
           <Search placeholder={t('projects.search.placeholder')} />
           <div>
-            <FilterJobs 
+            {/* <FilterJobs 
               onSortRecent={() => setIsSortedByRecent(!isSortedByRecent)} 
               isSortedByRecent={isSortedByRecent}
               sortLabel={t('projects.filter.sortBy')}
               recentLabel={t('projects.filter.recent')}
               oldestLabel={t('projects.filter.oldest')}
-            />
+            /> */}
             <ProjectCard 
               skills={props.skills} 
               jobStates={props.jobStates} 

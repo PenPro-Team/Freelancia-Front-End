@@ -23,7 +23,8 @@ const Wallet = () => {
     const [withdrawalError, setWithdrawalError] = useState(null);
     const [withdrawalStatus, setWithdrawalStatus] = useState(null);
     const [withdrawalResponse, setWithdrawalResponse] = useState(null);
-    const currentUser = getFromLocalStorage("auth").user;
+    const auth = getFromLocalStorage("auth");
+    const currentUser = auth?.user;
     const [withdrawalLogs, setWithdrawalLogs] = useState([]);
     const [logsLoading, setLogsLoading] = useState(false);
     const [logsError, setLogsError] = useState(null);
@@ -144,6 +145,10 @@ const Wallet = () => {
         setWithdrawalResponse(null);
 
         try {
+            if (!currentUser) {
+                navigate('/');
+                return;
+            }
             if (parseFloat(withdrawalAmount) > currentUser.user_balance) {
                 throw new Error('Insufficient balance for withdrawal');
             }
@@ -280,7 +285,9 @@ const Wallet = () => {
                                 </Alert>
                             )}
                             
-                            <Form onSubmit={handleWithdrawalSubmit}>
+                           {
+                            currentUser? (
+                                <Form onSubmit={handleWithdrawalSubmit}>
                                 <Form.Group className="mb-3">
                                     <Form.Label>{t('wallet.availableBalance')}: ${currentUser.user_balance}</Form.Label>
                                     <Form.Control
@@ -321,6 +328,8 @@ const Wallet = () => {
                                     )}
                                 </Button>
                             </Form>
+                            ): null
+                           }
                         </Card.Body>
                     </Card>
                 </div>

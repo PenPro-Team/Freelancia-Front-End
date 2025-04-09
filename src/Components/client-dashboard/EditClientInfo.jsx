@@ -13,7 +13,6 @@ import {
   Button,
   Alert,
 } from "react-bootstrap";
-import personalImg from "../../assets/hero-bg.jpg";
 import { AxiosUserInstance } from "../../network/API/AxiosInstance";
 import defaultImage from "../../assets/default-user.png";
 import { setToLocalStorage } from "../../network/local/LocalStorage";

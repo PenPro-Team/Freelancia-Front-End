@@ -1,7 +1,6 @@
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import img1 from "../assets/category-tiles-wordpress-81f6cf6d35ddcf9be55d8d515d7772a57f45fa280dd5ae187bd93db56916228c.avif";
 
 const Cards = ({ title, pragraph }) => {
   // Destructure to easily use

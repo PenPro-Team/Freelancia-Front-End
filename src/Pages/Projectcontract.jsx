@@ -104,7 +104,7 @@ function ProjectContract() {
 
       <HeaderColoredText text={t("projectContract.header")} />
 
-      <Form noValidate validated={validated} onSubmit={handleSubmit}>
+      <Form noValidate validated={validated} onSubmit={handleSubmit} className="mb-4">
         <Form.Group className="mb-4">
           <Form.Label>
             {t("projectContract.terms")}<span className="text-danger">*</span>
@@ -172,17 +172,20 @@ function ProjectContract() {
             value={formData.freelancer}
             readOnly
           />
-        </Form.Group>
+        </Form.Group >
 
         {isLoading ? (
           <div className="d-flex justify-content-center">
             <Spinner animation="border" variant="primary" />
           </div>
         ) : (
+          
+          <div >
+
           <div
             className="d-grid gap-2 mt-4"
             style={{
-              position: "absolute",
+             
               [i18n.language === "ar" ? "left" : "right"]: "0",
             }}
           >
@@ -190,7 +193,10 @@ function ProjectContract() {
               {t("projectContract.createButton")}
             </Button>
           </div>
-        )}
+          </div>
+        )
+        }
+
       </Form>
     </Container>
   );

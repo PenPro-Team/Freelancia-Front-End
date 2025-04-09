@@ -54,7 +54,6 @@ export default function Sidebar(props) {
               />
               <div className="d-flex flex-column">
                 <div className="fw-bold fs-3">{auth.user.name}</div>
-                <p className="fs-6 text-muted">Full stack developer</p>
                 <div className="text-muted">
                   <RateStars rating={auth.user.rate} />
                 </div>

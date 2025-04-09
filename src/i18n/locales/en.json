@@ -300,7 +300,21 @@
       "createdDate": "Created Date",
       "client": "Client",
       "freelancer": "Freelancer",
-      "viewProject": "View Project"
+      "viewProject": "View Project",
+      "submitWork": "Submit Work",
+      "workSubmissions": "Work Submissions",
+      "selectMultipleFiles": "Select multiple files",
+      "uploadFiles": "Upload Files",
+      "describeWork": "Describe the work",
+      "submitYourWork": "Submit your work",
+      "submission": "Submission",
+      "actions":{
+        "accept": "Accepted",
+        "decline": "Decline",
+        "complete": "Complete",
+        "cancel": "Cancel",
+        "cannotCancel": "You cannot cancel this contract."
+      }
     },
     "title": "Contract",
     "deadline": "Duration",

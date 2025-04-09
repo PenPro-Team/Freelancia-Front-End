@@ -102,3 +102,7 @@ export const AxiosWSAuthInstance = axios.create({
 export const AxiosChatInstance = axios.create({
   baseURL: `${url}/chat/`,
 });
+
+export const AxiosUserSearchInstance = axios.create({
+  baseURL: `${url}/users/search/`,
+});

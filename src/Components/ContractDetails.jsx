@@ -305,7 +305,7 @@ const ContractDetails = () => {
           </div>
 
           {/* Work Submission Section */}
-          {(contract.contract_state === 'Accepted' || contract.contract_state === 'Completed')  &&
+          {(contract.contract_state === 'Accepted' )  &&
             current_user.user.role === "freelancer" &&
             current_user.user.user_id === contract.freelancer_details.id && (
               <div className="mb-4 mt-5">
@@ -360,7 +360,7 @@ const ContractDetails = () => {
             )}
 
           {/* Work Submissions History */}
-          {contract.contract_state === "Accepted" && (
+          {contract.contract_state === "Accepted" || contract.contract_state === 'Completed' && (
             <div className="mb-4 mt-4">
               <h4 className="card-title">{t('contracts.details.workSubmissions')}</h4>
               <div className="card">
@@ -414,7 +414,7 @@ const ContractDetails = () => {
                                 className="text-decoration-none"
                               >
                                 <span className="badge bg-light text-dark me-2 p-2 mb-2 d-inline-block" style={{
-                                    position: "absolute",
+                                    
                                     [i18n.language === "ar" ? "left" : "right"]: "5px",
                                   }}>
                                   <i className={`bi ${iconClass} me-1`}></i>{" "}
@@ -451,7 +451,7 @@ const ContractDetails = () => {
                 <button
                   name="Decline"
                   onClick={handleAcceptOrDeclineContract}
-                  className="btn btn-danger"
+                  className="btn btn-danger me-2"
                 >
                   {t('contracts.details.actions.decline')}
                 </button>
@@ -483,7 +483,7 @@ const ContractDetails = () => {
                     <button
                       name="Cancel"
                       onClick={handleAcceptOrDeclineContract}
-                      className="btn btn-danger"
+                      className="btn btn-danger me-2"
                       disabled={current_user.user.role === "admin" ? false : !deadlinePassed}
                       title={
                         deadlinePassed
