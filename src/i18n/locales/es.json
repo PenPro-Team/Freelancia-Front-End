@@ -237,7 +237,21 @@
       "createdDate": "Fecha de creación",
       "client": "Cliente",
       "freelancer": "Freelancer",
-      "viewProject": "Ver el proyecto"
+      "viewProject": "Ver el proyecto",
+      "submitWork": "Enviar trabajo",
+      "workSubmissions": "Envíos de trabajo",
+      "selectMultipleFiles": "Seleccionar múltiples archivos",
+      "uploadFiles": "Subir archivos",
+      "describeWork": "Describir el trabajo",
+      "submitYourWork": "Enviar tu trabajo",
+      "submission": "Envío",
+      "actions":{
+        "accept": "Aceptar",
+        "decline": "Rechazar",
+        "complete": "Completar",
+        "cancel": "Cancelar",
+        "cannotCancel": "No se puede cancelar el contrato"
+      }
     },
     "report": {
       "title": "Reportar contrato",

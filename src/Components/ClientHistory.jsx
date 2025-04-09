@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 import RateStars from "./RateStars";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import { AxiosReviewInstance } from "../network/API/AxiosInstance";
-
+import defaultUserImage from "../assets/default-user.png";
 function ClientHistory({ owner_id: owner ,project_id }) {
   const [clientReviews, setClientReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -150,7 +150,7 @@ function ClientHistory({ owner_id: owner ,project_id }) {
               <Card.Title>
                 <div className="d-flex align-items-center">
                   <Image
-                    src={review.user_reviewr_details.image}
+                    src={review.user_reviewr_details.image ? review.user_reviewr_details.image : defaultUserImage}
                     roundedCircle
                     width={50}
                     height={50}

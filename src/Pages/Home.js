@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import proImage from "../assets/hero-image--popular-items-2963d5759f434e6691a0bb5363bf2d1707c8885ab10b6dba3b0648f8c5f94da5.webp";
 import { Button, Form, Alert } from "react-bootstrap";
 import Cards from "../Components/Cards";
 import proImages from "../assets/default-user.png";
@@ -10,13 +9,15 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AxiosFreelancersInstance, AxiosClientsInstance } from "../network/API/AxiosInstance";
+import { AxiosFreelancersInstance, AxiosClientsInstance, AxiosUserSearchInstance } from "../network/API/AxiosInstance";
 import RateStars from "../Components/RateStars";
 import { BASE_PATH } from "../network/API/AxiosInstance";
 import { useTranslation } from 'react-i18next';
-
+import freelancia from "../assets/freelancia.gif";
+import { getFromLocalStorage } from "../network/local/LocalStorage";
 function Home() {
-  const user = useSelector((state) => state.auth.user);
+  const auth = getFromLocalStorage("auth");
+  const user = auth ? auth.user : null; 
   const [freelancers, setFreelancers] = useState([]);
   const [clients, setClients] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
@@ -64,37 +65,23 @@ function Home() {
       setSearchResults([]);
       setHasSearched(false); // No search was performed
       return;
+    
     }
 
     let results = [];
     const query = searchQuery.toLowerCase();
-
-    // Filter based on search type
-    if (searchType === "all" || searchType === "freelancers") {
-      const freelancerResults = freelancers.filter((freelancer) =>
-        freelancer.name?.toLowerCase().includes(query) ||
-        freelancer.username?.toLowerCase().includes(query)
-      );
-      // Mark results as freelancers
-      freelancerResults.forEach(item => {
-        results.push({ ...item, userType: 'freelancer' });
-      });
+    AxiosUserSearchInstance.get(`?search=${query}&role=${searchType}`).then((res) => {
+      setSearchResults(res.data.results);
+      setHasSearched(true); // Search was performed
     }
+    ).catch((error) => {
+      console.error("Error fetching search results:", error);
+      setSearchResults([]);
+      setHasSearched(false); // No search was performed
+    })
 
-    if (searchType === "all" || searchType === "clients") {
-      const clientResults = clients.filter((client) =>
-        client.name?.toLowerCase().includes(query) ||
-        client.username?.toLowerCase().includes(query)
-      );
-      // Mark results as clients
-      clientResults.forEach(item => {
-        results.push({ ...item, userType: 'client' });
-      });
-    }
 
-    setSearchResults(results);
-    setHasSearched(true); // Search was performed
-  };
+   };
 
   // Defult Image Function
   const getUserImage = (user) => {
@@ -142,7 +129,7 @@ function Home() {
             <div className="d-flex justify-content-between align-items-center mb-2">
               <Card.Title className="mb-0 fw-bold">{user.name || user.username}</Card.Title>
               <div className={`badge ${user.userType === 'freelancer' ? 'bg-primary' : 'bg-success'} text-white`}>
-                {user.userType === 'freelancer' ? 'Freelancer' : 'Client'}
+                {user.role === 'freelancer' ? 'Freelancer' : 'Client'}
               </div>
             </div>
             <div className="mb-2">
@@ -210,8 +197,8 @@ function Home() {
                   onChange={(e) => setSearchType(e.target.value)}
                 >
                   <option value="all">All</option>
-                  <option value="freelancers">Freelancers</option>
-                  <option value="clients">Clients</option>
+                  <option value="freelancer">Freelancers</option>
+                  <option value="client">Clients</option>
                 </Form.Select>
               </Col>
               <Col xs={6} md={2}>
@@ -225,7 +212,7 @@ function Home() {
         <Col xs={12} md={5} className="text-center">
           <img
             className="img-fluid rounded"
-            src={proImage}
+            src ={freelancia}
             alt="Freelance Platform"
             style={{ maxHeight: "300px" }}
           />
@@ -233,74 +220,9 @@ function Home() {
       </Row>
 
       {/* Search Results Section */}
-      {searchResults.length > 0 && (
-        <div className="mb-5">
-          <h3 className="fw-bold mb-4 border-bottom pb-2">{t('home.searchResults.title')}</h3>
-          <Row>
-            {searchResults.map((freelancer, idx) => (
-              <Col key={idx} xs={12} md={6} lg={4} className="mb-4">
-                <Card
-                  className="h-100 shadow-sm border-light"
-                  onClick={() => navigate(`${BASE_PATH}/Dashboard/${freelancer.id}`)}
-                  style={{
-                    cursor: "pointer",
-                    transition: "transform 0.2s, box-shadow 0.2s",
-                    borderRadius: "8px",
-                    overflow: "hidden"
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = "translateY(-5px)";
-                    e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 .125rem .25rem rgba(0,0,0,.075)";
-                  }}
-                >
-                  <Card.Img
-                    variant="top"
-                    src={freelancer.image || proImages}
-                    alt={freelancer.name}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="mb-2 fw-bold">{freelancer.name}</Card.Title>
-                    <div className="mb-2">
-                      <RateStars rating={freelancer.rate} />
-                    </div>
-                    <Card.Text className="text-secondary">
-                      <strong>{t('home.description')}:</strong>{" "}
-                      {freelancer.description
-                        ? (freelancer.description.length > 100
-                          ? `${freelancer.description.substring(0, 100)}...`
-                          : freelancer.description)
-                        : t('home.noDescription')}
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>absolute
-        </div>
-      )}
+
       {/* Search Results Section with potential "No results" message */}
       {renderSearchResults()}
-
-      {/* Categories Section */}
-      <div className="mb-5">
-        <h3 className="fw-bold mb-4 border-bottom pb-2">{t('home.categories.title')}</h3>
-        <Row className="g-4 justify-content-center">
-          {t('home.categories.items', { returnObjects: true }).map((category, index) => (
-            <Col xs={12} md={4} key={index}>
-              <Cards
-                title={category.title}
-                pragraph={category.description}
-                customClass="bg-light h-100 shadow-sm rounded-3 p-4 text-center"
-              />
-            </Col>
-          ))}
-        </Row>
-      </div>
 
       {/* Clients Section */}
       <div className="mb-5 py-4 bg-light rounded shadow-sm">
@@ -356,13 +278,7 @@ function Home() {
       <div className="mb-4">
         <div className="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
           <h3 className="fw-bold mb-0">{t('home.freelancers.title')}</h3>
-          <Button
-            variant="outline-primary"
-            size="sm"
-            onClick={() => navigate(`${BASE_PATH}/freelancers`)}
-          >
-            {t('home.freelancers.viewAll')}
-          </Button>
+          
         </div>
         <Row className="g-4">
           {freelancers.slice(0, 6).map((freelancer, idx) => (
@@ -449,7 +365,7 @@ function Home() {
           </Button>
           <Button
             variant="outline-primary"
-            onClick={() => navigate(`${BASE_PATH}/Dashboard`)}
+            onClick={() => navigate(`${BASE_PATH}/Dashboard/${user?.user_id}`)}
           >
             Go to Dashboard
           </Button>

@@ -77,9 +77,17 @@ function Dashboard() {
                     <Nav.Item>
                       <Nav.Link eventKey="third">{t('dashboard.updateSecurity')}</Nav.Link>
                     </Nav.Item>
+                    {
+                      auth &&
+                      user &&
+                      user.user_id == user_id &&
+                      user.user_id == userData.id &&(
+
                     <Nav.Item>
                       <Nav.Link eventKey="sixth">{t('dashboard.wallet')}</Nav.Link>
                     </Nav.Item>
+                      )
+                    }
                     {auth && auth.user && auth.user.role === "freelancer" && (
                       <>
                         <Nav.Item>
