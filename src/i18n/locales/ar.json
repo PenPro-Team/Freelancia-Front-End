@@ -18,10 +18,10 @@
     "date": "التاريخ",
     "status": "الحالة",
     "notes": "ملاحظات",
+    "withdrawalRequestSubmitted": "تم تقديم طلب السحب",
     "payment": {
       "success": "تم الدفع بنجاح",
       "completed": "اكتمل الدفع! رصيدك الجديد هو ${{balance}}",
-      "withdrawalSubmitted": "تم تقديم طلب السحب",
       "withdrawalSuccess": "تم تقديم طلب السحب بمبلغ ${{amount}} بنجاح!"
     },
     "errors": {
@@ -360,9 +360,9 @@
       "viewProject": "عرض المشروع"
     },
     "status": {
-      "aproved": "مقبول",
+      "Accepted": "مقبول",
       "pending": "قيد الانتظار",
-      "finished": "مكتمل", 
+      "Completed": "مكتمل", 
       "canceled": "ملغي",
       "active": "نشط",
       "paid": "مدفوع"
