@@ -28,6 +28,7 @@ const Wallet = () => {
     const [logsLoading, setLogsLoading] = useState(false);
     const [logsError, setLogsError] = useState(null);
     const [withdrawalFlag, setWithdrawalFlag] = useState(false);
+    const newWindowRef = useRef(null); // Use useRef to store the newWindow reference
 
     useEffect(() => {
         const paymentId = searchParams.get('paymentId');
@@ -40,50 +41,6 @@ const Wallet = () => {
         }
     }, [searchParams,withdrawalFlag]);
 
-    const handleCloseWindow = useCallback(() => {
-        console.log("Attempting to close PayPal window");
-        
-        console.log("PayPal window state:", {
-            paypalVarWindow: paypalVarWindow?.closed,
-            paypalWindowRef: paypalWindow.current?.closed
-        });
-
-        let windowClosed = false;
-
-        // Try closing with paypalVarWindow first
-        if (paypalVarWindow && !paypalVarWindow.closed) {
-            try {
-                console.log("Attempting to close paypalVarWindow");
-                paypalVarWindow.close();
-                windowClosed = true;
-                console.log("Successfully closed paypalVarWindow");
-            } catch (e) {
-                console.error('Error closing paypalVarWindow:', e);
-            }
-        }
-
-        // Try closing with ref if first attempt failed
-        if (!windowClosed && paypalWindow.current && !paypalWindow.current.closed) {
-            try {
-                console.log("Attempting to close paypalWindow.current");
-                paypalWindow.current.close();
-                windowClosed = true;
-                console.log("Successfully closed paypalWindow.current");
-            } catch (e) {
-                console.error('Error closing paypalWindow.current:', e);
-            }
-        }
-
-        // Clear references only if we successfully closed the window
-        if (windowClosed) {
-            console.log("Clearing window references");
-            setPaypalVarWindow(null);
-            paypalWindow.current = null;
-        } else {
-            console.warn("Failed to close PayPal window");
-        }
-    }, [paypalVarWindow]);
-
     useEffect(() => {
         if (paypalWindow?.current) {
             const intervalId = setInterval(async () => {
@@ -92,7 +49,6 @@ const Wallet = () => {
                     
                     if (result.status === 'closed') {
                         clearInterval(intervalId);
-                        handleCloseWindow();
                         
                         // Get payment details from URL
                         const urlParams = new URLSearchParams(window.location.search);
@@ -110,15 +66,17 @@ const Wallet = () => {
 
             return () => clearInterval(intervalId);
         }
-    }, [paypalWindow, navigate, handleCloseWindow]);
+    }, [paypalWindow, navigate]);
 
     const handlePaymentVerification = async (paymentId, PayerID) => {
         setLoading(true);
         try {
+            console.log(window);
             const response = await PayPalService.verifyPayment(paymentId, PayerID);
             if (response.status === 'success') {
                 console.log('New balance:', response.new_balance); // Debug log
                 setNewBalance(response.new_balance);
+                
                 setShowToast(true);
                 
                 setTimeout(() => {
@@ -152,10 +110,11 @@ const Wallet = () => {
                     'PayPalWindow',
                     'width=800,height=600,toolbar=0,menubar=0,location=0,status=1'
                 );
-                
+
                 if (newWindow) {
                     console.log("PayPal window opened successfully");
-                    // Store reference before React state updates
+                    // Store reference in useRef
+                    newWindowRef.current = newWindow;
                     paypalWindow.current = newWindow;
                     setPaypalVarWindow(newWindow);
                     

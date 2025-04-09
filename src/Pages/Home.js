@@ -53,7 +53,6 @@ function Home() {
         console.error("Error fetching clients:", error);
       }
     };
-
     fetchClients();
   }, []);
 
@@ -185,7 +184,7 @@ function Home() {
       </div>
     );
   };
-
+  
   return (
     <Container className="py-4">
       <Row className="mb-5 py-3 bg-light rounded shadow-sm align-items-center">
