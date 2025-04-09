@@ -18,10 +18,10 @@
     "date": "Date",
     "status": "Status",
     "notes": "Notes",
+    "withdrawalRequestSubmitted": "Withdrawal Request Submitted",
     "payment": {
       "success": "Payment Successful",
       "completed": "Payment completed! Your new balance is ${{balance}}",
-      "withdrawalSubmitted": "Withdrawal Request Submitted",
       "withdrawalSuccess": "Withdrawal request for ${{amount}} submitted successfully!"
     },
     "errors": {
@@ -311,9 +311,9 @@
     "freelancer": "Freelancer",
     "viewDetails": "View Details",
     "status": {
-      "aproved": "Accepted",
+      "Accepted": "Accepted",
       "pending": "Pending",
-      "finished": "Completed",
+      "Completed": "Completed",
       "canceled": "Canceled",
       "active": "Active", 
       "paid": "Paid"

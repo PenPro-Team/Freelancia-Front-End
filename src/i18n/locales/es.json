@@ -18,10 +18,10 @@
     "date": "Fecha",
     "status": "Estado",
     "notes": "Notas",
+    "withdrawalRequestSubmitted": "Solicitud de retiro enviada",
     "payment": {
       "success": "Pago exitoso",
       "completed": "¡Pago completado! Tu nuevo saldo es ${{balance}}",
-      "withdrawalSubmitted": "Solicitud de retiro enviada",
       "withdrawalSuccess": "¡Solicitud de retiro por ${{amount}} enviada exitosamente!"
     },
     "errors": {
@@ -259,7 +259,7 @@
     "status": {
       "Accepted": "Aceptado",
       "pending": "Pendiente",
-      "finished": "Completado",
+      "Completed": "Completado",
       "canceled": "Cancelado",
       "active": "Activo",
       "paid": "Pagado"
