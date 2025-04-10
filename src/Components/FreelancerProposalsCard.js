@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"; // Corrected import path
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import personalImg from "../assets/default-user.png";
 import { useTranslation } from "react-i18next";
-
+import { BASE_PATH } from "../network/API/AxiosInstance";
 function FreelancerProposalsCard(props) {
   const navigate = useNavigate(); // Correct usage of useNavigate
   const curenUser = getFromLocalStorage("auth");
@@ -29,7 +29,16 @@ function FreelancerProposalsCard(props) {
                 className="me-2"
               />
               <div className="d-flex flex-column">
-                <div>{props.proposal.user.name}</div>
+                <div
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    navigate(
+                      `${BASE_PATH}/Dashboard/${props.proposal.user.id}`
+                    );
+                  }}
+                >
+                  {props.proposal.user.name}
+                </div>
                 <div className="text-muted">
                   <RateStars rating={props.proposal.user.rate} />
                 </div>
@@ -59,7 +68,8 @@ function FreelancerProposalsCard(props) {
         </Card.Title>
         <div className="mt-2">
           <span className="fw-bold">{t("proposals.deadline")}: </span>
-          {props.proposal.deadline} <span className="fw-bold">{t("proposals.days")}</span>
+          {props.proposal.deadline}{" "}
+          <span className="fw-bold">{t("proposals.days")}</span>
         </div>
         <div>
           <span className="fw-bold">{t("proposals.price")}: </span>

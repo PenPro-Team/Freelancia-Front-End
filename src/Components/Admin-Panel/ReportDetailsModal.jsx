@@ -83,7 +83,7 @@ function ReportDetailsModal({ show, onHide, report, type = "user" }) {
           </Row>
         </div>
 
-        {report?.status === "resolved" && (
+        {(report?.status === "resolved" || report?.status === "ignored") && (
           <div className="mb-4 p-3 bg-light rounded">
             <h5 className="mb-3">
               <FaInfoCircle className="me-2" />

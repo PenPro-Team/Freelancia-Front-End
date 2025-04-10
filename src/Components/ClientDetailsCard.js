@@ -8,6 +8,8 @@ import { IoLocationSharp } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import personalImg from "../assets/default-user.png";
+import { BASE_PATH } from "../network/API/AxiosInstance";
+import { useNavigate } from "react-router-dom";
 
 function ClientDetailsCard(props) {
   const [clientDetails, setClientDetails] = useState({
@@ -19,7 +21,7 @@ function ClientDetailsCard(props) {
     image: null,
   });
   const [userLoading, setUserLoading] = useState(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     // let id = Math.floor(Math.random() * 50) + 1;
     if (props.project.owner_id) {
@@ -82,7 +84,14 @@ function ClientDetailsCard(props) {
                       <Placeholder xs={6} size="lg" />
                     </>
                   ) : (
-                    <>{clientDetails.name}</>
+                    <div
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        navigate(`${BASE_PATH}/Dashboard/${clientDetails.id}`);
+                      }}
+                    >
+                      {clientDetails.name}
+                    </div>
                   )}
                 </div>
                 <div className="text-muted">

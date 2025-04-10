@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { AxiosFreelancersCertificate } from "../network/API/AxiosInstance";
 import { useParams } from "react-router-dom";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 function DisplayCertificate() {
   const { user_id } = useParams(); // Extract user ID from the route params
@@ -31,12 +31,18 @@ function DisplayCertificate() {
           <Card className="shadow-lg p-3 mb-5 bg-white rounded">
             <Card.Body>
               <Card.Title className="text-center">
-                {t('dashboard.certificates.displayTitle')}
+                {t("dashboard.certificates.displayTitle")}
               </Card.Title>
 
-              {error && <Alert variant="danger">{t('dashboard.certificates.error')}</Alert>}
+              {error && (
+                <Alert variant="danger">
+                  {t("dashboard.certificates.error")}
+                </Alert>
+              )}
               {!error && certificates.length === 0 && (
-                <Alert variant="info">{t('dashboard.certificates.noCertificates')}</Alert>
+                <Alert variant="info">
+                  {t("dashboard.certificates.noCertificates")}
+                </Alert>
               )}
 
               {/* Display certificates */}

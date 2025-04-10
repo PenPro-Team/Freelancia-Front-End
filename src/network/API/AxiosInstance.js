@@ -5,7 +5,7 @@ import { getFromLocalStorage } from "../local/LocalStorage";
 let url = "http://127.0.0.1:8000";
 
 export const AxiosFreelancersGetPortfolios = axios.create({
-  baseURL: `${url}/portfolios/?user=`, // API for GET Portfolios for freelancers
+  baseURL: `${url}/portfolios/`, // API for GET Portfolios for freelancers
 });
 
 export const AxiosFreelancersPortfolios = axios.create({

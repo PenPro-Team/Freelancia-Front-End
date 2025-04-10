@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { AxiosContractsInstance } from "../network/API/AxiosInstance";
+import {
+  AxiosContractsInstance,
+  BASE_PATH,
+} from "../network/API/AxiosInstance";
 import { getFromLocalStorage } from "../network/local/LocalStorage";
 import HeaderColoredText from "./HeaderColoredText";
 import PersonalImg from "../assets/default-user.png";
@@ -111,9 +114,7 @@ const ContractDetails = () => {
 
     // Validate that at least one field has a value
     if (description === "" && files.length === 0) {
-      setValidationError(
-        t("contracts.details.validationError")
-      );
+      setValidationError(t("contracts.details.validationError"));
       return;
     }
 
@@ -170,10 +171,10 @@ const ContractDetails = () => {
 
   return (
     <div className="container my-4">
-      <HeaderColoredText text={t('contracts.details.title')} />
+      <HeaderColoredText text={t("contracts.details.title")} />
       <div className="card shadow ">
         <div className="card-header d-flex justify-content-between align-items-center">
-          <h3 className="mb-0">{t('contracts.details.title')}</h3>
+          <h3 className="mb-0">{t("contracts.details.title")}</h3>
           <span
             className={`badge ${
               contract.contract_state === "Accepted"
@@ -198,17 +199,27 @@ const ContractDetails = () => {
                 onClick={() => setShowReportContractModal(true)}
                 className="btn btn-danger me-2"
               >
-                <FaExclamationTriangle /> {t('report.contract')}
+                <FaExclamationTriangle /> {t("report.contract")}
               </button>
             </div>
           }
           <div className="mb-4">
-            <h4 className="card-title">{t('contracts.details.parties')}</h4>
+            <h4 className="card-title">{t("contracts.details.parties")}</h4>
             <div className="row">
               <div className="col-md-6 mb-3">
-                <div className="card">
+                <div
+                  className="card"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    navigate(
+                      `${BASE_PATH}/Dashboard/${contract.client_details.id}`
+                    );
+                  }}
+                >
                   <div className="card-body">
-                    <h5 className="card-title">{t('contracts.details.client')}</h5>
+                    <h5 className="card-title">
+                      {t("contracts.details.client")}
+                    </h5>
                     <div className="text-center mb-3">
                       <img
                         src={
@@ -226,7 +237,7 @@ const ContractDetails = () => {
                       />
                     </div>
                     <p className="card-text mb-1">
-                      <strong>{t('contracts.details.name')}:</strong>{" "}
+                      <strong>{t("contracts.details.name")}:</strong>{" "}
                       {contract.client_details.first_name}{" "}
                       {contract.client_details.last_name}
                     </p>
@@ -234,9 +245,19 @@ const ContractDetails = () => {
                 </div>
               </div>
               <div className="col-md-6 mb-3">
-                <div className="card">
+                <div
+                  className="card"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    navigate(
+                      `${BASE_PATH}/Dashboard/${contract.freelancer_details.id}`
+                    );
+                  }}
+                >
                   <div className="card-body">
-                    <h5 className="card-title">{t('contracts.details.freelancer')}</h5>
+                    <h5 className="card-title">
+                      {t("contracts.details.freelancer")}
+                    </h5>
                     <div className="text-center mb-3">
                       <img
                         src={
@@ -256,7 +277,7 @@ const ContractDetails = () => {
                       />
                     </div>
                     <p className="card-text mb-1">
-                      <strong>{t('contracts.details.name')}:</strong>{" "}
+                      <strong>{t("contracts.details.name")}:</strong>{" "}
                       {contract.freelancer_details.first_name}{" "}
                       {contract.freelancer_details.last_name}
                     </p>
@@ -267,49 +288,60 @@ const ContractDetails = () => {
           </div>
 
           <div className="mb-4">
-            <h4 className="card-title">{t('contracts.details.projectDetails')}</h4>
+            <h4 className="card-title">
+              {t("contracts.details.projectDetails")}
+            </h4>
             <p>
-              <strong>{t('contracts.details.projectState')}:</strong>{" "}
+              <strong>{t("contracts.details.projectState")}:</strong>{" "}
               {contract.project_details.project_state}
             </p>
             <p className="mb-1">
-              <strong>{t('contracts.details.description')}:</strong>{" "}
+              <strong>{t("contracts.details.description")}:</strong>{" "}
               {contract.project_details.project_description}
             </p>
           </div>
 
           <div className="mb-4">
-            <h4 className="card-title">{t('contracts.details.contractDetails')}</h4>
+            <h4 className="card-title">
+              {t("contracts.details.contractDetails")}
+            </h4>
             <p className="mb-1">
-              <strong>{t('contracts.details.createdAt')}:</strong>{" "}
+              <strong>{t("contracts.details.createdAt")}:</strong>{" "}
               {new Date(contract.created_at).toLocaleDateString()}
             </p>
 
             <p className="mb-1">
-              <strong>{t('contracts.details.budget')}:</strong> {contract.budget} $
+              <strong>{t("contracts.details.budget")}:</strong>{" "}
+              {contract.budget} $
             </p>
             <p className="mb-1">
-              <strong>{t('contracts.details.deadline')}:</strong> {contract.deadline} {t('contracts.details.days')}
+              <strong>{t("contracts.details.deadline")}:</strong>{" "}
+              {contract.deadline} {t("contracts.details.days")}
             </p>
           </div>
 
           <div>
-            <h4 className="card-title">{t('contracts.details.termsAndConditions')}</h4>
+            <h4 className="card-title">
+              {t("contracts.details.termsAndConditions")}
+            </h4>
             <div className="card">
               <div className="card-body">
                 <p className="card-text">
-                  {contract.contract_terms || t('contracts.details.noTermsSpecified')}
+                  {contract.contract_terms ||
+                    t("contracts.details.noTermsSpecified")}
                 </p>
               </div>
             </div>
           </div>
 
           {/* Work Submission Section */}
-          {(contract.contract_state === 'Accepted' )  &&
+          {contract.contract_state === "Accepted" &&
             current_user.user.role === "freelancer" &&
             current_user.user.user_id === contract.freelancer_details.id && (
               <div className="mb-4 mt-5">
-                <h4 className="card-title">{t('contracts.details.submitYourWork')}</h4>
+                <h4 className="card-title">
+                  {t("contracts.details.submitYourWork")}
+                </h4>
                 <div className="card">
                   <div className="card-body">
                     {validationError && (
@@ -323,20 +355,20 @@ const ContractDetails = () => {
                     >
                       <div className="mb-3">
                         <label htmlFor="workDescription" className="form-label">
-                          {t('contracts.details.description')}
+                          {t("contracts.details.description")}
                         </label>
                         <textarea
                           className="form-control"
                           id="workDescription"
                           name="workDescription"
                           rows="3"
-                          placeholder={t('contracts.details.describeWork')}
+                          placeholder={t("contracts.details.describeWork")}
                         ></textarea>
                       </div>
 
                       <div className="mb-3">
                         <label htmlFor="workFiles" className="form-label">
-                          {t('contracts.details.uploadFiles')}
+                          {t("contracts.details.uploadFiles")}
                         </label>
                         <input
                           type="file"
@@ -346,12 +378,12 @@ const ContractDetails = () => {
                           multiple
                         />
                         <div className="form-text">
-                          {t('contracts.details.selectMultipleFiles')}
+                          {t("contracts.details.selectMultipleFiles")}
                         </div>
                       </div>
 
                       <button type="submit" className="btn btn-primary">
-                        {t('contracts.details.submitWork')}
+                        {t("contracts.details.submitWork")}
                       </button>
                     </form>
                   </div>
@@ -360,106 +392,113 @@ const ContractDetails = () => {
             )}
 
           {/* Work Submissions History */}
-          {contract.contract_state === "Accepted" || contract.contract_state === 'Completed' && (
-            <div className="mb-4 mt-4">
-              <h4 className="card-title">{t('contracts.details.workSubmissions')}</h4>
-              <div className="card">
-                <div className="card-body">
-                  {contract.attachments &&
-                  contract.attachments.files?.length > 0 ? (
-                    <div className="list-group">
-                      <div className="list-group-item">
-                        <div className="d-flex w-100 justify-content-between">
-                          <h5 className="mb-1">{t('contracts.details.submission')}</h5>
-                          <small className="text-muted">
-                            {new Date(contract.created_at).toLocaleDateString()}
-                          </small>
-                        </div>
-                        <p className="mb-1">
-                          {contract.attachments.description}
-                        </p>
-                        <div className="mt-2">
-                          {contract.attachments.files.map((file, index) => {
-                            // Extract filename from URL
-                            const fileName = file.split("/").pop();
-                            // Get file extension to determine icon
-                            const fileExt = fileName
-                              .split(".")
-                              .pop()
-                              .toLowerCase();
+          {/* {contract.contract_sta te === "Accepted"|| contract.contract_state === 'Completed' && ( */}
+          <div className="mb-4 mt-4">
+            <h4 className="card-title">
+              {t("contracts.details.workSubmissions")}
+            </h4>
+            <div className="card">
+              <div className="card-body">
+                {contract.attachments &&
+                contract.attachments.files?.length > 0 ? (
+                  <div className="list-group">
+                    <div className="list-group-item">
+                      <div className="d-flex w-100 justify-content-between">
+                        <h5 className="mb-1">
+                          {t("contracts.details.submission")}
+                        </h5>
+                        <small className="text-muted">
+                          {new Date(contract.created_at).toLocaleDateString()}
+                        </small>
+                      </div>
+                      <p className="mb-1">{contract.attachments.description}</p>
+                      <div className="mt-2">
+                        {contract.attachments.files.map((file, index) => {
+                          // Extract filename from URL
+                          const fileName = file.split("/").pop();
+                          // Get file extension to determine icon
+                          const fileExt = fileName
+                            .split(".")
+                            .pop()
+                            .toLowerCase();
 
-                            let iconClass = "bi-file-earmark";
-                            if (
-                              ["jpg", "jpeg", "png", "gif", "svg"].includes(
-                                fileExt
-                              )
-                            ) {
-                              iconClass = "bi-file-earmark-image";
-                            } else if (["pdf"].includes(fileExt)) {
-                              iconClass = "bi-file-earmark-pdf";
-                            } else if (
-                              ["zip", "rar", "tar", "gz"].includes(fileExt)
-                            ) {
-                              iconClass = "bi-file-earmark-zip";
-                            } else if (["doc", "docx"].includes(fileExt)) {
-                              iconClass = "bi-file-earmark-word";
-                            }
+                          let iconClass = "bi-file-earmark";
+                          if (
+                            ["jpg", "jpeg", "png", "gif", "svg"].includes(
+                              fileExt
+                            )
+                          ) {
+                            iconClass = "bi-file-earmark-image";
+                          } else if (["pdf"].includes(fileExt)) {
+                            iconClass = "bi-file-earmark-pdf";
+                          } else if (
+                            ["zip", "rar", "tar", "gz"].includes(fileExt)
+                          ) {
+                            iconClass = "bi-file-earmark-zip";
+                          } else if (["doc", "docx"].includes(fileExt)) {
+                            iconClass = "bi-file-earmark-word";
+                          }
 
-                            return (
-                              <a
-                                key={index}
-                                href={file}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-decoration-none"
+                          return (
+                            <a
+                              key={index}
+                              href={file}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-decoration-none"
+                            >
+                              <span
+                                className="badge bg-light text-dark me-2 p-2 mb-2 d-inline-block"
+                                style={{
+                                  [i18n.language === "ar" ? "left" : "right"]:
+                                    "5px",
+                                }}
                               >
-                                <span className="badge bg-light text-dark me-2 p-2 mb-2 d-inline-block" style={{
-                                    
-                                    [i18n.language === "ar" ? "left" : "right"]: "5px",
-                                  }}>
-                                  <i className={`bi ${iconClass} me-1`}></i>{" "}
-                                  {fileName}
-                                </span>
-                              </a>
-                            );
-                          })}
-                        </div>
+                                <i className={`bi ${iconClass} me-1`}></i>{" "}
+                                {fileName}
+                              </span>
+                            </a>
+                          );
+                        })}
                       </div>
                     </div>
-                  ) : (
-                    <p className="text-muted">
-                      {t('contracts.details.noWorkSubmitted')}
-                    </p>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <p className="text-muted">
+                    {t("contracts.details.noWorkSubmitted")}
+                  </p>
+                )}
               </div>
             </div>
-          )}
+          </div>
+          {/* )} */}
 
           {/* Contract Actions Section */}
-          {contract.contract_state === 'pending' && 
-            ((current_user.user.role === "freelancer" && current_user.user.user_id === contract.freelancer_details.id) || 
-             current_user.user.role === "admin") && (
+          {contract.contract_state === "pending" &&
+            ((current_user.user.role === "freelancer" &&
+              current_user.user.user_id === contract.freelancer_details.id) ||
+              current_user.user.role === "admin") && (
               <div className="d-flex justify-content-end mt-4">
                 <button
                   name="Accept"
                   onClick={handleAcceptOrDeclineContract}
                   className="btn btn-success me-2"
                 >
-                  {t('contracts.details.actions.accept')}
+                  {t("contracts.details.actions.accept")}
                 </button>
                 <button
                   name="Decline"
                   onClick={handleAcceptOrDeclineContract}
                   className="btn btn-danger me-2"
                 >
-                  {t('contracts.details.actions.decline')}
+                  {t("contracts.details.actions.decline")}
                 </button>
               </div>
-          )}
-          {contract.contract_state === 'Accepted' && 
-            ((current_user.user.role === "client" && current_user.user.user_id === contract.client_details.id) || 
-             (current_user.user.role === "admin")) && (
+            )}
+          {contract.contract_state === "Accepted" &&
+            ((current_user.user.role === "client" &&
+              current_user.user.user_id === contract.client_details.id) ||
+              current_user.user.role === "admin") && (
               <div className="d-flex justify-content-end mt-4">
                 {/* Complete button always available for client */}
                 <button
@@ -467,7 +506,7 @@ const ContractDetails = () => {
                   onClick={handleAcceptOrDeclineContract}
                   className="btn btn-success me-2"
                 >
-                  {t('contracts.details.actions.complete')}
+                  {t("contracts.details.actions.complete")}
                 </button>
 
                 {/* Calculate if deadline has passed */}
@@ -484,14 +523,18 @@ const ContractDetails = () => {
                       name="Cancel"
                       onClick={handleAcceptOrDeclineContract}
                       className="btn btn-danger me-2"
-                      disabled={current_user.user.role === "admin" ? false : !deadlinePassed}
+                      disabled={
+                        current_user.user.role === "admin"
+                          ? false
+                          : !deadlinePassed
+                      }
                       title={
                         deadlinePassed
-                          ? t('contracts.details.actions.cancel')
-                          : t('contracts.details.actions.cannotCancel')
+                          ? t("contracts.details.actions.cancel")
+                          : t("contracts.details.actions.cannotCancel")
                       }
                     >
-                      {t('contracts.details.actions.cancel')}
+                      {t("contracts.details.actions.cancel")}
                     </button>
                   );
                 })()}

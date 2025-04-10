@@ -66,7 +66,7 @@ function ResolveReportModal({ show, onHide, report, type, onSuccess }) {
             >
               <option value="violation">Terms violation found</option>
               <option value="no_violation">No violation found</option>
-              <option value="false_report">False report</option>
+              <option value="false">False report</option>
               <option value="other">Other reason</option>
             </Form.Select>
           </Form.Group>
