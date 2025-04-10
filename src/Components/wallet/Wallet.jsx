@@ -206,7 +206,7 @@ const Wallet = () => {
             >
                 <Toast.Header>
                     <strong className="me-auto">
-                        {withdrawalResponse ? t('wallet.payment.withdrawalSubmitted') : t('wallet.payment.success')}
+                        {withdrawalResponse ? t('wallet.payment.success') : t('wallet.payment.success')}
                     </strong>
                 </Toast.Header>
                 <Toast.Body>
@@ -277,11 +277,11 @@ const Wallet = () => {
                                 <Alert variant="success">
                                     {t('wallet.withdrawalRequestSubmitted')}
                                     <br />
-                                    {t('wallet.status')}: {withdrawalResponse.status}
+                                    {t('wallet.status')}: {withdrawalResponse?.status}
                                     <br />
-                                    {t('wallet.amount')}: ${withdrawalResponse.amount}
+                                    {t('wallet.amount')}: ${withdrawalResponse?.amount}
                                     <br />
-                                    {t('wallet.paypalEmail')}: {withdrawalResponse.paypal_email}
+                                    {t('wallet.paypalEmail')}: {withdrawalResponse?.paypal_email}
                                 </Alert>
                             )}
                             
