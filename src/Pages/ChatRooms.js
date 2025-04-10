@@ -9,6 +9,7 @@ import Spinner from "react-bootstrap/Spinner";
 import Chat from "./chat";
 import HeaderColoredText from "../Components/HeaderColoredText";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import defaultUserImage from "../assets/default-user.png";
 
 const ChatRooms = (props) => {
   const auth = getFromLocalStorage("auth");
@@ -22,6 +23,21 @@ const ChatRooms = (props) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const urlChatRoom = searchParams.get("chat_room");
+
+  const getNameImage = (chat_room) => {
+    const usernames = chat_room.name.split("-");
+    const myUsername = usernames.find((name) => name === user?.username);
+    const otherUsername = usernames.find((name) => name !== user?.username);
+    const otherUser = chat_room.participants.find(
+      (participant) => participant.username === otherUsername
+    );
+    const image = otherUser
+      ? otherUser.image
+        ? otherUser.image
+        : defaultUserImage
+      : defaultUserImage;
+    return { name: otherUser ? otherUser.name : chat_room, image: image };
+  };
 
   useEffect(() => {
     if (!token) {
@@ -73,7 +89,11 @@ const ChatRooms = (props) => {
   }
 
   if (chatRooms.length === 0) {
-    return <div className="p-3">No chat rooms available</div>;
+    return (
+      <div className="text-center fs-2 fw-bold p-3">
+        No chat rooms available
+      </div>
+    );
   }
 
   const handleTabSelect = (selectedKey) => {
@@ -94,9 +114,9 @@ const ChatRooms = (props) => {
         activeKey={activeKey}
         onSelect={handleTabSelect}
       >
-        <Row>
+        <div className="d-flex flex-column flex-lg-row justify-content-center align-items-center">
           <Col sm={3}>
-            <Nav variant="pills" className="flex-column m-5">
+            <Nav variant="pills" className="flex-column m-4">
               {chatRooms.map((chatRoom) => {
                 const isActive = chatRoom.id.toString() === activeKey;
                 return (
@@ -105,11 +125,18 @@ const ChatRooms = (props) => {
                       eventKey={chatRoom.id.toString()}
                       className={`custom-tab ${isActive ? "active" : ""}`}
                     >
-                      <div className="d-flex flex-column">
-                        <strong>{chatRoom.name}</strong>
-                        <small className="text-light">
+                      <div className="d-flex flex-row justify-content-start align-items-center gap-2">
+                        {/* <strong>{chatRoom.name}</strong> */}
+                        <img
+                          src={getNameImage(chatRoom).image}
+                          alt={getNameImage(chatRoom).name}
+                          className="rounded-circle"
+                          style={{ width: "56px", height: "56px" }}
+                        />
+                        <strong>{getNameImage(chatRoom).name}</strong>
+                        {/* <small className="text-light">
                           {chatRoom.participants?.length || 0} participants
-                        </small>
+                        </small> */}
                       </div>
                     </Nav.Link>
                   </Nav.Item>
@@ -130,7 +157,7 @@ const ChatRooms = (props) => {
               ))}
             </Tab.Content>
           </Col>
-        </Row>
+        </div>
       </Tab.Container>
     </div>
   );

@@ -31,6 +31,27 @@ const Chat = (props) => {
 
   const urlChatRoom = searchParams.get("chat_room");
 
+  const getName = (chat_room) => {
+    console.log("Old Chat Room: ", chat_room);
+    const usernames = chat_room.split("-");
+    const myUsername = usernames.find((name) => name === user?.username);
+    console.log("My User Name : ", myUsername);
+    const otherUsername = usernames.find((name) => name !== user?.username);
+    console.log("Other User Name : ", otherUsername);
+    const otherUser = participants.find(
+      (participant) => participant.username === otherUsername
+    );
+    console.log("Other User : ", otherUser);
+    return otherUser ? otherUser.name : chat_room;
+  };
+
+  const getNameFromUserName = (username) => {
+    const user = participants.find(
+      (participant) => participant.username === username
+    );
+    return user ? user.name : chat_room;
+  };
+
   useEffect(() => {
     if (!token) {
       navigate("/Freelancia-Front-End/login");
@@ -146,10 +167,14 @@ const Chat = (props) => {
 
   const getUserImage = (username) => {
     if (username === user?.username) {
-      return user?.image;
+      return user ? (user.image ? user.image : personalImg) : personalImg;
     }
     const participant = participants.find((p) => p.username === username);
-    return participant?.image || personalImg;
+    return participant
+      ? participant.image
+        ? participant.image
+        : personalImg
+      : personalImg;
   };
 
   const getUserID = (username) => {
@@ -162,7 +187,7 @@ const Chat = (props) => {
 
   return (
     <div>
-      <HeaderColoredText text={chat_room} />
+      <HeaderColoredText text={getName(chat_room)} />
       <div
         className="d-flex justify-content-center"
         style={{ minHeight: "20vh" }}
@@ -179,7 +204,6 @@ const Chat = (props) => {
           >
             <div className="d-flex flex-column gap-2">
               {messages.map((msg, index) => {
-                const userImage = getUserImage(msg.username);
                 const isCurrentUser = msg.username === user?.username;
 
                 return (
@@ -190,9 +214,9 @@ const Chat = (props) => {
                       justifyContent: isCurrentUser ? "flex-end" : "flex-start",
                     }}
                   >
-                    {!isCurrentUser && userImage && (
+                    {!isCurrentUser && (
                       <img
-                        src={userImage}
+                        src={getUserImage(msg.username)}
                         alt={msg.username}
                         onClick={() => {
                           const id = getUserID(msg.username);
@@ -241,7 +265,7 @@ const Chat = (props) => {
                               className="fs-5 fw-bold"
                               style={{ cursor: "pointer" }}
                             >
-                              {msg.username}
+                              {getNameFromUserName(msg.username)}
                             </span>
                           </div>
                           <Card.Text
@@ -277,9 +301,9 @@ const Chat = (props) => {
                       </Card>
                     </div>
 
-                    {isCurrentUser && userImage && (
+                    {isCurrentUser && (
                       <img
-                        src={userImage}
+                        src={getUserImage(msg.username)}
                         alt={msg.username}
                         onClick={() => {
                           const id = getUserID(msg.username);
